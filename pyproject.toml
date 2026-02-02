@@ -1,7 +1,10 @@
 [project]
 name = "dworshak-prompt"
 version = "0.1.0"
-description = "Add your description here"
+description = "Multiplexed input from CLI, GUI, and WEB, depending on availabilty."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "rich>=14.3.2",
+    "typer>=0.21.1",
+]
