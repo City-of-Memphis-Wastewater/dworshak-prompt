@@ -1,7 +1,7 @@
 [project]
 name = "dworshak-prompt"
 version = "0.1.0"
-description = "Multiplexed input from CLI, GUI, and WEB, depending on availabilty."
+description = "Multiplexed input from CLI, GUI, and WEB, depending on availability."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
