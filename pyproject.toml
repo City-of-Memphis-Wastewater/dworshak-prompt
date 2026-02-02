@@ -2,9 +2,69 @@
 name = "dworshak-prompt"
 version = "0.1.0"
 description = "Multiplexed input from CLI, GUI, and WEB, depending on availability."
+requires-python = ">=3.9"
 readme = "README.md"
-requires-python = ">=3.12"
 dependencies = [
     "rich>=14.3.2",
     "typer>=0.21.1",
 ]
+
+
+authors = [
+  { name="George Clayton Bennett", email="george.bennett@memphistn.gov" },
+]
+maintainers = [
+  { name="George Clayton Bennett", email="george.bennett@memphistn.gov" },
+]
+license = "MIT"
+license-files = ["LICENSE"]
+classifiers=[
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+    "Development Status :: 1 - Planning",
+]
+
+
+keywords = [
+    "credentials",
+    "prompt",
+    "input",
+    "configuration",
+    "config"
+]
+
+[project.urls]
+Homepage = "https://github.com/city-of-memphis-wastewater/dworshak-prompt"
+Repository = "https://github.com/city-of-memphis-wastewater/dworshak-prompt"
+
+[project.optional-dependencies]
+null  = [
+]
+
+[tool.uv]
+# This tells uv that if it can't find a wheel for aarch64,
+# it is allowed to build from source using your local Rust/Clang.
+package = true
+resolution = "highest"
+
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]]
