@@ -1,0 +1,33 @@
+Metadata-Version: 2.4
+Name: dworshak-prompt
+Version: 0.1.0
+Summary: Multiplexed input from CLI, GUI, and WEB, depending on availability.
+Author-email: George Clayton Bennett <george.bennett@memphistn.gov>
+Maintainer-email: George Clayton Bennett <george.bennett@memphistn.gov>
+License-Expression: MIT
+Project-URL: Homepage, https://github.com/city-of-memphis-wastewater/dworshak-prompt
+Project-URL: Repository, https://github.com/city-of-memphis-wastewater/dworshak-prompt
+Keywords: credentials,prompt,input,configuration,config
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
+Classifier: Operating System :: OS Independent
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Utilities
+Classifier: Development Status :: 1 - Planning
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pyhabitat>=1.1.35
+Requires-Dist: rich>=14.3.2
+Requires-Dist: typer>=0.21.1
+Provides-Extra: null
+Dynamic: license-file
+
+# dworshak-prompt
