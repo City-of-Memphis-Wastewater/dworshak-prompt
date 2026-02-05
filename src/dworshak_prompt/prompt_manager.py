@@ -7,7 +7,7 @@ from typing import Dict, Any, Optional
 class PromptManager:
     """
     Manages the state of active configuration prompts and submitted results.
-    Designed to be instantiated once and shared across (Starlette/msgspec) threads.
+    Designed to be instantiated once and shared across threads.
     """
     def __init__(self):
         # Stores active prompt details waiting for frontend detection
@@ -77,3 +77,10 @@ class PromptManager:
         if not self.server_host_port:
              return "http://127.0.0.1:8083" 
         return f"http://{self.server_host_port}"
+
+# --- THE SINGLETON INSTANCE ---
+_instance = PromptManager()
+
+def get_prompt_manager() -> PromptManager:
+    """Returns the global singleton instance."""
+    return _instance

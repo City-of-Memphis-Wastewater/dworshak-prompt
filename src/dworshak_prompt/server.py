@@ -1,118 +1,101 @@
 # src/dworshak_prompt/server.py
 from __future__ import annotations
-import msgspec.json
-from starlette.applications import Starlette
-from starlette.routing import Route
-from starlette.responses import HTMLResponse, Response
-from starlette.exceptions import HTTPException
-from starlette.requests import Request
-from starlette.middleware import Middleware
-from starlette.middleware.cors import CORSMiddleware
-
-import uvicorn
-import threading
-import time
+import http.server
+import socketserver
+import json
 import urllib.parse
-from importlib import resources
-
-from .prompt_manager import PromptManager
+import threading
 from .browser_utils import find_open_port
 
-# --- 1. Global State within the Library Scope ---
-_prompt_manager = PromptManager()
+# Shared state between the HTTP thread and the Multiplexer thread
+from .prompt_manager import get_prompt_manager
 
-def get_prompt_manager() -> PromptManager:
-    return _prompt_manager
+class PromptHandler(http.server.BaseHTTPRequestHandler):
+    def log_message(self, format, *args):
+        pass  # Silence the console noise
 
-# --- 2. Middleware (CORS for potential iframe/cross-port embedding) ---
-middleware = [
-    Middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_methods=["GET", "POST"],
-        allow_headers=["*"],
-    )
-]
+    def do_GET(self):
+        parsed_url = urllib.parse.urlparse(self.path)
+        params = urllib.parse.parse_qs(parsed_url.query)
 
-# --- 3. Route Handlers ---
+        if parsed_url.path == "/config_modal":
+            self._serve_html(params)
+        elif parsed_url.path == "/api/get_active_prompt":
+            self._serve_json(get_prompt_manager().get_active_prompt())
+        else:
+            self.send_error(404)
 
-async def serve_config_modal_html(request: Request):
-    """Serves the prompt UI, injecting the request_id and metadata."""
-    request_id = request.query_params.get("request_id")
-    message = request.query_params.get("message", "Input Required")
-    hide_input = request.query_params.get("hide_input", "false").lower() == "true"
+    def do_POST(self):
+        if self.path == "/api/submit_config":
+            # 1. Determine how much data to read
+            content_length = int(self.headers.get('Content-Length', 0))
+            if content_length == 0:
+                self.send_error(400, "Empty submission")
+                return
 
-    if not request_id:
-        raise HTTPException(status_code=400, detail="Missing request_id")
+            # 2. Read and parse the URL-encoded form data
+            post_data = self.rfile.read(content_length).decode('utf-8')
+            fields = urllib.parse.parse_qs(post_data)
+            
+            # 3. Extract our specific fields
+            req_id = fields.get('request_id', [None])[0]
+            val = fields.get('input_value', [None])[0]
 
-    try:
-        # Resolve template from WITHIN dworshak_prompt package
-        # Assumes: src/dworshak_prompt/templates/config_modal.html
-        html_content = resources.read_text('dworshak_prompt.templates', 'config_modal.html')
+            if req_id and val is not None:
+                # --- THE HANDOFF ---
+                manager = get_prompt_manager()
+                manager.submit_result(req_id, val) 
+                # -------------------
+                
+                self._send_response("<h1>Success</h1><p>Input received. You may now close this tab.</p>")
+            else:
+                self.send_error(400, "Missing request_id or input_value")
+        else:
+            self.send_error(404)
 
-        # Injecting values (using simple string replacement to avoid Jinja2 dependency)
-        final_html = html_content.replace('{{ request_id }}', urllib.parse.quote_plus(request_id))
-        final_html = final_html.replace('{{ message }}', message)
-        final_html = final_html.replace('{{ hide_input }}', str(hide_input).lower())
+    def _serve_html(self, params):
+        req_id = params.get('request_id', [''])[0]
+        msg = params.get('message', ['Input Required'])[0]
+        
+        # Inlined HTML to keep it zero-dep and avoid resource-loading drama
+        html = f"""<!DOCTYPE html>
+        <html>
+        <head><title>Prompt</title><style>
+            body {{ font-family: sans-serif; padding: 20px; background: #f0f2f5; }}
+            .card {{ background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
+            input {{ width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }}
+            button {{ background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }}
+        </style></head>
+        <body>
+            <div class="card">
+                <h2>{msg}</h2>
+                <form action="/api/submit_config" method="post">
+                    <input type="hidden" name="request_id" value="{req_id}">
+                    <input type="text" name="input_value" autofocus required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </body></html>"""
+        self._send_response(html, "text/html")
 
-        return HTMLResponse(content=final_html, status_code=200)
+    def _send_response(self, content, content_type="text/html"):
+        self.send_response(200)
+        self.send_header("Content-Type", f"{content_type}; charset=utf-8")
+        self.end_headers()
+        self.wfile.write(content.encode("utf-8"))
 
-    except Exception as e:
-        return HTMLResponse(f"<h1>Internal Template Error</h1><p>{e}</p>", status_code=500)
+    def _serve_json(self, data):
+        self._send_response(json.dumps(data or {"show": False}), "application/json")
 
-async def get_active_prompt(request: Request):
-    """API for the frontend to poll for the current prompt status."""
-    manager: PromptManager = get_prompt_manager()
-    data = manager.get_active_prompt() # Should return dict with message, hide_input, etc.
+def run_prompt_server_in_thread(port=8083):
+    port = find_open_port(port)
+    # ThreadingMixIn allows multiple requests (like the HTML page + the JSON poll)
+    class ThreadedServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+        allow_reuse_address = True
 
-    if data:
-        data["show"] = True
-        return Response(content=msgspec.json.encode(data), media_type="application/json")
-
-    return Response(content=msgspec.json.encode({"show": False}), media_type="application/json")
-
-async def submit_config(request: Request):
-    """Receives the user input and unblocks the multiplexer thread."""
-    manager: PromptManager = get_prompt_manager()
-    try:
-        form_data = await request.form()
-        request_id = form_data.get("request_id")
-        submitted_value = form_data.get("input_value")
-
-        if not request_id or submitted_value is None:
-            raise HTTPException(status_code=400, detail="Invalid submission")
-
-        manager.submit_result(request_id, submitted_value)
-        return HTMLResponse("<h1>Input Received. You can close this tab.</h1>", status_code=200)
-    except Exception as e:
-        return HTMLResponse(f"<h1>Submission Error</h1><p>{e}</p>", status_code=500)
-
-# --- 4. App & Lifecycle ---
-
-routes = [
-    Route("/config_modal", endpoint=serve_config_modal_html, methods=["GET"]),
-    Route("/api/get_active_prompt", endpoint=get_active_prompt, methods=["GET"]),
-    Route("/api/submit_config", endpoint=submit_config, methods=["POST"]),
-]
-
-app = Starlette(debug=False, middleware=middleware, routes=routes)
-
-def run_prompt_server_in_thread(host: str = "127.0.0.1", port: int = 8083) -> threading.Thread:
-    """Launches the server in a daemon thread so it doesn't block the CLI/Multiplexer."""
+    httpd = ThreadedServer(("127.0.0.1", port), PromptHandler)
+    get_prompt_manager().set_server_host_port(f"127.0.0.1:{port}")
     
-    # Ensure we use an open port
-    actual_port = find_open_port(port, port + 50)
-    host_port_str = f"{host}:{actual_port}"
-    
-    # Update manager so browser_get_input knows where to point the browser
-    _prompt_manager.set_server_host_port(host_port_str)
-
-    config = uvicorn.Config(app, host=host, port=actual_port, log_level="error")
-    server = uvicorn.Server(config=config)
-
-    thread = threading.Thread(target=server.run, daemon=True)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     thread.start()
-
-    # Wait for server to bind
-    time.sleep(0.4)
     return thread
