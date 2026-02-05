@@ -7,17 +7,16 @@ def main():
     shutdown_trigger = threading.Event()
 
     print("--- Dworshak Prompt Multiplexer Demo ---")
-    print("Testing Fallback Chain: GUI -> WEB -> CONSOLE\n")
 
     try:
         # 2. Trigger the 'Monster' Engine
         # We simulate a 'suggestion' for a config value
         result = DworshakPrompt.ask(
-            message="Enter your API Endpoint:",
-            suggestion="https://api.example.com/v1",
+            message="Enter a test value",
+            suggestion="99",
             hide_input=False,
             # We explicitly set the priority for this demo
-            priority=[PromptMode.GUI, PromptMode.WEB, PromptMode.CONSOLE],
+            priority=[PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB],
             interrupt_event=shutdown_trigger
         )
 
