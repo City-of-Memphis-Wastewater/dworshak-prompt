@@ -23,7 +23,7 @@ class PromptManager:
         # Store the dynamically found server URL
         self.server_host_port: str = ""
 
-    def register_prompt(self, key: str, message: str, is_credential: bool) -> str:
+    def register_prompt(self, key: str, message: str, is_credential: bool, suggestion: str | None = None) -> str:
         """Stores a new prompt request and returns its ID."""
         request_id = str(uuid.uuid4())
         prompt_data = {
@@ -31,6 +31,7 @@ class PromptManager:
             "key": key,
             "message": message,
             "is_credential": is_credential,
+            "suggestion": suggestion, 
         }
         with self.active_prompt_lock:
             # Critical: Ensure only one prompt is active at a time for simplicity

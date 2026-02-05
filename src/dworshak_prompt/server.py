@@ -56,6 +56,9 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
     def _serve_html(self, params):
         req_id = params.get('request_id', [''])[0]
         msg = params.get('message', ['Input Required'])[0]
+        suggestion = params.get('suggestion', [''])[0] 
+        hide = params.get('hide_input', ['false'])[0].lower() == 'true'
+        input_type = "password" if hide else "text"
         
         # Inlined HTML to keep it zero-dep and avoid resource-loading drama
         html = f"""<!DOCTYPE html>
@@ -71,7 +74,7 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
                 <h2>{msg}</h2>
                 <form action="/api/submit_config" method="post">
                     <input type="hidden" name="request_id" value="{req_id}">
-                    <input type="text" name="input_value" autofocus required>
+                    <input type="{input_type}" name="input_value" value="{suggestion}" autofocus onfocus="this.select()" required>
                     <button type="submit">Submit</button>
                 </form>
             </div>

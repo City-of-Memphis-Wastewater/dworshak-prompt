@@ -5,7 +5,7 @@ from tkinter import simpledialog
 from typing import Optional
 
 
-def gui_get_input(prompt_message: str, hide_input: bool = False) -> Optional[str]:
+def gui_get_input(prompt_message: str,  suggestion: str | None = None,  hide_input: bool = False) -> Optional[str]:
     """
     Displays a modal GUI popup to get input.
     Improved for WSLg stability.
@@ -18,14 +18,14 @@ def gui_get_input(prompt_message: str, hide_input: bool = False) -> Optional[str
         # Lift the window to the top so it doesn't hide behind the terminal
         root.attributes("-topmost", True)
 
-        show_char = '*' if hide_input else ''
-
-        # askstring handles its own internal event loop
-        value = simpledialog.askstring(
-            title="Config Input",
-            prompt=prompt_message,
-            show=show_char
-        )
+        # Customizing the dialog to handle defaults
+        if hide_input:
+            # Simpledialog doesn't support 'show="*"' natively in the basic call
+            # For a true production GUI, you'd use a Toplevel with an Entry(show="*")
+            val = simpledialog.askstring("Input", message, show='*')
+        else:
+            # 'initialvalue' is the key for suggested values in tkinter
+            val = simpledialog.askstring("Input", message, initialvalue=suggestion or "")
         
         return value
         

@@ -17,6 +17,8 @@ def main():
             hide_input=False,
             # We explicitly set the priority for this demo
             priority=[PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB],
+            #priority=[PromptMode.WEB, PromptMode.GUI, PromptMode.CONSOLE],
+            
             interrupt_event=shutdown_trigger
         )
 
