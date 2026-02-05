@@ -5,7 +5,7 @@ description = "Multiplexed input from CLI, GUI, and WEB, depending on availabili
 requires-python = ">=3.9"
 readme = "README.md"
 dependencies = [
-    "pyhabitat>=1.1.35",
+    "pyhabitat>=1.1.37",
     "rich>=14.3.2",
     "typer>=0.21.1",
 ]

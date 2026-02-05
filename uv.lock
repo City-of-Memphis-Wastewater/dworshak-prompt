@@ -63,7 +63,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "pyhabitat", specifier = ">=1.1.35" },
+    { name = "pyhabitat", specifier = ">=1.1.37" },
     { name = "rich", specifier = ">=14.3.2" },
     { name = "typer", specifier = ">=0.21.1" },
 ]
@@ -176,11 +176,11 @@ wheels = [
 
 [[package]]
 name = "pyhabitat"
-version = "1.1.35"
+version = "1.1.37"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/15/92/31caa9c816da220c6e3461661615654c82283837cfc3ad30cc560be94d10/pyhabitat-1.1.35.tar.gz", hash = "sha256:897048dd339e531ddd2ad8c25618f1d8db95f2b6dfc58d1a42601f8f82762b11", size = 27887, upload-time = "2026-01-27T13:53:48.023Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/19/12/c49e9d0e71a6b49c8bc51873e1a99a27cf97d8c2df77c58b6d4a7a4cdb22/pyhabitat-1.1.37.tar.gz", hash = "sha256:3c8b2d708f117281d9010a24fded5c3647c6979fe039ad8e846c161bbc0832bb", size = 27868, upload-time = "2026-02-05T21:48:47.866Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cf/d1/929746a3c2dcc92c19fd9405c7333ebe1f68167d94c27b903829338caafe/pyhabitat-1.1.35-py3-none-any.whl", hash = "sha256:c470bdc4bf722ec1ca8d8ab1761863066cf129a432e307731ab17cfbaf2aa1f6", size = 25944, upload-time = "2026-01-27T13:53:46.227Z" },
+    { url = "https://files.pythonhosted.org/packages/20/92/6b09d1396705e84c7e1d9fb87d12495ea34164771d1ce1151c3e7db8db65/pyhabitat-1.1.37-py3-none-any.whl", hash = "sha256:f4cb2f6544008009f0c986849cbc086f8db59eae5cfd995dc09655db6da84b16", size = 25936, upload-time = "2026-02-05T21:48:46.26Z" },
 ]
 
 [[package]]
