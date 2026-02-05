@@ -5,9 +5,14 @@ description = "Multiplexed input from CLI, GUI, and WEB, depending on availabili
 requires-python = ">=3.9"
 readme = "README.md"
 dependencies = [
+    "msgspec>=0.20.0",
     "pyhabitat>=1.1.35",
+    "python-multipart>=0.0.20",
+    "requests>=2.32.5",
     "rich>=14.3.2",
+    "starlette>=0.49.3",
     "typer>=0.21.1",
+    "uvicorn>=0.39.0",
 ]
 
 

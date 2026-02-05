@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration Required</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        /* Shared Dark Theme Variables */
+        :root {
+            --color-bg: #121212;
+            --color-card: #1E1E1E;
+            --color-text-primary: #E0E0E0;
+            --color-accent: #FF9800; /* Orange */
+            --color-affirm: #22c55e;
+            --color-input-border: #374151; /* Gray-700 */
+        }
+        body { 
+            background-color: var(--color-bg); 
+            color: var(--color-text-primary);
+            font-family: sans-serif;
+        }
+        .card-bg { background-color: var(--color-card); }
+        .input-style {
+            background-color: var(--color-card);
+            border: 1px solid var(--color-input-border);
+            color: var(--color-text-primary);
+        }
+        .input-style:focus {
+            outline: 2px solid var(--color-accent);
+            border-color: var(--color-accent) !important;
+            box-shadow: none;
+        }
+        .btn-green { background-color: var(--color-affirm); }
+        .btn-green:hover:not(:disabled) { background-color: #16a34a; /* green-600 */ }
+    </style>
+</head>
+<body x-data="configPrompt()" 
+      x-cloak 
+      x-init="init()"
+      class="flex items-center justify-center min-h-screen p-4">
+
+    <div :class="{'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50': !isEmbedded, 'relative': isEmbedded}">
+        <div class="card-bg p-8 rounded-xl shadow-2xl w-full max-w-md border-t-4 border-accent space-y-6">
+            
+            <h2 class="text-3xl font-bold text-accent">Configuration Required</h2>
+            <p class="text-gray-400">Please enter the required value to continue the process.</p>
+            
+            <form @submit.prevent="submitForm()" class="space-y-4">
+                
+                <p x-text="promptMessage" class="text-lg font-semibold"></p>
+
+                <input type="hidden" name="request_id" x-model="requestId">
+
+                <div>
+                    <input 
+                        :type="isCredential ? 'password' : 'text'" 
+                        name="input_value" 
+                        x-model="inputValue"
+                        required
+                        class="w-full p-3 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent input-style"
+                        :placeholder="promptMessage"
+                    >
+                    <p class="text-sm text-gray-500 mt-1">Cancelling input will submit an empty value (`None` in Python).</p>
+                </div>
+                
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" 
+                            @click="cancelInput()"
+                            :disabled="isSubmitting"
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition disabled:opacity-50">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            :disabled="!inputValue.trim() || isSubmitting"
+                            class="btn-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition disabled:opacity-50">
+                        <span x-show="!isSubmitting">Submit</span>
+                        <span x-show="isSubmitting">Submitting...</span>
+                    </button>
+                </div>
+                <p x-show="errorMessage" x-text="errorMessage" class="text-red-400 text-sm text-center"></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => { //detroy this line?
+            Alpine.data('configPrompt', () => ({
+                requestId: '',
+                promptMessage: 'Loading...',
+                isCredential: false,
+                inputValue: '',
+                isSubmitting: false,
+                errorMessage: '',
+                isEmbedded: window.self !== window.top,
+
+                init() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    
+                    // 1. Get data from URL parameters
+                    this.requestId = urlParams.get('request_id') || '';
+                    // Decode URI component to handle spaces and special characters from Python's URL encoding
+                    this.promptMessage = decodeURIComponent(urlParams.get('message') || 'Enter required value');
+                    this.isCredential = urlParams.get('hide_input') === 'True'; // Match Python's kwarg: hide_input
+                    
+                    // 2. Set the window title
+                    document.title = this.promptMessage.split('(')[0].trim() + " Required";
+
+                    // 3. Focus on input field after a small delay
+                    setTimeout(() => {
+                        const inputElement = document.querySelector('input[name="input_value"]');
+                        if (inputElement) {
+                            inputElement.focus();
+                        }
+                    }, 100);
+                },
+
+                async submitData(valueToSend) {
+                    this.isSubmitting = true;
+                    this.errorMessage = '';
+                    
+                    // Manually construct FormData since we might be sending an empty string (cancel)
+                    const formData = new FormData();
+                    formData.append('request_id', this.requestId);
+                    formData.append('input_value', valueToSend);
+
+                    try {
+                        const response = await fetch('/api/submit_config', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        if (response.ok) {
+                            // Submission successful, close the window.
+                            if (this.isEmbedded) {
+                                // ⚠️ IFRAME SCENARIO: Send a message to the parent window
+                                window.parent.postMessage({
+                                    type: 'configSubmitted',
+                                    requestId: this.requestId
+                                }, '*'); // '*' means any origin
+                            }
+                            this.closeWindow(); 
+                        } else {
+                            // Handle server-side errors (e.g., validation failure)
+                            const errorText = await response.text();
+                            this.errorMessage = `Submission failed. Server response: ${errorText.substring(0, 100)}...`;
+                        }
+                    } catch (error) {
+                        this.errorMessage = `Network error: ${error.message}`;
+                    } finally {
+                        this.isSubmitting = false;
+                    }
+                },
+                
+                // Form submission for non-empty input
+                submitForm() {
+                    if (this.inputValue.trim()) {
+                        this.submitData(this.inputValue.trim());
+                    }
+                },
+
+                // Cancellation: submits an empty string
+                cancelInput() {
+                    // Send an empty string, which the Python backend should interpret as None.
+                    this.submitData(''); 
+                },
+
+                closeWindow() {
+                    // Utility function to close the dedicated window
+                    if (!this.isEmbedded) {
+                        // Only attempt to close the window if we are NOT embedded (i.e., we are a new tab)
+                        try {
+                            window.close();
+                        } catch {
+                            // Alert for safety if run in a strict browser environment
+                            alert('Configuration submitted. Please manually close this tab.');
+                        }
+                    }
+                }
+            }));
+        });
+    </script>
+</body>
+</html>
