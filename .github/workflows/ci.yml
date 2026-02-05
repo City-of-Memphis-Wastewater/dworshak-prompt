@@ -1,0 +1,39 @@
+# This workflow installs Python dependencies, runs tests, and lints across Python versions
+# For details: https://docs.github.com/en/actions/automating-builds-and-testing/building-and-testing-python
+
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        #python-version: ['3.9','3.10','3.11', '3.12', '3.13']  # Test some supported versions
+        python-version: ['3.11', '3.13']  # Test some supported versions
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install uv
+      run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+    - name: Install main dependencies only (skip dev for speed/CI stability)
+      run: uv sync --group test --no-dev
+    #- name: Lint with ruff
+    #  run: |
+    #    uv run ruff check .
+
+    #- name: Run tests with pytest (optional — uncomment if ready)
+    #  run: uv run pytest tests/ -v --cov=pipeline --cov-report=term-missing

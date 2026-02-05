@@ -1,0 +1,50 @@
+# File: .github/workflows/publish.yaml
+
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  pypi-publish:
+    name: Build and upload to PyPI
+    runs-on: ubuntu-latest
+
+    environment: pypi  # Optional but recommended: create this environment in repo settings
+
+    permissions:
+      id-token: write   # Required for Trusted Publishing (OIDC)
+      contents: read    # Needed to checkout code
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history needed for version detection from git tags
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install dependencies
+        # uv sync handles the 'virtualenv create false' logic 
+        # via the --system flag if you don't want a venv
+        run: uv sync --no-dev
+
+      - name: Build package
+        run: uv build
+        
+      - name: Build package (sdist + wheel)
+        run: uv build
+
+      - name: Install the built package (sanity check)
+        run: uv pip install dist/*.whl --system
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # Trusted Publishing: no token needed — uses OIDC automatically

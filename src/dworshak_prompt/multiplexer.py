@@ -22,7 +22,7 @@ from .server import (
 logger = logging.getLogger("dworshak_prompt")
 # Default to INFO to hide diagnostics; change to DEBUG to see them
 logger.setLevel(logging.INFO) 
-logger.setLevel(logging.DEBUG) 
+#logger.setLevel(logging.DEBUG) 
 _handler = logging.StreamHandler(sys.stdout)
 _handler.setFormatter(logging.Formatter('%(message)s'))
 logger.addHandler(_handler)
