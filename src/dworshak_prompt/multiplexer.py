@@ -10,7 +10,11 @@ from .gui_prompt import gui_get_input
 from .web_prompt import browser_get_input
 #from .prompt_manager import PromptManager # Import the manager class for type hinting
 from .browser_utils import is_server_running
-from .server import run_prompt_server_in_thread, get_prompt_manager
+from .server import (
+    run_prompt_server_in_thread, 
+    get_prompt_manager, 
+    stop_prompt_server
+)
 
 class PromptMode(Enum):
     WEB = "web"
@@ -60,7 +64,6 @@ class DworshakPrompt__:
             PromptMode.GUI in force or (ph.tkinter_is_available() and not force)
         ):
             try:
-                from .guiconfig import gui_get_input # Relative import within lib
                 val = gui_get_input(message, hide_input)
                 if val is not None: return val
             except Exception:
@@ -69,9 +72,15 @@ class DworshakPrompt__:
 
         # --- BRANCH 3: WEB ---
         if PromptMode.WEB not in avoid:
-            from .config_via_web import  browser_get_input
-            return  browser_get_input(manager=manager, key=message, prompt_message=message, hide_input=hide_input)
-
+            active_manager = manager or get_prompt_manager()
+            try:
+                val = browser_get_input(active_manager, message, hide_input, interrupt_event)
+                return value
+            finally:
+                # This ensures that as soon as the polling loop finishes (success or cancel),
+                # the background server is killed and the port is released.
+                stop_prompt_server()
+        
         raise RuntimeError("No available prompt mechanism found.")
 
     @staticmethod

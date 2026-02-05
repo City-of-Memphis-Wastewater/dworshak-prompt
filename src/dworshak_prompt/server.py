@@ -87,15 +87,34 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
     def _serve_json(self, data):
         self._send_response(json.dumps(data or {"show": False}), "application/json")
 
-def run_prompt_server_in_thread(port=8083):
-    port = find_open_port(port)
-    # ThreadingMixIn allows multiple requests (like the HTML page + the JSON poll)
-    class ThreadedServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
-        allow_reuse_address = True
+# Global reference to the running server so we can shut it down cleanly
+_current_server: ThreadedServer | None = None
 
-    httpd = ThreadedServer(("127.0.0.1", port), PromptHandler)
-    get_prompt_manager().set_server_host_port(f"127.0.0.1:{port}")
+class ThreadedServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
+def run_prompt_server_in_thread(port=8083):
+    global _current_server
     
-    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    # Don't spin up multiple servers if one is already active
+    if _current_server is not None:
+        return None
+
+    port = find_open_port(port)
+    _current_server = ThreadedServer(("127.0.0.1", port), PromptHandler)
+    get_prompt_manager().set_server_host_port(f"127.0.0.1:{port}")
+
+    thread = threading.Thread(target=_current_server.serve_forever, daemon=True)
     thread.start()
     return thread
+
+def stop_prompt_server():
+    """Tells the server to stop the loop and release the socket."""
+    global _current_server
+    if _current_server:
+        # shutdown() stops the serve_forever() loop
+        _current_server.shutdown()
+        # server_close() releases the socket port
+        _current_server.server_close()
+        _current_server = None
