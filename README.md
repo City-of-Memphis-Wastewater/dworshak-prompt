@@ -15,7 +15,7 @@ Automatically skips incompatible modes (e.g., GUI on WSL) via `pyhabitat`.
 ### Usage
 
 ```python
-from dworshak_prompt import DworshakPrompt
+from dworshak_prompt import DworshakPrompt, PromptMode
 
 # Basic
 val = DworshakPrompt.ask("Enter value")
@@ -24,7 +24,9 @@ val = DworshakPrompt.ask("Enter value")
 val = DworshakPrompt.ask(
     "Secure Key",
     hide_input=True,
-    priority=["gui", "web"]
+    priority = [PromptMode.CONSOLE, PromptMode.GUI]
+    avoid = {PromptMode.WEB}
+
 )
 
 ```
