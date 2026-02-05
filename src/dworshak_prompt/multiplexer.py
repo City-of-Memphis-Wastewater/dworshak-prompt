@@ -37,6 +37,7 @@ class DworshakPrompt:
     def ask(
         message: str,
         suggestion: str | None = None,
+        default: Any | None = None,
         hide_input: bool = False,
         priority: list[PromptMode] | None = None,
         avoid: set[PromptMode] | None = None,
@@ -46,6 +47,15 @@ class DworshakPrompt:
     ) -> str | None:
         if debug:
             logger.setLevel(logging.DEBUG)
+
+        # 1. CI/Headless Detection
+        # If we aren't in a TTY and aren't on a system that can spawn a GUI/Web window,
+        # return the default immediately to avoid the "Time Bomb."
+        if not ph.interactive_terminal_is_available() and \
+        not ph.tkinter_is_available() and \
+        not ph.is_browser_available(): # Hypothetical pyhabitat check
+            logger.debug("[DIAGNOSTIC] Non-interactive environment detected. Using default.")
+            return default
 
         avoid = avoid or set()
         if ph.on_wsl():

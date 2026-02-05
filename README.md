@@ -31,3 +31,16 @@ val = DworshakPrompt.ask(
 
 ```
 
+Another example, for handling CI:
+
+```python
+from dworshak_prompt import DworshakPrompt, PromptMode
+
+# If this runs in GitHub Actions, it returns "staging" immediately.
+# If it runs on a laptop, it pops up a GUI or Console prompt.
+val = DworshakPrompt.ask(
+    "Target Environment",
+    suggestion="production",  # What the human sees
+    default="staging"         # What the CI/Headless system uses
+)
+```
