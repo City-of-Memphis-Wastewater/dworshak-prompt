@@ -6,7 +6,9 @@ import subprocess
 import time
 import socket
 import webbrowser
-import requests
+import urllib.request
+import urllib.error
+
 
 def launch_browser(url: str):
     """Refined, silent WSLg-aware launcher."""
@@ -59,7 +61,12 @@ def find_open_port(start: int = 8082, end: int = 8100) -> int:
     return start
 
 def is_server_running(url: str) -> bool:
+    """Check if server is up using stdlib only."""
     try:
-        return requests.head(url, timeout=0.5).status_code < 500
-    except:
+        # We use a short timeout because it's localhost
+        with urllib.request.urlopen(url, timeout=0.5) as response:
+            return response.getcode() < 500
+    except (urllib.error.URLError, TimeoutError, ConnectionRefusedError):
+        return False
+    except Exception:
         return False
