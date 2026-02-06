@@ -1,6 +1,7 @@
 [project]
 name = "dworshak-prompt"
-version = "0.1.0"
+#version = "x.x.x"
+dynamic = ["version"] # look in src/dworshk_prompt/VERSION
 description = "Multiplexed input from CLI, GUI, and WEB, depending on availability."
 requires-python = ">=3.9"
 readme = "README.md"
@@ -32,7 +33,9 @@ classifiers=[
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Utilities",
-    "Development Status :: 1 - Planning",
+    "Development Status :: 3 - Alpha",
+    #"Development Status :: 4 - Beta",
+    #"Development Status :: 5 - Production/Stable",
 ]
 
 
@@ -69,3 +72,16 @@ test = [
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.dynamic]
+version = {file = "src/dworshak-access/VERSION"}
+
+[tool.bumpversion]
+current_version = "0.1.2"
+allow_dirty = false # true  # Don't complain if I have uncommitted changes
+commit = true      # Don't create a git commit
+tag = false         # Don't create a git tag
+tag_name = "v{new_version}"
+
+[[tool.bumpversion.files]]
+filename = "src/dworshak-access/VERSION"
