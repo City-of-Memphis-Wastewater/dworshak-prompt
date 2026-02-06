@@ -74,7 +74,8 @@ test = [
 where = ["src"]
 
 [tool.setuptools.dynamic]
-version = {file = "src/dworshak_access/VERSION"}
+version = {file = "src/dworshak_prompt
+/VERSION"}
 
 [tool.bumpversion]
 current_version = "0.1.2"
@@ -84,4 +85,4 @@ tag = false         # Don't create a git tag
 tag_name = "v{new_version}"
 
 [[tool.bumpversion.files]]
-filename = "src/dworshak_access/VERSION"
+filename = "src/dworshak_prompt/VERSION"
