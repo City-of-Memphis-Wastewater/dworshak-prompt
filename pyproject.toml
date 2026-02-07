@@ -2,7 +2,7 @@
 name = "dworshak-prompt"
 #version = "x.x.x"
 dynamic = ["version"] # look in src/dworshk_prompt/VERSION
-description = "Multiplexed input from CLI, GUI, and WEB, depending on availability."
+description = "Multiplexed user input via console, GUI, and web, depending on availability."
 requires-python = ">=3.9"
 readme = "README.md"
 dependencies = [
