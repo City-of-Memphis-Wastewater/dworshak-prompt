@@ -84,20 +84,16 @@ special_secret = DworshakPrompt.ask(
 
 When building tools that may be automated or run by multiple agents (e.g., AI assistants, bots, or pipelines), you sometimes need input that is:
 
-Occasionally human-driven
-
-Occasionally automated or non-interactive
-
-Safe to skip or default when unattended
+- Occasionally human-driven
+- Occasionally automated or non-interactive
+- Safe to skip or default when unattended
 
 
 DworshakPrompt handles this automatically:
 
-Returns defaults in non-interactive contexts
-
-Falls back to console, GUI, or web input when available
-
-Can integrate with threads or events for programmatic cancellation
+- Returns defaults in non-interactive contexts
+- Falls back to console, GUI, or web input when available
+- Can integrate with threads or events for programmatic cancellation
 
 
 Example:
@@ -132,10 +128,8 @@ Your automated workflows can safely handle optional human input without breaking
 
 Philosophy
 
-Input is treated as an environment-dependent capability, not a given.
-
-Every input call is resilient: console, GUI, web, or fallback to default.
-
-Designed for developers who want reliability, simplicity, and cross-platform behavior without extra dependencies.
+- Input is treated as an environment-dependent capability, not a given.
+- Every input call is resilient: console, GUI, web, or fallback to default.
+- Designed for developers who want reliability, simplicity, and cross-platform behavior without extra dependencies.
 
 
