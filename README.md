@@ -22,7 +22,7 @@ val = DworshakPrompt.ask("Enter value")
 
 # Options
 val = DworshakPrompt.ask(
-    "Secure Key",
+    message = "Secure Key",
     hide_input=True,
     priority = [PromptMode.CONSOLE, PromptMode.GUI]
     avoid = {PromptMode.WEB}
@@ -39,7 +39,7 @@ from dworshak_prompt import DworshakPrompt, PromptMode
 # If this runs in GitHub Actions, it returns "staging" immediately.
 # If it runs on a laptop, it pops up a GUI or Console prompt.
 val = DworshakPrompt.ask(
-    "Target Environment",
+    message = "Target Environment",
     suggestion="production",  # What the human sees
     default="staging"         # What the CI/Headless system uses
 )
