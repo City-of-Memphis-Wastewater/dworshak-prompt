@@ -9,6 +9,8 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ## [0.1.5] – 2026-02-06
 ### Fixed:
 - Guard tkinter import in gui stuff
+- Guard init
+- demo, main()
 
 ---
 
