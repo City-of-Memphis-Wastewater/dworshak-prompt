@@ -28,7 +28,7 @@ env = DworshakPrompt.ask(
 
 ---
 
-User Story 2: Simple input without building UX
+## User Story 2: Simple input without building UX
 
 You need credentials, API keys, or basic configuration values quickly. You don’t want to implement a console prompt, GUI, or web interface. DworshakPrompt handles all the interfacing under the hood.
 
@@ -53,7 +53,7 @@ api_key = DworshakPrompt.ask(
 
 ---
 
-User Story 3: Augment existing applications
+## User Story 3: Augment existing applications
 
 For heavier applications that already have dedicated interfaces, you may occasionally need special-case input or credentials. Instead of revamping your GUI or building new interaction layers, DworshakPrompt can step in:
 
@@ -79,6 +79,56 @@ special_secret = DworshakPrompt.ask(
 ```
 
 ---
+
+## User Story 4: AI / Agent & Multi-User Workflows
+
+When building tools that may be automated or run by multiple agents (e.g., AI assistants, bots, or pipelines), you sometimes need input that is:
+
+Occasionally human-driven
+
+Occasionally automated or non-interactive
+
+Safe to skip or default when unattended
+
+
+DworshakPrompt handles this automatically:
+
+Returns defaults in non-interactive contexts
+
+Falls back to console, GUI, or web input when available
+
+Can integrate with threads or events for programmatic cancellation
+
+
+Example:
+
+```python
+
+from dworshak_prompt import DworshakPrompt, PromptMode
+import threading
+
+cancel_event = threading.Event()
+
+api_key = DworshakPrompt.ask(
+    message="Enter API key for agent workflow",
+    suggestion="Use your AI service key",  # human-facing
+    default="NONE",                         # safe fallback for automation
+    priority=[PromptMode.WEB, PromptMode.CONSOLE],
+    hide_input=True,
+    interrupt_event=cancel_event,
+    debug=True
+)
+
+if cancel_event.is_set():
+    print("Input cancelled by user or agent")
+```
+
+Why this matters:
+Your automated workflows can safely handle optional human input without breaking pipelines, hanging scripts, or requiring major changes to existing UIs.
+
+
+---
+
 
 Philosophy
 
