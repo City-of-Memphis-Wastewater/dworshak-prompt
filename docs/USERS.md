@@ -57,11 +57,9 @@ api_key = DworshakPrompt.ask(
 
 For heavier applications that already have dedicated interfaces, you may occasionally need special-case input or credentials. Instead of revamping your GUI or building new interaction layers, DworshakPrompt can step in:
 
-Automatically chooses the most appropriate input method.
-
-Skips modes incompatible with the environment.
-
-Integrates seamlessly without modifying your existing codebase.
+- Automatically chooses the most appropriate input method.
+- Skips modes incompatible with the environment.
+- Integrates seamlessly without modifying your existing codebase.
 
 
 Example:
