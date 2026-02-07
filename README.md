@@ -44,3 +44,7 @@ val = DworshakPrompt.ask(
     default="staging"         # What the CI/Headless system uses
 )
 ```
+
+## More Information
+
+- [User Stories](https://github.com/City-of-Memphis-Wastewater/dworshak-prompt/blob/main/docs/USERS.md)
