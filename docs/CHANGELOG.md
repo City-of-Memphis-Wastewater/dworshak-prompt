@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.1.4] – 2026-02-06
+### Added:
+- DworshakPrompt known to __init__
+
+---
+
 ## [0.1.3] – 2026-02-06
 ### Added:
 - Initial release to PyPI via publish.yml
