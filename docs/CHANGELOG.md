@@ -6,6 +6,15 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.1] – 2026-02-07
+### Added:
+- Reference user stories at docs/USERS.md
+
+### Internal:
+- Stable usage in pipeline-eds.
+
+---
+
 ## [0.1.5] – 2026-02-06
 ### Fixed:
 - Guard tkinter import in gui stuff
