@@ -77,7 +77,7 @@ where = ["src"]
 version = {file = "src/dworshak_prompt/VERSION"}
 
 [tool.bumpversion]
-current_version = "0.2.1"
+current_version = "0.2.2"
 allow_dirty = false # true  # Don't complain if I have uncommitted changes
 commit = true      # Don't create a git commit
 tag = false         # Don't create a git tag
