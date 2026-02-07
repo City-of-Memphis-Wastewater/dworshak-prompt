@@ -1,6 +1,5 @@
 # src/dworshak_prompt/multiplexer.py
 from __future__ import annotations
-import typer
 import pyhabitat as ph
 from enum import Enum
 from typing import Set, Any
@@ -21,14 +20,18 @@ from .server import (
     stop_prompt_server
 )
 
+
+    
 # Setup logger
 logger = logging.getLogger("dworshak_prompt")
 # Default to INFO to hide diagnostics; change to DEBUG to see them
 logger.setLevel(logging.INFO) 
 #logger.setLevel(logging.DEBUG) 
-_handler = logging.StreamHandler(sys.stdout)
-_handler.setFormatter(logging.Formatter('%(message)s'))
-logger.addHandler(_handler)
+if not logger.handlers:
+    _handler = logging.StreamHandler(sys.stdout)
+    _handler.setFormatter(logging.Formatter('%(message)s'))
+    logger.addHandler(_handler)
+
 
 class PromptMode(Enum):
     WEB = "web"
