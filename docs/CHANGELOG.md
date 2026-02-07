@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.1.5] – 2026-02-06
+### Fixed:
+- Guard tkinter import in gui stuff
+
+---
+
 ## [0.1.4] – 2026-02-06
 ### Added:
 - DworshakPrompt known to __init__

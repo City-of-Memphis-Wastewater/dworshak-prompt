@@ -1,7 +1,10 @@
 # src/dworshak_prompt/gui_prompt.py
 from __future__ import annotations
-import tkinter as tk
-from tkinter import simpledialog
+try:
+    import tkinter as tk
+    from tkinter import simpledialog
+except:
+    pass
 from typing import Optional
 
 def gui_get_input(prompt_message: str, suggestion: str | None = None, hide_input: bool = False) -> Optional[str]:

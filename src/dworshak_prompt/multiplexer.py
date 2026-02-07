@@ -10,7 +10,10 @@ import sys
 import logging
 
 from .cli_prompt import cli_get_input
-from .gui_prompt import gui_get_input
+if ph.tkinter_is_available():
+    from .gui_prompt import gui_get_input
+else:
+    gui_get_input = None
 from .web_prompt import browser_get_input
 from .keyboard_interrupt import PromptCancelled
 from .server import (
@@ -134,3 +137,10 @@ class DworshakPrompt:
 
         logger.debug("[DIAGNOSTIC] All modes exhausted.")
         raise RuntimeError("No input method succeeded.")
+
+def main():
+    DworshakPrompt.ask(
+        "What is your name?",
+        suggestion="George",
+        debug=True,
+    )
