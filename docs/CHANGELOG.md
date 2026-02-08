@@ -12,7 +12,6 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 - README section for pipx installation, specifically clarifying the `[cli]` extra.
 - README section for `uv add`, specifically clarifying the `--extra cli` extra.
 
-
 ---
 
 ## [0.2.3] – 2026-02-08
