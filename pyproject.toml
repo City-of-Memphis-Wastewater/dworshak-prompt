@@ -7,8 +7,6 @@ requires-python = ">=3.9"
 readme = "README.md"
 dependencies = [
     "pyhabitat>=1.1.37",
-    "rich>=14.3.2",
-    "typer>=0.21.1",
 ]
 
 
@@ -51,8 +49,11 @@ keywords = [
 Homepage = "https://github.com/city-of-memphis-wastewater/dworshak-prompt"
 Repository = "https://github.com/city-of-memphis-wastewater/dworshak-prompt"
 
+
 [project.optional-dependencies]
-null  = [
+cli = [
+    "typer>=0.21.1",
+    "rich>=14.3.2",
 ]
 
 [tool.uv]
