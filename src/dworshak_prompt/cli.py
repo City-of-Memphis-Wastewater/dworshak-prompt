@@ -3,7 +3,10 @@ import typer
 from typer.models import OptionInfo
 from rich.console import Console
 import os
-from .multiplexer import DworshakPrompt, PromptMode
+from pathlib import Path
+
+from .multiplexer import DworshakPrompt, PromptMode 
+from .dworshak_config import ConfigManager
 from ._version import __version__
 
 
@@ -46,5 +49,37 @@ def ask(
         print(val)
 
 
+@app.command()
+def config(
+    key: str = typer.Argument(..., help="The configuration key."),
+    value: str = typer.Option(None, "--set", help="Directly set a value for the key."),
+    message: str = typer.Option(None, "--message", help="Custom prompt message if key is missing."),
+    path: Path = typer.Option(None, "--path", help="Custom config file path."),
+    overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt even if key exists."),
+):
+    """
+    Get or set a configuration value. Prompts the user if the key is missing.
+    """
+    manager = ConfigManager(path=path)
+    
+    if value is not None:
+        # Direct SET logic
+        cfg = manager._load()
+        cfg[key] = value
+        manager._save(cfg)
+        typer.echo(f"Stored: {key} = {value}")
+    else:
+        # GET logic (with prompt fallback)
+        result = manager.get(
+            key=key, 
+            prompt_message=message, 
+            overwrite=overwrite
+        )
+        if result:
+            print(result)
+
+
+
 if __name__ == "__main__":
     app()
+
