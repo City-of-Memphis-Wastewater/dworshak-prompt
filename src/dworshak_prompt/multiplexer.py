@@ -20,7 +20,6 @@ from .server import (
     stop_prompt_server
 )
 
-
     
 # Setup logger
 logger = logging.getLogger("dworshak_prompt")
@@ -34,9 +33,9 @@ if not logger.handlers:
 
 
 class PromptMode(Enum):
-    WEB = "web"
-    GUI = "gui"
     CONSOLE = "console"
+    GUI = "gui"
+    WEB = "web"
 
 class DworshakPrompt:
     @staticmethod
