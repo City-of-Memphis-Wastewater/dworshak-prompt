@@ -1,8 +1,8 @@
-# src/dworshak_prompt/cli_prompt.py
+# src/dworshak_prompt/console_prompt.py
 import typer
 from .keyboard_interrupt import PromptCancelled
 
-def cli_get_input(message: str, suggestion: str | None = None, hide_input: bool = False) -> str:
+def console_get_input(message: str, suggestion: str | None = None, hide_input: bool = False) -> str:
     try:
         if hide_input:
             try:

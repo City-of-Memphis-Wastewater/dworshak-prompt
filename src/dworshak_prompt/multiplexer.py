@@ -8,7 +8,7 @@ import traceback
 import sys
 import logging
 
-from .cli_prompt import cli_get_input
+from .console_prompt import console_get_input
 if ph.tkinter_is_available():
     from .gui_prompt import gui_get_input
 else:
@@ -82,7 +82,7 @@ class DworshakPrompt:
                         logger.debug(f"[DIAGNOSTIC] {mode} skipped: No interactive terminal.")
                         continue
                     
-                    val = cli_get_input(message, suggestion, hide_input)
+                    val = console_get_input(message, suggestion, hide_input)
                     logger.debug(f"[DIAGNOSTIC] SUCCESS: {mode} returned: {repr(val)}")
                     return val
 
