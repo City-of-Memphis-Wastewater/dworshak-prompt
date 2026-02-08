@@ -41,7 +41,7 @@ class PromptMode(Enum):
 class DworshakPrompt:
     @staticmethod
     def ask(
-        message: str,
+        message: str = "Enter value",
         suggestion: str | None = None,
         default: Any | None = None,
         hide_input: bool = False,
