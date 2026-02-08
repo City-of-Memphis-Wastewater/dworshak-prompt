@@ -6,6 +6,22 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.3] – 2026-02-08
+### Added:
+- Stabilize cli.py as entry point as as example.
+
+### Changed:
+- Filename change, cli_prompt.py -> console_prompt.py
+- Optional dependency group 'cli' now contains typer and rich, so that web and tkinter can be used without needing to carry those deps.
+
+---
+
+## [0.2.2] – 2026-02-07
+### Fixed:
+- Improve pyproject.toml description.
+
+---
+
 ## [0.2.1] – 2026-02-07
 ### Added:
 - Reference user stories at docs/USERS.md

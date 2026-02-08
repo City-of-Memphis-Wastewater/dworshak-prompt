@@ -26,7 +26,7 @@ from .server import (
 logger = logging.getLogger("dworshak_prompt")
 # Default to INFO to hide diagnostics; change to DEBUG to see them
 #logger.setLevel(logging.INFO) 
-logger.setLevel(logging.DEBUG) 
+logger.setLevel(logging.WARNING) 
 if not logger.handlers:
     _handler = logging.StreamHandler(sys.stdout)
     _handler.setFormatter(logging.Formatter('%(message)s'))
@@ -53,6 +53,8 @@ class DworshakPrompt:
     ) -> str | None:
         if debug:
             logger.setLevel(logging.DEBUG)
+        else:
+            logger.setLevel(logging.WARNING)
 
         # 1. CI/Headless Detection
         # If we aren't in a TTY and aren't on a system that can spawn a GUI/Web window,
@@ -67,7 +69,13 @@ class DworshakPrompt:
         if ph.on_wsl():
             avoid.add(PromptMode.GUI)
 
-        effective_priority = priority or [PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB]
+        default_order = [PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB]
+        if priority:
+            # User choice first, followed by everything else as a safety net
+            effective_priority = priority + [m for m in default_order if m not in priority]
+        else:
+            effective_priority = default_order
+            
 
         for mode in effective_priority:
             if mode in avoid:
