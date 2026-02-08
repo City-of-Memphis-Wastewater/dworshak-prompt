@@ -1,56 +1,31 @@
-"""
-Docstring for dworshak_prompt.dworshak_config
-
-Vars:
-- path to configuration file
-    - defaults to .dworshak/config.json
-    - can be specified by any program that consumes the dwroshak-prompt library to point to a package specific path, like ~/.pipeline-eds/config.json
-
-"""
-from pathlib import Path
-import logging
-import sys
-import pyhabitat as ph
-import json
-
-# Setup logger
-logger = logging.getLogger("dworshak_prompt")
-# Default to INFO to hide diagnostics; change to DEBUG to see them
-#logger.setLevel(logging.INFO) 
-logger.setLevel(logging.WARNING) 
-if not logger.handlers:
-    _handler = logging.StreamHandler(sys.stdout)
-    _handler.setFormatter(logging.Formatter('%(message)s'))
-    logger.addHandler(_handler)
-
-DEFAULT_CONFIG_FILE = Path.home() / ".dworshak" / "config.json"
-
+# src/dworshak_prompt/dworshak_config.py
 from pathlib import Path
 import json
 import logging
-import sys
 from typing import Any
-import pyhabitat as ph
 from .multiplexer import DworshakPrompt
 
 logger = logging.getLogger("dworshak_prompt")
 
+DEFAULT_CONFIG_PATH = Path.home() / ".dworshak" / "config.json"
 class ConfigManager:
     def __init__(self, path: str | Path | None = None):
-        self.path = Path(path) if path else Path.home() / ".dworshak" / "config.json"
+        self.path = Path(path) if path else DEFAULT_CONFIG_PATH
 
     def _load(self) -> dict:
+        """Loads the nested JSON config."""
         if not self.path.exists():
             return {}
         try:
             with open(self.path, "r") as f:
-                return json.load(f)
+                data = json.load(f)
+                return data if isinstance(data, dict) else {}
         except (json.JSONDecodeError, Exception) as e:
             logger.warning(f"⚠️ Warning: Config file '{self.path}' is corrupted: {e}")
-            # Here you could implement your json_heal logic
             return {}
 
     def _save(self, config: dict):
+        """Saves the nested JSON config."""
         try:
             self.path.parent.mkdir(parents=True, exist_ok=True)
             with open(self.path, "w") as f:
@@ -60,33 +35,48 @@ class ConfigManager:
 
     def get(
         self,
-        key: str,
+        service: str,
+        item: str,
         prompt_message: str | None = None,
         suggestion: str | None = None,
         overwrite: bool = False,
+        hide_input: bool = False,
         forget: bool = False,
     ) -> str | None:
+        """Retrieves a value using service/item logic, prompting if missing."""
         config = self._load()
-        value = config.get(key)
+        
+        # Access nested: config[service][item]
+        service_dict = config.get(service, {})
+        value = service_dict.get(item)
 
-        # Logic: If we have it and aren't forcing an overwrite, return it
         if value is not None and not overwrite:
             return value
 
         # If we need to prompt
-        actual_prompt = prompt_message or f"Enter value for '{key}'"
+        actual_prompt = prompt_message or f"[{service}] Enter {item}"
         
-        # Use the existing DworshakPrompt multiplexer
         new_value = DworshakPrompt.ask(
             message=actual_prompt,
-            suggestion=suggestion or value, # Use existing as suggestion if overwriting
+            suggestion=suggestion or value,
+            hide_input=hide_input
         )
 
         if new_value is None:
             return value if not overwrite else None
 
         if not forget:
-            config[key] = new_value
+            if service not in config:
+                config[service] = {}
+            config[service][item] = new_value
             self._save(config)
             
         return new_value
+
+    def set_value(self, service: str, item: str, value: Any):
+        """Directly sets a nested value."""
+        config = self._load()
+        if service not in config:
+            config[service] = {}
+        config[service][item] = value
+        self._save(config)

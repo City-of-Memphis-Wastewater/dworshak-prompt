@@ -51,34 +51,34 @@ def ask(
 
 @app.command()
 def config(
-    key: str = typer.Argument(..., help="The configuration key."),
-    value: str = typer.Option(None, "--set", help="Directly set a value for the key."),
-    message: str = typer.Option(None, "--message", help="Custom prompt message if key is missing."),
+    service: str = typer.Argument(..., help="The service name (e.g., Maxson)."),
+    item: str = typer.Argument(..., help="The item key (e.g., port)."),
+    value: str = typer.Option(None, "--set", help="Directly set a value."),
+    message: str = typer.Option(None, "--message", help="Custom prompt message."),
     path: Path = typer.Option(None, "--path", help="Custom config file path."),
-    overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt even if key exists."),
+    overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
+    hide: bool = typer.Option(False, "--hide", help="Mask input for sensitive info."),
 ):
     """
-    Get or set a configuration value. Prompts the user if the key is missing.
+    Get or set a configuration value using Service and Item (Vault-style).
     """
     manager = ConfigManager(path=path)
     
     if value is not None:
-        # Direct SET logic
-        cfg = manager._load()
-        cfg[key] = value
-        manager._save(cfg)
-        typer.echo(f"Stored: {key} = {value}")
+        manager.set_value(service, item, value)
+        display_val = "***" if hide else value
+        typer.echo(f"Stored: [{service}] {item} = {display_val}")
     else:
-        # GET logic (with prompt fallback)
         result = manager.get(
-            key=key, 
-            prompt_message=message, 
-            overwrite=overwrite
+            service=service,
+            item=item,
+            prompt_message=message,
+            overwrite=overwrite,
+            hide_input=hide
         )
         if result:
+            # Only print the result to stdout for piping/capture
             print(result)
-
-
 
 if __name__ == "__main__":
     app()
