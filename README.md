@@ -45,6 +45,17 @@ val = DworshakPrompt.ask(
 )
 ```
 
+---
+
+## Install as CLI (for demo purposes)
+
+```bash
+pipx install "dworshak-prompt[cli]"
+dworshak-prompt --version
+dworshak-prompt --help
+dworshak-prompt ask --message "Please state name" --mode web
+```
+
 ## More Information
 
 - [User Stories](https://github.com/City-of-Memphis-Wastewater/dworshak-prompt/blob/main/docs/USERS.md)
