@@ -56,6 +56,23 @@ dworshak-prompt --help
 dworshak-prompt ask --message "Please state name" --mode web
 ```
 
+---
+
+## Add dworshak-prompt to Python project
+When using `uv` for dependency management.
+```
+uv add dworshak-prompt --extra cli
+```
+
+Or, when using raw `pip` for dependency management.
+```
+pip install "dworshak-prompt[cli]"
+``` 
+
+Including the `cli` optional dependency group ensures that Typer and Rich are included as a dependencies. 
+
+---
+
 ## More Information
 
 - [User Stories](https://github.com/City-of-Memphis-Wastewater/dworshak-prompt/blob/main/docs/USERS.md)

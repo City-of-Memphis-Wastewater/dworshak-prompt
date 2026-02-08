@@ -6,6 +6,15 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.4] – 2026-02-08
+### Added:
+- Add app entry point to pyproject.toml to ensure CLI availability
+- README section for pipx installation, specifically clarifying the `[cli]` extra.
+- README section for `uv add`, specifically clarifying the `--extra cli` extra.
+
+
+---
+
 ## [0.2.3] – 2026-02-08
 ### Added:
 - Stabilize cli.py as entry point as as example.
