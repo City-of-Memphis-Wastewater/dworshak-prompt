@@ -70,9 +70,6 @@ requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [dependency-groups]
-#dev = [
-#    "bump-my-version>=0.28.0",
-#]
 test = [
     "pytest>=8.4.2",
 ]
@@ -82,13 +79,3 @@ where = ["src"]
 
 [tool.setuptools.dynamic]
 version = {file = "src/dworshak_prompt/VERSION"}
-
-[tool.bumpversion]
-current_version = "0.2.9"
-allow_dirty = false # true  # Don't complain if I have uncommitted changes
-commit = true      # Don't create a git commit
-tag = false         # Don't create a git tag
-tag_name = "v{new_version}"
-
-[[tool.bumpversion.files]]
-filename = "src/dworshak_prompt/VERSION"
