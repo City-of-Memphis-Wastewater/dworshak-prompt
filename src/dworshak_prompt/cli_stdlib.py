@@ -2,7 +2,8 @@
 import argparse
 import sys
 
-from .multiplexer import DworshakPrompt, PromptCancelled
+from .multiplexer import DworshakPrompt, PromptMode
+from .keyboard_interrupt import PromptCancelled
 from .console_prompt_stdlib import stdlib_notify
 from ._version import __version__
 
@@ -11,6 +12,7 @@ def run_prompt(
     suggestion: str | None = None,
     hide_input: bool = False,
     debug: bool = False,
+    priority: list[PromptMode] | None = None,
 ) -> int:
     if debug:
         import logging
@@ -21,6 +23,7 @@ def run_prompt(
             message=message,
             suggestion=suggestion,
             hide_input=hide_input,
+            priority=priority,
             debug=debug,
         )
         if value is not None:
@@ -84,6 +87,12 @@ def main():
         help="Hide input (password mode)",
     )
     ask_parser.add_argument(
+        "--mode",
+        choices=[m.value for m in PromptMode], 
+        default=PromptMode.CONSOLE.value,
+        help="Preferred input mode (case-insensitive)",
+    )
+    ask_parser.add_argument(
         "--debug",
         action="store_true",
         help="Enable debug logging",
@@ -104,11 +113,15 @@ def main():
     args = parser.parse_args()
 
     if args.command == "ask":
+        mode_map = {m.value: m for m in PromptMode}
+        selected_mode = mode_map[args.mode]
+
         exit_code = run_prompt(
             message=args.message,
             suggestion=args.suggestion,
             hide_input=args.hide,
             debug=args.debug,
+            priority=[selected_mode],
         )
         sys.exit(exit_code)
 
