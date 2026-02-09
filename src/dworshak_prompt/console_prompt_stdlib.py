@@ -11,6 +11,7 @@ def console_get_input_stdlib(
     """
     A pure standard-library fallback for user input.
     Ensures zero dependencies while maintaining a professional CLI feel.
+    If a suggestion is provided while hide is True, the suggestion is ignored.
     """
     
     # Construct the prompt string
@@ -24,8 +25,12 @@ def console_get_input_stdlib(
     try:
         if hide_input:
             # getpass handles terminal echoing automatically
-            response = getpass.getpass(prompt_str)
+            hidden_prompt = f"{message} (input hidden): "
+            response = getpass.getpass(hidden_prompt)
         else:
+            # Standard logic for visible input
+            if suggestion:
+                prompt_str = f"{message} [{suggestion}]: ".replace("::", ":")
             response = input(prompt_str)
 
         # Handle the 'Enter' key with a suggestion

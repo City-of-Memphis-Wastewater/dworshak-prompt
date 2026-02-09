@@ -37,11 +37,15 @@ def ask(
     message: str = typer.Option(
         "Enter value", 
         "--message", "-M", 
-        help="The prompt message.",),
+        help="The prompt message."),
     mode: PromptMode = typer.Option( 
         PromptMode.CONSOLE,
         "--mode", "-m", 
         help="Preferred input mode."),
+    suggestion: str = typer.Option(
+        "Enter value", 
+        "--suggestion", "-s", 
+        help="The user will be suggested this value."),
     hide: bool = typer.Option(False, "--hide", "-H", help="Hide input (password mode)"),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
@@ -49,7 +53,8 @@ def ask(
     val = DworshakPrompt.ask(
         message=message,
         priority=[mode],
-        hide = hide,
+        suggestion = suggestion,
+        hide_input = hide,
         debug=debug, 
     )
     if val:

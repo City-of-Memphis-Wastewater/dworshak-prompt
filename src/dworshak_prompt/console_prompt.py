@@ -6,14 +6,16 @@ from .keyboard_interrupt import PromptCancelled
 def console_get_input(message: str, suggestion: str | None = None, hide_input: bool = False) -> str:
     try:        
         if hide_input:
+            # Explicitly add the hint so the user isn't confused by lack of feedback
+            hidden_msg = f"{message} (input hidden)"
             try:
                 from rich.prompt import Prompt
-                return Prompt.ask(message, password=True)
+                return Prompt.ask(hidden_msg, password=True)
             except ImportError:
-                return typer.prompt(message, hide_input=True)
+                return typer.prompt(hidden_msg, hide_input=True)
         
         # Standard credential case
-        if suggestion:
+        if suggestion: # and not hide_input
             return typer.prompt(message, default=suggestion)
         return typer.prompt(message)
     except (typer.Abort, KeyboardInterrupt, EOFError, SystemExit):
