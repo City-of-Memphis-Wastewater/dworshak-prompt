@@ -1,0 +1,59 @@
+name: Build and Release PYZ
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    name: Build PYZ and Attach to Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: "pyproject.toml"
+          python-version: '3.12'
+
+      - name: UV Sync
+        run: |
+          uv venv --clear
+          # No extras needed for the Lite PYZ build
+          uv sync
+
+      - name: Build PYZ Artifact
+        run: |
+          # This runs your build_pyz.py which generates the dist/zipapp/*.pyz
+          uv run python build_pyz.py
+
+      - name: Sanity Check Artifact
+        run: |
+          echo "Verifying PYZ execution..."
+          # Test help command to ensure entry point and stdlib fallback work
+          uv run python dist/zipapp/*.pyz --help
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/')
+        with:
+          # Automatically finds the versioned .pyz in your zipapp folder
+          files: dist/zipapp/*.pyz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifact for Manual Runs
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dworshak-prompt-pyz
+          path: dist/zipapp/*.pyz
