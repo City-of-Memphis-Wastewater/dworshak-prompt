@@ -16,17 +16,26 @@ class CustomPromptDialog:
         self.top.attributes("-topmost", True)
         self.top.resizable(False, False)
         
-        # Center the window roughly
-        self.top.geometry("+%d+%d" % (parent.winfo_screenwidth()/2 - 150, 
-                                     parent.winfo_screenheight()/2 - 100))
+        
+        # Set a minimum width and padding
+        # We target ~400px width to ensure the title isn't truncated
+        min_w, min_h = 400, 180
+        screen_w = parent.winfo_screenwidth()
+        screen_h = parent.winfo_screenheight()
+        
+        # Center with the new dimensions
+        x = (screen_w // 2) - (min_w // 2)
+        y = (screen_h // 2) - (min_h // 2)
+        self.top.geometry(f"{min_w}x{min_h}+{x}+{y}")
+        self.top.minsize(min_w, min_h)
 
-        tk.Label(self.top, text=message, wraplength=250, justify="left", padx=10, pady=10).pack()
+        tk.Label(self.top, text=message, wraplength=300, justify="left", padx=10, pady=10).pack(fill ="x")
 
         # Input container
         entry_frame = tk.Frame(self.top, padx=10)
         entry_frame.pack(fill="x")
 
-        self.entry = tk.Entry(entry_frame)
+        self.entry = tk.Entry(entry_frame, font=("sans-serif", 10))
         if hide_input:
             self.entry.config(show="*")
         self.entry.insert(0, suggestion or "")
