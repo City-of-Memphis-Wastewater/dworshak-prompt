@@ -90,7 +90,8 @@ def main():
         "--mode",
         choices=[m.value for m in PromptMode], 
         default=PromptMode.CONSOLE.value,
-        help="Preferred input mode (case-sensitive)",
+        type=str.lower,
+        help="Preferred input mode (case-insensitive)",
     )
     ask_parser.add_argument(
         "--debug",
