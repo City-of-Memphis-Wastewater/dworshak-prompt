@@ -73,14 +73,16 @@ def main():
     ask_parser.add_argument(
         "message",
         nargs="?",                # Makes it optional
-        default="Enter value",    # Use this if no string is provided
+        #default="Enter value",
+        default=None,
         help="The prompt message to display",
     )
 
     ask_parser.add_argument(
         "--message",
         "-M",
-        default="Enter value",
+        #default="Enter value",
+        default=None,
         dest="message_flag",      # Store it separately to avoid conflict
         help="The prompt message to display (overwrites positional argument)",
     )
@@ -130,7 +132,8 @@ def main():
         selected_mode = mode_map[args.mode]
 
         # If -M was used, it takes precedence over the positional argument
-        message_used = args.message_flag if args.message_flag else args.message
+        #message_used = args.message_flag if args.message_flag else args.message
+        message_used = args.message_flag or args.message or "Enter value"
 
         exit_code = run_prompt(
             message=message_used,
