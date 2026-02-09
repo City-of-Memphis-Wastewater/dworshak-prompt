@@ -1,9 +1,10 @@
 # src/dworshak_prompt/console_prompt.py
+import typer # keep at the top to enable failure, to hit the std lib fallback
+
 from .keyboard_interrupt import PromptCancelled
 
 def console_get_input(message: str, suggestion: str | None = None, hide_input: bool = False) -> str:
-    try:
-        import typer
+    try:        
         if hide_input:
             try:
                 from rich.prompt import Prompt
