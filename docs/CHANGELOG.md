@@ -6,6 +6,16 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.9] – 2026-02-09
+- Enable cli.py and cli_stdlib.py to use both positional arg for message as well as --message/-M flag.
+
+---
+
+## [0.2.8] – 2026-02-09
+- Minor changes, retest
+
+---
+
 ## [0.2.7] – 2026-02-09
 ### Added:
 - build_pyz.py; this uses the lite std lib version for console and the cli, so typer is not required.
