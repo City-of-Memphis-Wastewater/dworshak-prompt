@@ -1,6 +1,6 @@
 # src/dworshak_prompt/cli.py
 import typer
-from typer.models import OptionInfo
+#$from typer.models import OptionInfo
 from rich.console import Console
 import os
 from pathlib import Path
@@ -34,9 +34,8 @@ def main(ctx: typer.Context):
 
 @app.command()
 def ask(
-    message: str = typer.Option(
+    message: str = typer.Argument(
         "Enter value", 
-        "--message", "-M", 
         help="The prompt message."),
     mode: PromptMode = typer.Option( 
         PromptMode.CONSOLE,
