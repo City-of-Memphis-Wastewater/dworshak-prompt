@@ -50,7 +50,8 @@ Homepage = "https://github.com/city-of-memphis-wastewater/dworshak-prompt"
 Repository = "https://github.com/city-of-memphis-wastewater/dworshak-prompt"
 
 [project.scripts]
-dworshak-prompt = "dworshak_prompt.cli:app"
+dworshak-prompt = "dworshak_prompt.__main__:run"
+#dworshak-prompt = "dworshak_prompt.cli:app"
 
 [project.optional-dependencies]
 cli = [
