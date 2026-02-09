@@ -9,6 +9,11 @@ import sys
 import logging
 
 from .console_prompt import console_get_input
+try:
+    from .console_prompt import console_get_input
+except ImportError:
+    from .console_prompt_stdlib import console_get_input_stdlib as console_get_input
+    
 if ph.tkinter_is_available():
     from .gui_prompt import gui_get_input
 else:
