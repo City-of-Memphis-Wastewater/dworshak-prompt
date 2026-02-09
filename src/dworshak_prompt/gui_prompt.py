@@ -73,7 +73,7 @@ def gui_get_input(prompt_message: str, suggestion: str | None = None, hide_input
         root.withdraw()
 
         # Use our custom dialog instead of simpledialog
-        dialog = CustomPromptDialog(root, "Input Required", prompt_message, suggestion, hide_input)
+        dialog = CustomPromptDialog(root, "dworshak-prompt", prompt_message, suggestion, hide_input)
         
         return dialog.result
 

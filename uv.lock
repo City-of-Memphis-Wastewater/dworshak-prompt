@@ -53,7 +53,7 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
-cli = [
+typer = [
     { name = "rich" },
     { name = "typer" },
 ]
@@ -67,10 +67,10 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "pyhabitat", specifier = ">=1.1.37" },
-    { name = "rich", marker = "extra == 'cli'", specifier = ">=14.3.2" },
-    { name = "typer", marker = "extra == 'cli'", specifier = ">=0.21.1" },
+    { name = "rich", marker = "extra == 'typer'", specifier = ">=14.3.2" },
+    { name = "typer", marker = "extra == 'typer'", specifier = ">=0.21.1" },
 ]
-provides-extras = ["cli"]
+provides-extras = ["typer"]
 
 [package.metadata.requires-dev]
 test = [{ name = "pytest", specifier = ">=8.4.2" }]

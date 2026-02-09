@@ -62,7 +62,7 @@ The default config file path is "~/.dworshak/config.json".
 ## Install as CLI (for demo purposes)
 
 ```bash
-pipx install "dworshak-prompt[cli]"
+pipx install "dworshak-prompt[typer]"
 dworshak-prompt --version
 dworshak-prompt --help
 dworshak-prompt ask --message "Please state name" --mode web
@@ -73,15 +73,16 @@ dworshak-prompt ask --message "Please state name" --mode web
 ## Add dworshak-prompt to Python project
 When using `uv` for dependency management.
 ```
-uv add dworshak-prompt --extra cli
+uv add dworshak-prompt --extra typer
 ```
 
 Or, when using raw `pip` for dependency management.
 ```
-pip install "dworshak-prompt[cli]"
+pip install "dworshak-prompt[typer]"
 ``` 
 
-Including the `cli` optional dependency group ensures that Typer and Rich are included as a dependencies. 
+Including the `typer` optional dependency group ensures that Typer and Rich are included as a dependencies. 
+Without this, the CLI and console_prompt functionality are still stable, due to Python standard library fallbacks. 
 
 ---
 

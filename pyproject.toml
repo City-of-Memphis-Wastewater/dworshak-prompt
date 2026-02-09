@@ -54,7 +54,7 @@ dworshak-prompt = "dworshak_prompt.__main__:run"
 #dworshak-prompt = "dworshak_prompt.cli:app"
 
 [project.optional-dependencies]
-cli = [
+typer = [
     "typer>=0.21.1",
     "rich>=14.3.2",
 ]

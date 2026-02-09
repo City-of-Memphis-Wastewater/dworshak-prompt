@@ -71,7 +71,7 @@ def main():
 
     ask_parser.add_argument(
         "--message",
-        "-m",
+        "-M",
         default="Enter value",
         help="The prompt message to display",
     )
@@ -89,6 +89,7 @@ def main():
     )
     ask_parser.add_argument(
         "--mode",
+        "-m",
         choices=[m.value for m in PromptMode], 
         default=PromptMode.CONSOLE.value,
         type=str.lower,

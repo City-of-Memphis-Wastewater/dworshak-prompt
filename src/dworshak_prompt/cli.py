@@ -34,14 +34,22 @@ def main(ctx: typer.Context):
 
 @app.command()
 def ask(
-    message: str = typer.Option("Enter value", help="The prompt message."),
-    mode: PromptMode = typer.Option(default = PromptMode.CONSOLE, help="Preferred input mode."),
+    message: str = typer.Option(
+        "Enter value", 
+        "--message", "-M", 
+        help="The prompt message.",),
+    mode: PromptMode = typer.Option( 
+        PromptMode.CONSOLE,
+        "--mode", "-m", 
+        help="Preferred input mode."),
+    hide: bool = typer.Option(False, "--hide", "-H", help="Hide input (password mode)"),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
     """Get user input and print it to stdout."""
     val = DworshakPrompt.ask(
         message=message,
         priority=[mode],
+        hide = hide,
         debug=debug, 
     )
     if val:
