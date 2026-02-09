@@ -17,7 +17,7 @@ from dworshak_prompt._version import __version__
 PROJECT_NAME = "dworshak-prompt"
 ENTRY_POINT = "dworshak_prompt.__main__:run"
 DIST_DIR = Path("dist") / "zipapp"
-BUILD_ROOT = Path("build")
+BUILD_ROOT = Path("build_zipapp")
 
 def run_build():
     print(f"--- PYZ Build: {PROJECT_NAME} v{__version__} ---")
@@ -28,7 +28,7 @@ def run_build():
     DIST_DIR.mkdir(parents=True, exist_ok=True)
 
     # 2. Build the Wheel
-    subprocess.run(["uv", "build", "--wheel", "--out-dir", str(DIST_DIR)], check=True)
+    subprocess.run(["uv", "build", "--wheel", "--sdist", "--out-dir", str(DIST_DIR)], check=True)
 
     # 3. Find and Stage
     wheel = next(DIST_DIR.glob(f"dworshak_prompt-{__version__}-*.whl"))
@@ -57,7 +57,7 @@ def run_build():
 
     # 6. Cleanup and Report
     output_pyz.chmod(0o755)
-    wheel.unlink()
+    #wheel.unlink() <-- suppressed so it stays for the GitHub Release
     shutil.rmtree(BUILD_ROOT)
 
     size_kb = output_pyz.stat().st_size / 1024

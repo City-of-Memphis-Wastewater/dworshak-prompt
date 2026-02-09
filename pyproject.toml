@@ -70,6 +70,9 @@ requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [dependency-groups]
+dev = [
+    "bump-my-version>=0.28.0",
+]
 test = [
     "pytest>=8.4.2",
 ]

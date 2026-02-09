@@ -6,6 +6,13 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.7] – 2026-02-09
+### Added:
+- build_pyz.py; this uses the lite std lib version for console and the cli, so typer is not required.
+- .github/workflows/build.yml
+
+---
+
 ## [0.2.6] – 2026-02-09
 ### Changed:
 - Alter extra name to be appropriate for differentiating bewtween std lib cli callback and typer optional deps; `cli` extra -> `typer` extra.
