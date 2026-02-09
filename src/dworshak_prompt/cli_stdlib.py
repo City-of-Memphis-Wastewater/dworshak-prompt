@@ -110,6 +110,7 @@ def main():
         action="help",
         help="Show this help message and exit",
     )
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
 
     args = parser.parse_args()
 
