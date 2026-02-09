@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.4] – 2026-02-09
+### Added:
+- Std lib fallback cli and console_prompt features.
+
+---
+
 ## [0.2.4] – 2026-02-08
 ### Added:
 - Add app entry point to pyproject.toml to ensure CLI availability
