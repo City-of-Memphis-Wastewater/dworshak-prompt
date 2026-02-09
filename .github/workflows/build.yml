@@ -41,13 +41,21 @@ jobs:
           echo "Verifying PYZ execution..."
           # Test help command to ensure entry point and stdlib fallback work
           uv run python dist/zipapp/*.pyz --help
+      
+      - name: Generate Checksums
+        run: |
+          cd dist/zipapp
+          sha256sum *.pyz *.whl *.tar.gz > SHA256SUMS.txt
 
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/')
         with:
-          # Automatically finds the versioned .pyz in your zipapp folder
-          files: dist/zipapp/*
+          files: |
+            dist/zipapp/*.pyz
+            dist/zipapp/*.whl
+            dist/zipapp/*.tar.gz
+            dist/zipapp/SHA256SUMS.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -56,4 +64,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dworshak-prompt-pyz
-          path: dist/zipapp/*.pyz
+          files: |
+            dist/zipapp/*.pyz
+            dist/zipapp/*.whl
+            dist/zipapp/*.tar.gz
+            dist/zipapp/SHA256SUMS.txt
