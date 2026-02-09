@@ -4,6 +4,7 @@ import typer
 from rich.console import Console
 import os
 from pathlib import Path
+from typing import Optional
 
 from .multiplexer import DworshakPrompt, PromptMode 
 from ._version import __version__
@@ -32,11 +33,29 @@ def main(ctx: typer.Context):
         typer.echo(ctx.get_help())
         raise typer.Exit()
 
+
+# This is the "hidden" state to store the flag value
+_message_from_flag = None
+def message_callback(value: str):
+    """
+    If the user uses -M or --message, this captures it.
+    """
+    global _message_from_flag
+    if value:
+        _message_from_flag = value
+    return value
+
 @app.command()
 def ask(
     message: str = typer.Argument(
         "Enter value", 
         help="The prompt message."),
+    msg_flag: Optional[str] = typer.Option(
+        None, "--message", "-M", 
+        callback=message_callback, 
+        is_eager=True, # Processes this before other arguments
+        help="Flag alias for message."
+    ),
     mode: PromptMode = typer.Option( 
         PromptMode.CONSOLE,
         "--mode", "-m", 
@@ -48,9 +67,13 @@ def ask(
     hide: bool = typer.Option(False, "--hide", "-H", help="Hide input (password mode)"),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
+    
+    # If the callback caught a flag value, use it. Otherwise, use the positional.
+    final_message = _message_from_flag or message
+
     """Get user input and print it to stdout."""
     val = DworshakPrompt.ask(
-        message=message,
+        message=final_message,
         priority=[mode],
         suggestion = suggestion,
         hide_input = hide,
