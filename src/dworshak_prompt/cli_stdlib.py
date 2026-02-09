@@ -57,6 +57,7 @@ def main():
     subparsers = parser.add_subparsers(
         dest="command",
         required=False,
+        title="Commands",          # Overrides "positional arguments"
         help="Available commands",
     )
 
