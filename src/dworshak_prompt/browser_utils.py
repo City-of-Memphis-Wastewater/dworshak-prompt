@@ -21,6 +21,11 @@ def launch_browser(url: str):
     edge_bin = shutil.which("microsoft-edge")
     if edge_bin:
         env = os.environ.copy()
+        # Force basic (non-keyring) storage to prevent the keyring password popup
+        env["PYTHON_KEYRING_BACKEND"] = "keyring.backends.null.Keyring" 
+        env["PASSWORD_STORE"] = "basic"
+
+        # Try to quiet down excessive console prints for chromium launch in WSL
         env["CHROME_LOG_LEVEL"] = "3"
         log_path = os.path.expanduser("~/.cache/dworshak_browser.log")
         if os.path.exists(log_path) and os.path.getsize(log_path) > 10 * 1024 * 1024:
@@ -36,12 +41,17 @@ def launch_browser(url: str):
         return
     # Try general Linux desktop launcher
     if shutil.which("xdg-open"):
+        env = os.environ.copy()
+        # Force basic (non-keyring) storage to prevent the keyring password popup
+        env["PYTHON_KEYRING_BACKEND"] = "keyring.backends.null.Keyring" 
+        env["PASSWORD_STORE"] = "basic"
         try:
             print("[WEBPROMPT] Attempting launch using 'xdg-open'...")
             subprocess.Popen(
                 ["xdg-open", url],
                 stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL
+                stderr=subprocess.DEVNULL,
+                env = env
             )
             launched = True
             return
