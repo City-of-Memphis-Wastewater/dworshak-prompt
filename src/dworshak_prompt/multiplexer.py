@@ -8,7 +8,6 @@ import traceback
 import sys
 import logging
 
-from .console_prompt import console_get_input
 try:
     from .console_prompt import console_get_input
 except ImportError:
