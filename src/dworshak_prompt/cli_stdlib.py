@@ -1,71 +1,120 @@
 # src/dworshak_prompt/cli_stdlib.py
-import sys
 import argparse
-from .multiplexer import DworshakPrompt, PromptMode, PromptCancelled
+import sys
+
+from .multiplexer import DworshakPrompt, PromptCancelled
 from .console_prompt_stdlib import stdlib_notify
+from ._version import __version__
 
-def main():
-    parser = argparse.ArgumentParser(
-        prog="dworshak-prompt",
-        description="Multiplexed user input via console/GUI/web",
-        epilog="Falls back to basic stdlib input when Typer/Rich unavailable.",
-    )
-    parser.add_argument(
-        "message",
-        nargs="?",
-        default="Enter value",
-        help="The prompt message to display",
-    )
-    parser.add_argument(
-        "--suggestion",
-        "-s",
-        default=None,
-        help="Suggested/default value",
-    )
-    parser.add_argument(
-        "--hide",
-        "-H",
-        action="store_true",
-        help="Hide input (password mode)",
-    )
-    parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="Enable debug logging",
-    )
-    # Add more flags as needed (priority, avoid modes, etc.)
-
-    args = parser.parse_args()
-
-    if args.debug:
+def run_prompt(
+    message: str = "Enter value",
+    suggestion: str | None = None,
+    hide_input: bool = False,
+    debug: bool = False,
+) -> int:
+    if debug:
         import logging
         logging.getLogger("dworshak_prompt").setLevel(logging.DEBUG)
 
     try:
         value = DworshakPrompt.ask(
+            message=message,
+            suggestion=suggestion,
+            hide_input=hide_input,
+            debug=debug,
+        )
+        if value is not None:
+            print(value)
+            return 0
+        else:
+            stdlib_notify("Input cancelled or no method succeeded.")
+            return 1
+
+    except PromptCancelled:
+        stdlib_notify("Prompt cancelled by user.")
+        return 130
+    except KeyboardInterrupt:
+        stdlib_notify("Interrupted.")
+        return 130
+    except Exception as e:
+        stdlib_notify(f"Error: {e}")
+        if debug:
+            import traceback
+            traceback.print_exc()
+        return 1
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog="dworshak-prompt",
+        description=f"Multiplexed user input via console, GUI, and web. (v{__version__})",
+        add_help=False,
+    )
+
+    subparsers = parser.add_subparsers(
+        dest="command",
+        required=False,
+        help="Available commands",
+    )
+
+    # ask subcommand – exact match in name, help text, flags
+    ask_parser = subparsers.add_parser(
+        "ask",
+        help="Get user input and print it to stdout",
+        description="Prompt the user using available methods.",
+        add_help=False,
+    )
+
+    ask_parser.add_argument(
+        "--message",
+        "-m",
+        default="Enter value",
+        help="The prompt message to display",
+    )
+    ask_parser.add_argument(
+        "--suggestion",
+        "-s",
+        default=None,
+        help="Suggested/default value",
+    )
+    ask_parser.add_argument(
+        "--hide",
+        "-H",
+        action="store_true",
+        help="Hide input (password mode)",
+    )
+    ask_parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug logging",
+    )
+
+    # Help flags at both levels
+    parser.add_argument(
+        "-h", "--help",
+        action="help",
+        help="Show this help message and exit",
+    )
+    ask_parser.add_argument(
+        "-h", "--help",
+        action="help",
+        help="Show this help message and exit",
+    )
+
+    args = parser.parse_args()
+
+    if args.command == "ask":
+        exit_code = run_prompt(
             message=args.message,
             suggestion=args.suggestion,
             hide_input=args.hide,
             debug=args.debug,
         )
-        if value is not None:
-            print(value)
-        else:
-            stdlib_notify("Input cancelled or no method succeeded.")
-            sys.exit(1)
+        sys.exit(exit_code)
 
-    except PromptCancelled:
-        stdlib_notify("Prompt cancelled by user.")
-        sys.exit(130)  # common Ctrl+C exit code
-    except KeyboardInterrupt:
-        stdlib_notify("Interrupted.")
-        sys.exit(130)
-    except Exception as e:
-        stdlib_notify(f"Error: {e}")
-        if args.debug:
-            import traceback
-            traceback.print_exc()
-        sys.exit(1)
+    # No subcommand → show root help (exact Typer behavior)
+    parser.print_help()
+    sys.exit(0)
 
 
 if __name__ == "__main__":
