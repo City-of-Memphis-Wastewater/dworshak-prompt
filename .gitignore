@@ -1,5 +1,6 @@
 dist/
 build/
+build_zipapp/
 .venv/
 *.egg-info/
 __pycache__/
@@ -7,3 +8,9 @@ __pycache__/
 .dworshak/
 *.pyc
 uv.lock
+
+# Environments
+.env
+.venv
+env/
+venv/
