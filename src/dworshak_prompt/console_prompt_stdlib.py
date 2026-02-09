@@ -43,5 +43,5 @@ def console_get_input_stdlib(
 
 def stdlib_notify(message: str):
     """Simple print wrapper for warnings without Rich/Typer."""
-    sys.stderr.write(f"ℹ️  {message}\n")
+    sys.stderr.write(f"{message}\n")
     sys.stderr.flush()

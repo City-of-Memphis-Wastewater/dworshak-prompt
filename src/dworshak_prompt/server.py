@@ -60,8 +60,69 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
         hide = params.get('hide_input', ['false'])[0].lower() == 'true'
         input_type = "password" if hide else "text"
         
-        # Inlined HTML to keep it zero-dep and avoid resource-loading drama
+        # Only add the Toggle Button and Script if we are in hide mode
+        toggle_html = ""
+        toggle_script = ""
+        if hide:
+            toggle_html = '<button type="button" id="toggleBtn" onclick="toggleSecret()" style="background:#6c757d; margin-left: 5px;">Show</button>'
+            toggle_script = """
+            <script>
+                function toggleSecret() {
+                    var x = document.getElementById("input_field");
+                    var btn = document.getElementById("toggleBtn");
+                    if (x.type === "password") {
+                        x.type = "text";
+                        btn.innerText = "Hide";
+                    } else {
+                        x.type = "password";
+                        btn.innerText = "Show";
+                    }
+                }
+            </script>
+            """
+
         html = f"""<!DOCTYPE html>
+        <html>
+        <head>
+            <title>Dworshak Prompt</title>
+            <style>
+                body {{ font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f2f5; }}
+                .card {{ background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 100%; max-width: 400px; }}
+                h2 {{ margin-top: 0; color: #1c1e21; font-size: 1.2rem; }}
+                .input-group {{ display: flex; margin: 20px 0; }}
+                input {{ flex-grow: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; }}
+                button {{ background: #007bff; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }}
+                button:hover {{ opacity: 0.9; }}
+                .actions {{ display: flex; justify-content: flex-end; }}
+            </style>
+        </head>
+        <body>
+            <div class="card">
+                <h2>{msg}</h2>
+                <form action="/api/submit_config" method="post">
+                    <input type="hidden" name="request_id" value="{req_id}">
+                    <div class="input-group">
+                        <input id="input_field" 
+                               type="{input_type}" 
+                               name="input_value" 
+                               value="{suggestion}" 
+                               autofocus 
+                               onfocus="this.select()" 
+                               autocomplete="off" 
+                               spellcheck="false"
+                               required>
+                        {toggle_html}
+                    </div>
+                    <div class="actions">
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+            {toggle_script}
+        </body></html>"""
+
+        # Inlined HTML to keep it zero-dep and avoid resource-loading drama
+        html_ = f"""<!DOCTYPE html>
         <html>
         <head><title>Prompt</title><style>
             body {{ font-family: sans-serif; padding: 20px; background: #f0f2f5; }}
