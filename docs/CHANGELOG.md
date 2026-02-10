@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.11] – 2026-02-09
+### Fixed:
+- Default suggestion should be None. It was conflated with the default message.
+
+---
+
 ## [0.2.10] – 2026-02-09
 ### Changed:
 - Stop using `bump-my-version` on this project. Pydantic is a cancer and it will not live here.
