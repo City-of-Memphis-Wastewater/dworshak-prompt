@@ -60,8 +60,8 @@ def ask(
         PromptMode.CONSOLE,
         "--mode", "-m", 
         help="Preferred input mode."),
-    suggestion: str = typer.Option(
-        "Enter value", 
+    suggestion: Optional[str] = typer.Option(
+        None, 
         "--suggestion", "-s", 
         help="The user will be suggested this value."),
     hide: bool = typer.Option(False, "--hide", "-H", help="Hide input (password mode)"),
