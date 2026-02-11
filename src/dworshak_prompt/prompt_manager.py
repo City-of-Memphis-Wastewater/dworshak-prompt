@@ -34,9 +34,9 @@ class PromptManager:
             "suggestion": suggestion, 
         }
         with self.active_prompt_lock:
-            # Critical: Ensure only one prompt is active at a time for simplicity
-            if self.active_prompt_request:
-                 raise RuntimeError("A configuration prompt is already active.")
+            # When singleton, defunct: Critical: Ensure only one prompt is active at a time for simplicity
+            #if self.active_prompt_request:
+            #     raise RuntimeError("A configuration prompt is already active.")
             self.active_prompt_request[request_id] = prompt_data
         return request_id
 

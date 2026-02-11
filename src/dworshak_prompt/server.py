@@ -160,7 +160,13 @@ def run_prompt_server_in_thread(manager,port=8083):
     
     # Don't spin up multiple servers if one is already active
     if _current_server is not None:
+        #logger.debug(f"[DIAGNOSTIC] Server already active. Hot-swapping manager: {id(manager)}")
+        _current_server.manager = manager # Re-point the existing server
+        # Ensure the manager knows the existing port
+        host, actual_port = _current_server.server_address
+        manager.set_server_host_port(f"{host}:{actual_port}")
         return None
+    
 
     port = find_open_port(port)
     _current_server = ThreadedServer(("127.0.0.1", port), PromptHandler)
