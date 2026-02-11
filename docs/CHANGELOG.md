@@ -6,6 +6,13 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.12] – 2026-02-10
+### Fixed:
+- Ensure both imports (DworshakPrompt and PromptMode) are handled under single __getattr__ in __init__.py
+- Explicitly define __dir__ to include __all__, along with the pythonic standards.
+
+---
+
 ## [0.2.11] – 2026-02-09
 ### Fixed:
 - Default suggestion should be None. It was conflated with the default message.
