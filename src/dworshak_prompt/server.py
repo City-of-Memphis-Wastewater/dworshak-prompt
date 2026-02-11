@@ -7,9 +7,6 @@ import urllib.parse
 import threading
 from .browser_utils import find_open_port
 
-# Shared state between the HTTP thread and the Multiplexer thread
-from .prompt_manager import get_prompt_manager
-
 class PromptHandler(http.server.BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         pass  # Silence the console noise
@@ -18,10 +15,13 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
         parsed_url = urllib.parse.urlparse(self.path)
         params = urllib.parse.parse_qs(parsed_url.query)
 
+        # USE LOCAL MANAGER FROM SERVER
+        manager = self.server.manager
+
         if parsed_url.path == "/config_modal":
             self._serve_html(params)
         elif parsed_url.path == "/api/get_active_prompt":
-            self._serve_json(get_prompt_manager().get_active_prompt())
+            self._serve_json(manager.get_active_prompt())
         else:
             self.send_error(404)
 
@@ -42,11 +42,8 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             val = fields.get('input_value', [None])[0]
 
             if req_id and val is not None:
-                # --- THE HANDOFF ---
-                manager = get_prompt_manager()
-                manager.submit_result(req_id, val) 
-                # -------------------
-                
+                # --- THE HANDOFF VIA ATTACHED MANAGER ---
+                self.server.manager.submit_result(req_id, val) 
                 self._send_response("<h1>Success</h1><p>Input received. You may now close this tab.</p>")
             else:
                 self.send_error(400, "Missing request_id or input_value")
@@ -158,7 +155,7 @@ class ThreadedServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-def run_prompt_server_in_thread(port=8083):
+def run_prompt_server_in_thread(manager,port=8083):
     global _current_server
     
     # Don't spin up multiple servers if one is already active
@@ -167,7 +164,8 @@ def run_prompt_server_in_thread(port=8083):
 
     port = find_open_port(port)
     _current_server = ThreadedServer(("127.0.0.1", port), PromptHandler)
-    get_prompt_manager().set_server_host_port(f"127.0.0.1:{port}")
+    _current_server.manager = manager
+    manager.set_server_host_port(f"127.0.0.1:{port}")
 
     thread = threading.Thread(target=_current_server.serve_forever, daemon=True)
     thread.start()

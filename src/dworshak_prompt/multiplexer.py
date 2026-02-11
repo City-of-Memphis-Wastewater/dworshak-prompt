@@ -19,11 +19,8 @@ else:
     gui_get_input = None
 from .web_prompt import browser_get_input
 from .keyboard_interrupt import PromptCancelled
-from .server import (
-    get_prompt_manager,
-    stop_prompt_server
-)
-
+from .server import stop_prompt_server
+from .prompt_manager import PromptManager
     
 # Setup logger
 logger = logging.getLogger("dworshak_prompt")
@@ -111,9 +108,15 @@ class DworshakPrompt:
                     raise PromptCancelled()
 
                 elif mode == PromptMode.WEB:
-                    active_manager = manager or get_prompt_manager()
+                    local_manager = PromptManager()
                     try:
-                        val = browser_get_input(message, suggestion, hide_input, active_manager, interrupt_event)
+                        val = browser_get_input(
+                            message, 
+                            suggestion, 
+                            hide_input, 
+                            manager = local_manager, 
+                            stop_event = interrupt_event
+                            )
                         if val is not None:
                             logger.debug(f"[DIAGNOSTIC] SUCCESS: {mode} returned: {repr(val)}")
                             return val
