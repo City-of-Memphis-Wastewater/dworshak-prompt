@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.13] – 2026-02-10
+### Changed:
+- PromptManager is no longer a singleton but it instantiated per request.
+
+---
+
 ## [0.2.12] – 2026-02-10
 ### Fixed:
 - Ensure both imports (DworshakPrompt and PromptMode) are handled under single __getattr__ in __init__.py
