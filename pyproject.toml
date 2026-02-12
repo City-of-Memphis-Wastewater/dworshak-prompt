@@ -7,6 +7,7 @@ requires-python = ">=3.9"
 readme = "README.md"
 dependencies = [
     "dworshak-config>=0.1.6",
+    "dworshak-secret>=1.2.3",
     "pyhabitat>=1.1.37",
 ]
 
@@ -59,11 +60,12 @@ typer = [
     "typer-helptree>=0.1.10",
     "memphisdrip[typer]>=0.1.2"
 ]
-secret = [
-    "dworshak-secret[crypto]>=1.2.3", # without this, DworshakGet.secret() will show an error message()
+crypto = [
+    "cryptography>=46.0.3",
+    "dworshak-secret[crypto]", # without this, DworshakGet.secret() will show an error message()
 ]
 full = [
-    "dworshak-prompt[typer,secret]"
+    "dworshak-prompt[typer,crypto]"
 ]
 
 [tool.uv]

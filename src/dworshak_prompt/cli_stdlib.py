@@ -7,6 +7,7 @@ from .keyboard_interrupt import PromptCancelled
 from .console_prompt_stdlib import stdlib_notify
 from ._version import __version__
 
+
 def run_prompt(
     message: str = "Enter value",
     suggestion: str | None = None,
@@ -46,6 +47,27 @@ def run_prompt(
             traceback.print_exc()
         return 1
 
+def stdlib_notify(msg: str):
+    """Print to stderr so it doesn't break shell piping."""
+    sys.stderr.write(f"{msg}\n")
+    sys.stderr.flush()
+
+def stdlib_notify_redirect(command: str):
+    """
+    Detailed notification for Typer-only commands with platform-specific guidance.
+    """
+    msg = [
+        f"dworshak-prompt [lite]: The '{command}' command is only available in the full CLI.",
+        "",
+        "To enable the full interface, install the required extras:",
+        "  pip install 'dworshak-prompt[full]'",
+        "To enable the cryptography usage, like with dworshak-secret, install the required extras:",
+        "  pip install 'dworshak-prompt[secret]'",
+        ""
+    ]
+    sys.stderr.write("\n".join(msg) + "\n")
+    sys.stderr.flush()
+    
 
 def main():
     parser = argparse.ArgumentParser(

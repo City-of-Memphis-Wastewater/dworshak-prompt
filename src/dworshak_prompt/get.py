@@ -1,6 +1,11 @@
 # src/dworshak_prompt/get.py
 from dworshak_config import ConfigManager
-from dworshak_secret import get_secret, store_secret
+# Try to import the vault logic
+try:
+    from dworshak_secret import get_secret, store_secret
+    HAS_SECRET = True
+except ImportError:
+    HAS_SECRET = False
 from .multiplexer import DworshakPrompt
 
 class DworshakGet:
