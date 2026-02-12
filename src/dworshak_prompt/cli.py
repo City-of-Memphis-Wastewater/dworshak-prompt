@@ -80,7 +80,7 @@ def ask(
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
     
-    message = typer_resolve_arg_flag_pair(message, msg_flag, default = DEFAULT_PROMPT_MSG)
+    #message = typer_resolve_arg_flag_pair(message, msg_flag, default = DEFAULT_PROMPT_MSG)
 
     """Get user input and print it to stdout."""
     val = DworshakPrompt.ask(
