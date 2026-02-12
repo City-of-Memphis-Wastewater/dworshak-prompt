@@ -40,4 +40,3 @@ def notify_missing_function_redirect(_function: str):
         "",
         ]
     return msg_missing_function
-    return msg_missing_command
