@@ -73,15 +73,19 @@ class DworshakGet:
         value = get_secret(service, item)
         if value is not None and not overwrite:
             return SecretData(value = value, is_new = False)
-            
+        print(f"service = {service}")
+        print(f"item = {item}")
         new_value = DworshakPrompt.ask(
-            message=f"secret [{service}][{item}]",
+            message=f"{service} / {item}",
             hide_input=True,
             **kwargs 
         )
         
-        if new_value is not None:
-            store_secret(service, item, new_value)
+        if new_value is None:
+            # User cancelled (KeyboardInterrupt)
+            return SecretData(value=None, is_new=None)
+        
+        store_secret(service, item, new_value)
         return SecretData(value = new_value, is_new = True)
     
 

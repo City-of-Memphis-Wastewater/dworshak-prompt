@@ -99,7 +99,7 @@ class DworshakPrompt:
                         logger.debug(f"[DIAGNOSTIC] {mode} skipped: No interactive terminal.")
                         continue
                     
-                    val = console_get_input(message, suggestion, hide_input)
+                    val = console_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
                     logger.debug(f"[DIAGNOSTIC] SUCCESS: {mode} returned: {repr(val)}")
                     return val
 
@@ -108,7 +108,7 @@ class DworshakPrompt:
                         logger.debug(f"[DIAGNOSTIC] {mode} skipped: Tkinter unavailable.")
                         continue
                         
-                    val = gui_get_input(message, suggestion, hide_input)
+                    val = gui_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
                     if val is not None:
                         logger.debug(f"[DIAGNOSTIC] SUCCESS: {mode} returned: {repr(val)}")
                         return val
