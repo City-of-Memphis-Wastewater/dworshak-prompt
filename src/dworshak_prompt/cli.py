@@ -81,41 +81,6 @@ def ask(
     if val:
         print(val)
 
-if False:
-    # migrate this stuff to dworshak-config
-    from .dworshak_config import ConfigManager
-    @app.command()
-    def config(
-        service: str = typer.Argument(..., help="The service name (e.g., Maxson)."),
-        item: str = typer.Argument(..., help="The item key (e.g., port)."),
-        value: str = typer.Option(None, "--set", help="Directly set a value."),
-        message: str = typer.Option(None, "--message", help="Custom prompt message."),
-        path: Path = typer.Option(None, "--path", help="Custom config file path."),
-        overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
-        hide: bool = typer.Option(False, "--hide", help="Mask input for sensitive info."),
-    ):
-        """
-        Get or set a configuration value using Service and Item (Vault-style).
-        """
-        manager = ConfigManager(path=path)
-        
-        if value is not None:
-            manager.set_value(service, item, value)
-            display_val = "***" if hide else value
-            typer.echo(f"Stored: [{service}] {item} = {display_val}")
-        else:
-            result = manager.get(
-                service=service,
-                item=item,
-                prompt_message=message,
-                overwrite=overwrite,
-                hide_input=hide
-            )
-            if result:
-                # Only print the result to stdout for piping/capture
-                print(result)
-
-
 if __name__ == "__main__":
     app()
 
