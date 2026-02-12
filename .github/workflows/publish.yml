@@ -38,9 +38,6 @@ jobs:
 
       - name: Build package
         run: uv build
-        
-      - name: Build package (sdist + wheel)
-        run: uv build
 
       - name: Install the built package (sanity check)
         run: uv pip install dist/*.whl --system

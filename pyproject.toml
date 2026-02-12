@@ -51,13 +51,13 @@ Repository = "https://github.com/city-of-memphis-wastewater/dworshak-prompt"
 
 [project.scripts]
 dworshak-prompt = "dworshak_prompt.__main__:run"
-#dworshak-prompt = "dworshak_prompt.cli:app"
 
 [project.optional-dependencies]
 typer = [
     "typer>=0.21.1",
     "rich>=14.3.2",
     "typer-helptree>=0.1.10",
+    "memphisdrip[typer]>=0.1.2"
 ]
 secret = [
     "dworshak-secret[crypto]>=1.2.3", # without this, DworshakGet.secret() will show an error message()
