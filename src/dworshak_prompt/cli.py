@@ -33,7 +33,6 @@ def main(ctx: typer.Context):
         typer.echo(ctx.get_help())
         raise typer.Exit()
 
-
 # This is the "hidden" state to store the flag value
 _message_from_flag = None
 def message_callback(value: str):
