@@ -228,19 +228,23 @@ name = "dworshak-prompt"
 source = { editable = "." }
 dependencies = [
     { name = "dworshak-config" },
+    { name = "dworshak-secret" },
+    { name = "memphisdrip" },
     { name = "pyhabitat" },
 ]
 
 [package.optional-dependencies]
+crypto = [
+    { name = "cryptography" },
+    { name = "dworshak-secret", extra = ["crypto"] },
+]
 full = [
+    { name = "cryptography" },
     { name = "dworshak-secret", extra = ["crypto"] },
     { name = "memphisdrip", extra = ["typer"] },
     { name = "rich" },
     { name = "typer" },
     { name = "typer-helptree" },
-]
-secret = [
-    { name = "dworshak-secret", extra = ["crypto"] },
 ]
 typer = [
     { name = "memphisdrip", extra = ["typer"] },
@@ -257,16 +261,19 @@ test = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cryptography", marker = "extra == 'crypto'", specifier = ">=46.0.3" },
     { name = "dworshak-config", path = "../dworshak-config/dist/dworshak_config-0.1.2-py3-none-any.whl" },
-    { name = "dworshak-prompt", extras = ["secret", "typer"], marker = "extra == 'full'" },
-    { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'secret'", specifier = ">=1.2.3" },
+    { name = "dworshak-prompt", extras = ["crypto", "typer"], marker = "extra == 'full'" },
+    { name = "dworshak-secret", specifier = ">=1.2.3" },
+    { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'crypto'" },
+    { name = "memphisdrip", specifier = ">=0.1.3" },
     { name = "memphisdrip", extras = ["typer"], marker = "extra == 'typer'", specifier = ">=0.1.2" },
     { name = "pyhabitat", specifier = ">=1.1.37" },
     { name = "rich", marker = "extra == 'typer'", specifier = ">=14.3.2" },
     { name = "typer", marker = "extra == 'typer'", specifier = ">=0.21.1" },
     { name = "typer-helptree", marker = "extra == 'typer'", specifier = ">=0.1.10" },
 ]
-provides-extras = ["typer", "secret", "full"]
+provides-extras = ["typer", "crypto", "full"]
 
 [package.metadata.requires-dev]
 test = [{ name = "pytest", specifier = ">=8.4.2" }]
@@ -362,11 +369,11 @@ wheels = [
 
 [[package]]
 name = "memphisdrip"
-version = "0.1.2"
+version = "0.1.3"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/64/39/cdbc10e363ebfa1c8e5ab5a464f78a463d35993e3628a2077b55ba2c1c4c/memphisdrip-0.1.2.tar.gz", hash = "sha256:e8bf7193deb9e105a0fa7e55e01e91dbe7c0dee609c831e15cc845f9a2d37be6", size = 3100, upload-time = "2026-02-12T21:16:30.937Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5d/0a/0ac089db5f813bc3df3dfdb979e5caf86a1ba36f8a485d9b50088400ea3c/memphisdrip-0.1.3.tar.gz", hash = "sha256:a7ca58a6001a2967e4fcd534bcd7d2d26455d539b9ce9b2cec735bd167426566", size = 3364, upload-time = "2026-02-12T22:27:26.601Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/73/6f/e3540c914d5dfdaf1522661d1de4e8dc489f18be02d446ed3e96e3a5fa65/memphisdrip-0.1.2-py3-none-any.whl", hash = "sha256:8968e67ba218e563b3ac9366b6342bb3c906c1678d35e74d0388874791e48d8a", size = 3322, upload-time = "2026-02-12T21:16:29.801Z" },
+    { url = "https://files.pythonhosted.org/packages/e7/16/d9b713dec711961518eb49db2d07453c3f75ab46c83b4d17732e99bb9fb6/memphisdrip-0.1.3-py3-none-any.whl", hash = "sha256:c85131b859985da31e4880c523136b46c430b9c35aae5f87e3ecbd1e759bec71", size = 3777, upload-time = "2026-02-12T22:27:25.648Z" },
 ]
 
 [package.optional-dependencies]
