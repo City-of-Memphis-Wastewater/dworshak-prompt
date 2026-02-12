@@ -1,4 +1,5 @@
 # src/dworshak_prompt/get.py
+from dataclasses import dataclass
 from dworshak_config import ConfigManager
 # Try to import the vault logic
 try:
@@ -7,6 +8,15 @@ try:
 except ImportError:
     HAS_SECRET = False
 from .multiplexer import DworshakPrompt
+
+@dataclass
+class SecretData:
+    value: str = None
+    is_new: bool = False
+
+    def __repr__(self):
+        # This prevents the secret from appearing if the whole object is printed 
+        return f"SecretData(is_new={self.is_new}, value='********')"
 
 class DworshakGet:
     @staticmethod
@@ -48,6 +58,7 @@ class DworshakGet:
         **kwargs 
         ):
 
+
         if not HAS_SECRET:
             # Trigger the "Lifeboat" redirection error
             from .messages import safe_notify, notify_missing_function_redirect, MSG_CRYPTO_EXTRA
@@ -60,7 +71,7 @@ class DworshakGet:
         # Similar logic for secrets, but using dworshak-secret
         value = get_secret(service, item)
         if value is not None and not overwrite:
-            return value
+            return SecretData(value = value, is_new = False)
             
         new_value = DworshakPrompt.ask(
             message=f"secret [{service}][{item}]",
@@ -70,6 +81,6 @@ class DworshakGet:
         
         if new_value is not None:
             store_secret(service, item, new_value)
-        return new_value
+        return SecretData(value = new_value, is_new = True)
     
 

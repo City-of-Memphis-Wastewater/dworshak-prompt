@@ -134,13 +134,16 @@ def get_or_set_secret(
     service = typer_resolve_arg_flag_pair(service, service_flag)
     item = typer_resolve_arg_flag_pair(item, item_flag)
 
-    val = DworshakGet.secret(
+    data = DworshakGet.secret(
         service=service,
         item=item,
         overwrite=overwrite,
         debug=debug
     )
-
+    if data["is_new"]:
+        print("Secret stored.")
+    else:
+        print("Secret known.")
 
 if __name__ == "__main__":
     app()
