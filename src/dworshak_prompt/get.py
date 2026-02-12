@@ -28,7 +28,7 @@ class DworshakGet:
 
         # If missing or overwriting, we use the multiplexer
         new_value = DworshakPrompt.ask(
-            message=prompt_message or f"[{service}] Enter {item}",
+            message=prompt_message or f"config [{service}][{item}]",
             suggestion=suggestion or value,
             hide_input=False,
             **kwargs # Pass-through for priority, avoid, debug, etc.
@@ -63,7 +63,7 @@ class DworshakGet:
             return value
             
         new_value = DworshakPrompt.ask(
-            message=f"Secret for {service}/{item}",
+            message=f"secret [{service}][{item}]",
             hide_input=True,
             **kwargs 
         )

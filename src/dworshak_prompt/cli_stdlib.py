@@ -1,14 +1,13 @@
 # src/dworshak_prompt/cli_stdlib.py
 import argparse
 import sys
+from memphisdrip import safe_notify
 
 from .multiplexer import DworshakPrompt, PromptMode
 from .keyboard_interrupt import PromptCancelled
-from .console_prompt_stdlib import stdlib_notify
 from ._version import __version__
 
 from .messages import (
-    safe_notify,
     MSG_CRYPTO_EXTRA, 
     MSG_FULL_EXTRA,
     stdlib_notify_missing_command_redirect
@@ -34,20 +33,20 @@ def run_prompt(
             debug=debug,
         )
         if value is not None:
-            print(value)
+            safe_notify(value)
             return 0
         else:
-            stdlib_notify("Input cancelled or no method succeeded.")
+            safe_notify("Input cancelled or no method succeeded.")
             return 1
 
     except PromptCancelled:
-        stdlib_notify("Prompt cancelled by user.")
+        safe_notify("Prompt cancelled by user.")
         return 130
     except KeyboardInterrupt:
-        stdlib_notify("Interrupted.")
+        safe_notify("Interrupted.")
         return 130
     except Exception as e:
-        stdlib_notify(f"Error: {e}")
+        safe_notify(f"Error: {e}")
         if debug:
             import traceback
             traceback.print_exc()

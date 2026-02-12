@@ -49,28 +49,11 @@ def main(ctx: typer.Context,
 # In cli.py
 add_typer_helptree(app=app, console=console, version = __version__,hidden=True)
 
-# This is the "hidden" state to store the flag value
-_message_from_flag = None
-def message_callback(value: str):
-    """
-    If the user uses -M or --message, this captures it.
-    """
-    global _message_from_flag
-    if value:
-        _message_from_flag = value
-    return value
-
 @app.command()
 def ask(
     message: str = typer.Argument(
         DEFAULT_PROMPT_MSG, 
         help="The prompt message."),
-    #msg_flag: Optional[str] = typer.Option(
-    #    None, "--message", "-M", 
-    #    callback=message_callback, 
-    #    is_eager=True, # Processes this before other arguments
-    #    help="Flag alias for message."
-    #),
     msg_flag: Optional[str] = typer.Option(
         None, "--message", "-M", 
         help="Flag alias for message."
@@ -87,13 +70,11 @@ def ask(
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
     
-    # If the callback caught a flag value, use it. Otherwise, use the positional.
-    #final_message = _message_from_flag or message
-    final_message = typer_resolve_arg_flag_pair(message, msg_flag, default = DEFAULT_PROMPT_MSG)
+    message = typer_resolve_arg_flag_pair(message, msg_flag, default = DEFAULT_PROMPT_MSG)
 
     """Get user input and print it to stdout."""
     val = DworshakPrompt.ask(
-        message=final_message,
+        message=message,
         priority=[mode],
         suggestion = suggestion,
         hide_input = hide,
@@ -108,15 +89,22 @@ get_app = typer.Typer(help="Retrieve values from config or secrets.")
 app.add_typer(get_app, name="get")
 
 @get_app.command(name="config")
-def get_config(
-    service: str = typer.Argument(..., help="Service name."),
-    item: str = typer.Argument(..., help="Key name."),
+def get_or_set_config(
+    #service: str = typer.Argument(..., help="Service name."),
+    #item: str = typer.Argument(..., help="Key name."),
+    service: Optional[str] = typer.Argument(None, help="Service name."),
+    item: Optional[str] = typer.Argument(None, help="Key name."),
+    service_flag: Optional[str] = typer.Option(None, "--service", "-s", help="Flag alias for service name."),
+    item_flag: Optional[str] = typer.Option(None, "--item", "-i", help="Flag alias for item key."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
-    suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
+    suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
     overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
+    service = typer_resolve_arg_flag_pair(service, service_flag)
+    item = typer_resolve_arg_flag_pair(item, item_flag)
+
     """Get a configuration value (Storage -> Prompt -> Save)."""
     val = DworshakGet.config(
         service=service,
@@ -131,13 +119,21 @@ def get_config(
         print(val)
 
 @get_app.command(name="secret")
-def get_secret(
-    service: str = typer.Argument(..., help="Service name."),
-    item: str = typer.Argument(..., help="Key name."),
+def get_or_set_secret(
+    #service: str = typer.Argument(..., help="Service name."),
+    #item: str = typer.Argument(..., help="Key name."),
+    service: Optional[str] = typer.Argument(None, help="Service name."),
+    item: Optional[str] = typer.Argument(None, help="Key name."),
+    service_flag: Optional[str] = typer.Option(None, "--service", "-s", help="Flag alias for service name."),
+    item_flag: Optional[str] = typer.Option(None, "--item", "-i", help="Flag alias for item key."),
     overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
     """Get a secret value (Vault -> Prompt -> Save)."""
+
+    service = typer_resolve_arg_flag_pair(service, service_flag)
+    item = typer_resolve_arg_flag_pair(item, item_flag)
+
     val = DworshakGet.secret(
         service=service,
         item=item,
