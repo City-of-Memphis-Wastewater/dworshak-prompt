@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import Optional
 
 from .multiplexer import DworshakPrompt, PromptMode 
+from .get import DworshakGet
+
 from ._version import __version__
 
 
@@ -80,6 +82,52 @@ def ask(
     )
     if val:
         print(val)
+
+
+# Create the 'get' sub-app
+get_app = typer.Typer(help="Retrieve values from config or secrets.")
+app.add_typer(get_app, name="get")
+
+@get_app.command(name="config")
+def get_config(
+    service: str = typer.Argument(..., help="Service name."),
+    item: str = typer.Argument(..., help="Key name."),
+    message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
+    suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
+    overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
+    forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
+    debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
+):
+    """Get a configuration value (Storage -> Prompt -> Save)."""
+    val = DworshakGet.config(
+        service=service,
+        item=item,
+        prompt_message=message,
+        suggestion=suggestion,
+        overwrite=overwrite,
+        forget=forget,
+        debug=debug
+    )
+    if val:
+        print(val)
+
+@get_app.command(name="secret")
+def get_secret(
+    service: str = typer.Argument(..., help="Service name."),
+    item: str = typer.Argument(..., help="Key name."),
+    overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
+    debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
+):
+    """Get a secret value (Vault -> Prompt -> Save)."""
+    val = DworshakGet.secret(
+        service=service,
+        item=item,
+        overwrite=overwrite,
+        debug=debug
+    )
+    if val:
+        print(val)
+
 
 if __name__ == "__main__":
     app()

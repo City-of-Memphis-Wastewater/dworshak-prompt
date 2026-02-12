@@ -12,7 +12,7 @@ class DworshakGet:
         suggestion: str | None = None,
         overwrite: bool = False,
         forget: bool = False,
-        timeout: int = 60
+        **kwargs # Pass-through for priority, avoid, debug, etc.
     ) -> str | None:
         mgr = ConfigManager()
         value = mgr.get_value(service, item)
@@ -22,11 +22,11 @@ class DworshakGet:
             return value
 
         # If missing or overwriting, we use the multiplexer
-        # Note: Add your Timeout logic here to wrap the .ask() call
         new_value = DworshakPrompt.ask(
             message=prompt_message or f"[{service}] Enter {item}",
             suggestion=suggestion or value,
-            hide_input=False
+            hide_input=False,
+            **kwargs # Pass-through for priority, avoid, debug, etc.
         )
 
         # Persistence logic
@@ -36,7 +36,12 @@ class DworshakGet:
         return new_value or value
 
     @staticmethod
-    def secret(service: str, item: str, overwrite: bool = False, timeout: int = 60):
+    def secret(
+        service: str, 
+        item: str, 
+        overwrite: bool = False,
+        **kwargs 
+        ):
         # Similar logic for secrets, but using dworshak-secret
         value = get_secret(service, item)
         if value is not None and not overwrite:
@@ -44,9 +49,12 @@ class DworshakGet:
             
         new_value = DworshakPrompt.ask(
             message=f"Secret for {service}/{item}",
-            hide_input=True
+            hide_input=True,
+            **kwargs 
         )
         
         if new_value is not None:
             store_secret(service, item, new_value)
         return new_value
+    
+

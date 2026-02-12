@@ -6,6 +6,8 @@ description = "Multiplexed user input via console, GUI, and web, depending on av
 requires-python = ">=3.9"
 readme = "README.md"
 dependencies = [
+    "dworshak-config",
+    "dworshak-secret>=1.2.3",
     "pyhabitat>=1.1.37",
 ]
 
@@ -64,6 +66,9 @@ typer = [
 # it is allowed to build from source using your local Rust/Clang.
 package = true
 resolution = "highest"
+
+[tool.uv.sources]
+dworshak-config = { path = "../dworshak-config/dist/dworshak_config-0.1.2-py3-none-any.whl" }
 
 [build-system]
 requires = ["setuptools>=64", "wheel"]
