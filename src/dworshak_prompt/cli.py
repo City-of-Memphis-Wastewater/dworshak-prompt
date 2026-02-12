@@ -6,7 +6,6 @@ import os
 from pathlib import Path
 from typing import Optional
 from typer_helptree import add_typer_helptree
-from memphisdrip import typer_resolve_arg_flag_pair
 
 from .multiplexer import DworshakPrompt, PromptMode 
 from .get import DworshakGet
@@ -79,8 +78,6 @@ def ask(
     hide: bool = typer.Option(False, "--hide", "-H", help="Hide input (password mode)"),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
-    
-    #message = typer_resolve_arg_flag_pair(message, msg_flag, default = DEFAULT_PROMPT_MSG)
 
     """Get user input and print it to stdout."""
     val = DworshakPrompt.ask(
