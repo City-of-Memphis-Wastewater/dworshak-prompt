@@ -7,6 +7,11 @@ from .keyboard_interrupt import PromptCancelled
 from .console_prompt_stdlib import stdlib_notify
 from ._version import __version__
 
+from .messages import (
+    MSG_CRYPTO_EXTRA, 
+    MSG_FULL_EXTRA,
+    stdlib_notify_missing_command_redirect
+)
 
 def run_prompt(
     message: str = "Enter value",
@@ -52,19 +57,16 @@ def stdlib_notify(msg: str):
     sys.stderr.write(f"{msg}\n")
     sys.stderr.flush()
 
+
 def stdlib_notify_redirect(command: str):
     """
     Detailed notification for Typer-only commands with platform-specific guidance.
     """
-    msg = [
-        f"dworshak-prompt [lite]: The '{command}' command is only available in the full CLI.",
-        "",
-        "To enable the full interface, install the required extras:",
-        "  pip install 'dworshak-prompt[full]'",
-        "To enable the cryptography usage, like with dworshak-secret, install the required extras:",
-        "  pip install 'dworshak-prompt[secret]'",
-        ""
-    ]
+    msg_missing_typer_command = stdlib_notify_missing_command_redirect(command)
+        
+    
+    msg = msg_missing_typer_command + MSG_CRYPTO_EXTRA + MSG_FULL_EXTRA
+
     sys.stderr.write("\n".join(msg) + "\n")
     sys.stderr.flush()
     

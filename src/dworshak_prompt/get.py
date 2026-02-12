@@ -47,6 +47,14 @@ class DworshakGet:
         overwrite: bool = False,
         **kwargs 
         ):
+
+        if not HAS_SECRET:
+            # Trigger the "Lifeboat" redirection error
+            from .cli_stdlib import stdlib_notify_redirect
+            # We pass a specific context so the user knows why it failed
+            stdlib_notify_redirect("secret-vault access")
+            raise SystemExit(1)
+        
         # Similar logic for secrets, but using dworshak-secret
         value = get_secret(service, item)
         if value is not None and not overwrite:

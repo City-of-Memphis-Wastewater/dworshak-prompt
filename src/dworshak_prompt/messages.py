@@ -1,0 +1,43 @@
+# src/dworshak_prompt/messages.py
+
+MSG_CRYPTO_EXTRA = [ 
+    "To enable cryptography usage, like with dworshak-secret, install the required extras:",
+    "  pip install 'dworshak-prompt[crypto]'",
+    "",
+    "If 'cryptography' fails to build on your platform, install it via your manager first:",
+    "  * Termux:     pkg install python-cryptography",
+    "  * iSH/Alpine: apk add py3-cryptography"
+]
+
+MSG_TYPER_EXTRA = [
+    "To enable the full Typer interface, install the required extras:",
+    "  pip install 'dworshak-prompt[typer]'"]
+]
+
+MSG_FULL_EXTRA = [
+    "To enable all features, install all extras:",
+    "  pip install 'dworshak-prompt[full]'",
+]
+
+def stdlib_notify_missing_command_redirect(command: str):
+    """
+    Detailed notification missing Typer-specific commands with platform-specific guidance.
+    """
+    msg_missing_command = [
+        f"dworshak-prompt [lite]: The '{command}' command is only available in the full CLI.. Check installed extras.",
+        "",
+        "To enable the full Typer interface, install the required extras:",
+        "  pip install 'dworshak-prompt[typer]'"
+        ]
+    return msg_missing_command
+
+def notify_missing_function_redirect(_function: str):
+    """
+    Detailed notification missing functions, generically.
+    """
+    msg_missing_function = [
+        f"dworshak-prompt [lite]: The '{_function}' function is not available. Check installed extras.",
+        "",
+        ]
+    return msg_missing_function
+    return msg_missing_command
