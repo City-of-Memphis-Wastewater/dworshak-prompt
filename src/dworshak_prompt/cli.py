@@ -5,6 +5,7 @@ from rich.console import Console
 import os
 from pathlib import Path
 from typing import Optional
+from typer_helptree import add_typer_helptree
 
 from .multiplexer import DworshakPrompt, PromptMode 
 from .get import DworshakGet
@@ -34,6 +35,9 @@ def main(ctx: typer.Context):
     if ctx.invoked_subcommand is None:
         typer.echo(ctx.get_help())
         raise typer.Exit()
+
+# In cli.py
+add_typer_helptree(app=app, console=console, version = __version__,hidden=True)
 
 # This is the "hidden" state to store the flag value
 _message_from_flag = None

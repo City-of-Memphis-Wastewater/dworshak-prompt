@@ -75,6 +75,7 @@ dependencies = [
     { name = "dworshak-config" },
     { name = "dworshak-secret" },
     { name = "pyhabitat" },
+    { name = "typer-helptree" },
 ]
 
 [package.optional-dependencies]
@@ -96,6 +97,7 @@ requires-dist = [
     { name = "pyhabitat", specifier = ">=1.1.37" },
     { name = "rich", marker = "extra == 'typer'", specifier = ">=14.3.2" },
     { name = "typer", marker = "extra == 'typer'", specifier = ">=0.21.1" },
+    { name = "typer-helptree", specifier = ">=0.1.10" },
 ]
 provides-extras = ["typer"]
 
@@ -355,6 +357,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/7e/e6/44e073787aa57cd71c151f44855232feb0f748428fd5242d7366e3c4ae8b/typer-0.23.0.tar.gz", hash = "sha256:d8378833e47ada5d3d093fa20c4c63427cc4e27127f6b349a6c359463087d8cc", size = 120181, upload-time = "2026-02-11T15:22:18.637Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7a/ed/d6fca788b51d0d4640c4bc82d0e85bad4b49809bca36bf4af01b4dcb66a7/typer-0.23.0-py3-none-any.whl", hash = "sha256:79f4bc262b6c37872091072a3cb7cb6d7d79ee98c0c658b4364bdcde3c42c913", size = 56668, upload-time = "2026-02-11T15:22:21.075Z" },
+]
+
+[[package]]
+name = "typer-helptree"
+version = "0.1.10"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyhabitat" },
+    { name = "rich" },
+    { name = "typer" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e6/60/0a1fba0fc0274f0d098f744f8c8d4a53e0be3fd2cc02826751bbb808a1e4/typer_helptree-0.1.10.tar.gz", hash = "sha256:40f622198eed9815ad9143c727c93b0a276a49237fbaf6abee892e027bd646be", size = 8438, upload-time = "2026-01-28T21:15:10.258Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/38/84/1146aa60823260aa00527958855f9a5a0b8705577073e634b5b63f8072ed/typer_helptree-0.1.10-py3-none-any.whl", hash = "sha256:853c5fcac4ec5aab35690aaca83d9d7ce6741b51fcfe97889638dffa3ee5e370", size = 9209, upload-time = "2026-01-28T21:15:08.79Z" },
 ]
 
 [[package]]
