@@ -47,10 +47,15 @@ class DworshakPrompt:
         hide_input: bool = False,
         priority: list[PromptMode] | None = None,
         avoid: set[PromptMode] | None = None,
-        manager: Any | None = None,
         interrupt_event: threading.Event | None = None,
-        debug: bool = False  # Added a flag to toggle at runtime
+        debug: bool = False,  # Added a flag to toggle at runtime
+        timeout: int | float | None = None,
     ) -> str | None:
+        
+        # Use existing interrupt_event or create a local one for this call
+        if interrupt_event is None:
+            interrupt_event = threading.Event()
+
         if debug:
             logger.setLevel(logging.DEBUG)
         else:
@@ -75,7 +80,11 @@ class DworshakPrompt:
             effective_priority = priority + [m for m in default_order if m not in priority]
         else:
             effective_priority = default_order
-            
+
+        if timeout:
+            # A background timer to fire the interrupt signal
+            timer = threading.Timer(timeout, lambda: interrupt_event.set())
+            timer.start()
 
         for mode in effective_priority:
             if mode in avoid:
@@ -151,6 +160,7 @@ class DworshakPrompt:
                 
                 logger.debug(f"[DIAGNOSTIC] Continuing to fallback mode...")
                 continue
+
 
         logger.debug("[DIAGNOSTIC] All modes exhausted.")
         raise RuntimeError("No input method succeeded.")
