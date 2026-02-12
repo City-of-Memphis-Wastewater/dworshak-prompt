@@ -6,12 +6,9 @@ description = "Multiplexed user input via console, GUI, and web, depending on av
 requires-python = ">=3.9"
 readme = "README.md"
 dependencies = [
-    "dworshak-config",
-    "dworshak-secret>=1.2.3",
+    "dworshak-config>=0.1.6",
     "pyhabitat>=1.1.37",
-    "typer-helptree>=0.1.10",
 ]
-
 
 authors = [
   { name="George Clayton Bennett", email="george.bennett@memphistn.gov" },
@@ -60,6 +57,13 @@ dworshak-prompt = "dworshak_prompt.__main__:run"
 typer = [
     "typer>=0.21.1",
     "rich>=14.3.2",
+    "typer-helptree>=0.1.10",
+]
+secret = [
+    "dworshak-secret[crypto]>=1.2.3", # without this, DworshakGet.secret() will show an error message()
+]
+full = [
+    "dworshak-prompt[typer,secret]"
 ]
 
 [tool.uv]
