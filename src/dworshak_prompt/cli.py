@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 from typing import Optional
 from typer_helptree import add_typer_helptree
+from memphisdrip import typer_resolve_arg_flag_pair
 
 from .multiplexer import DworshakPrompt, PromptMode 
 from .get import DworshakGet
@@ -20,6 +21,8 @@ app = typer.Typer()
 os.environ["FORCE_COLOR"] = "1"
 # Optional but helpful for full terminal feature detection
 os.environ["TERM"] = "xterm-256color"
+
+DEFAULT_PROMPT_MSG = "Enter value"
 
 app = typer.Typer(
     name="dworshak-prompt",
@@ -60,12 +63,16 @@ def message_callback(value: str):
 @app.command()
 def ask(
     message: str = typer.Argument(
-        "Enter value", 
+        DEFAULT_PROMPT_MSG, 
         help="The prompt message."),
+    #msg_flag: Optional[str] = typer.Option(
+    #    None, "--message", "-M", 
+    #    callback=message_callback, 
+    #    is_eager=True, # Processes this before other arguments
+    #    help="Flag alias for message."
+    #),
     msg_flag: Optional[str] = typer.Option(
         None, "--message", "-M", 
-        callback=message_callback, 
-        is_eager=True, # Processes this before other arguments
         help="Flag alias for message."
     ),
     mode: PromptMode = typer.Option( 
@@ -81,7 +88,8 @@ def ask(
 ):
     
     # If the callback caught a flag value, use it. Otherwise, use the positional.
-    final_message = _message_from_flag or message
+    #final_message = _message_from_flag or message
+    final_message = typer_resolve_arg_flag_pair(message, msg_flag, default = DEFAULT_PROMPT_MSG)
 
     """Get user input and print it to stdout."""
     val = DworshakPrompt.ask(
