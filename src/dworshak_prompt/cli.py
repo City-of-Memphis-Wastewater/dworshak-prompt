@@ -31,10 +31,17 @@ app = typer.Typer(
 )
 
 @app.callback(invoke_without_command=True)
-def main(ctx: typer.Context):
-    if ctx.invoked_subcommand is None:
-        typer.echo(ctx.get_help())
-        raise typer.Exit()
+def main(ctx: typer.Context,
+    version: Optional[bool] = typer.Option(
+    None, "--version", is_flag=True, help="Show the version."
+    )
+    ):
+    """
+    Enable --version
+    """
+    if version:
+        typer.echo(__version__)
+        raise typer.Exit(code=0)
 
 # In cli.py
 add_typer_helptree(app=app, console=console, version = __version__,hidden=True)
