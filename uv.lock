@@ -267,7 +267,7 @@ requires-dist = [
     { name = "dworshak-secret", specifier = ">=1.2.3" },
     { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'crypto'" },
     { name = "memphisdrip", specifier = ">=0.1.3" },
-    { name = "memphisdrip", extras = ["typer"], marker = "extra == 'typer'", specifier = ">=0.1.2" },
+    { name = "memphisdrip", extras = ["typer"], marker = "extra == 'typer'", specifier = ">=0.1.3" },
     { name = "pyhabitat", specifier = ">=1.1.37" },
     { name = "rich", marker = "extra == 'typer'", specifier = ">=14.3.2" },
     { name = "typer", marker = "extra == 'typer'", specifier = ">=0.21.1" },

@@ -140,8 +140,6 @@ def get_or_set_secret(
         overwrite=overwrite,
         debug=debug
     )
-    if val:
-        print(val)
 
 
 if __name__ == "__main__":
