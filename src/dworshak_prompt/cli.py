@@ -49,10 +49,20 @@ def main(ctx: typer.Context,
 # In cli.py
 add_typer_helptree(app=app, console=console, version = __version__,hidden=True)
 
+
+def resolve_message(ctx: typer.Context, value: str):
+    # ctx.params will already contain 'msg_flag' because Options are parsed first
+    msg_flag = ctx.params.get("msg_flag")
+    # Priority: 1. Flag, 2. Positional (if not the default), 3. Default
+    if msg_flag:
+        return msg_flag
+    return value
+
 @app.command()
 def ask(
     message: str = typer.Argument(
         DEFAULT_PROMPT_MSG, 
+        callback=resolve_message,
         help="The prompt message."),
     msg_flag: Optional[str] = typer.Option(
         None, "--message", "-M", 
@@ -90,20 +100,19 @@ app.add_typer(get_app, name="get")
 
 @get_app.command(name="config")
 def get_or_set_config(
-    #service: str = typer.Argument(..., help="Service name."),
-    #item: str = typer.Argument(..., help="Key name."),
-    service: Optional[str] = typer.Argument(None, help="Service name."),
-    item: Optional[str] = typer.Argument(None, help="Key name."),
-    service_flag: Optional[str] = typer.Option(None, "--service", "-s", help="Flag alias for service name."),
-    item_flag: Optional[str] = typer.Option(None, "--item", "-i", help="Flag alias for item key."),
+    service: Optional[str] = typer.Option(None, "--service", "-s", help="Service name."),
+    item: Optional[str] = typer.Option(None, "--item", "-i", help="Item key."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
     overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
-    service = typer_resolve_arg_flag_pair(service, service_flag)
-    item = typer_resolve_arg_flag_pair(item, item_flag)
+    # If the user didn't provide values via flags, prompt for them now.
+    if not service:
+        service = DworshakPrompt.ask("Service name", avoid = {PromptMode.WEB, PromptMode.GUI})
+    if not item:
+        item = DworshakPrompt.ask("Item key", avoid = {PromptMode.WEB, PromptMode.GUI})
 
     """Get a configuration value (Storage -> Prompt -> Save)."""
     val = DworshakGet.config(
@@ -120,21 +129,15 @@ def get_or_set_config(
 
 @get_app.command(name="secret")
 def get_or_set_secret(
-    #service: str = typer.Argument(..., help="Service name."),
-    #item: str = typer.Argument(..., help="Key name."),
-    #service: Optional[str] = typer.Argument(None, help="Service name."),
-    #item: Optional[str] = typer.Argument(None, help="Key name."),
-    service: Optional[str] = typer.Option(None, "--service", "-s", help="Flag alias for service name."),
-    item: Optional[str] = typer.Option(None, "--item", "-i", help="Flag alias for item key."),
+    service: Optional[str] = typer.Option(None, "--service", "-s", help="Service name."),
+    item: Optional[str] = typer.Option(None, "--item", "-i", help="Item key."),
     overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
     """Get a secret value (Vault -> Prompt -> Save)."""
 
-    #service = typer_resolve_arg_flag_pair(None, service_flag)
-    #item = typer_resolve_arg_flag_pair(None, item_flag)
 
-    # If the user didn't provide them via flags, prompt for them right now.
+    # If the user didn't provide values via flags, prompt for them now.
     if not service:
         service = DworshakPrompt.ask("Service name", avoid = {PromptMode.WEB, PromptMode.GUI})
     if not item:
