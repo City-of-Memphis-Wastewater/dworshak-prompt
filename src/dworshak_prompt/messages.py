@@ -1,4 +1,13 @@
 # src/dworshak_prompt/messages.py
+from __future__ import annotations
+import sys
+def safe_notify(msg: str | list[str]):
+    """Print to stderr so it doesn't break shell piping."""
+    if isinstance(msg, list):
+        msg = "\n".join(msg)
+    sys.stderr.write(f"\n{msg}\n")
+    sys.stderr.flush()
+    
 
 MSG_CRYPTO_EXTRA = [ 
     "To enable cryptography usage, like with dworshak-secret, install the required extras:",
@@ -11,7 +20,7 @@ MSG_CRYPTO_EXTRA = [
 
 MSG_TYPER_EXTRA = [
     "To enable the full Typer interface, install the required extras:",
-    "  pip install 'dworshak-prompt[typer]'"]
+    "  pip install 'dworshak-prompt[typer]'"
 ]
 
 MSG_FULL_EXTRA = [
@@ -24,11 +33,9 @@ def stdlib_notify_missing_command_redirect(command: str):
     Detailed notification missing Typer-specific commands with platform-specific guidance.
     """
     msg_missing_command = [
-        f"dworshak-prompt [lite]: The '{command}' command is only available in the full CLI.. Check installed extras.",
-        "",
-        "To enable the full Typer interface, install the required extras:",
-        "  pip install 'dworshak-prompt[typer]'"
-        ]
+        f"dworshak-prompt [lite]: The '{command}' command is only available in the full CLI. Check installed extras.",
+        ""
+        ] + MSG_TYPER_EXTRA
     return msg_missing_command
 
 def notify_missing_function_redirect(_function: str):

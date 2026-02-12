@@ -50,9 +50,11 @@ class DworshakGet:
 
         if not HAS_SECRET:
             # Trigger the "Lifeboat" redirection error
-            from .cli_stdlib import stdlib_notify_redirect
+            from .messages import safe_notify, notify_missing_function_redirect, MSG_CRYPTO_EXTRA
             # We pass a specific context so the user knows why it failed
-            stdlib_notify_redirect("secret-vault access")
+            full_msg = notify_missing_function_redirect("DworshakGet.secret()") + MSG_CRYPTO_EXTRA
+            safe_notify(full_msg)
+
             raise SystemExit(1)
         
         # Similar logic for secrets, but using dworshak-secret

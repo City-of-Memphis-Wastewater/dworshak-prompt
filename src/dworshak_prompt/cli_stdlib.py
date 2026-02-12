@@ -8,6 +8,7 @@ from .console_prompt_stdlib import stdlib_notify
 from ._version import __version__
 
 from .messages import (
+    safe_notify,
     MSG_CRYPTO_EXTRA, 
     MSG_FULL_EXTRA,
     stdlib_notify_missing_command_redirect
@@ -52,23 +53,14 @@ def run_prompt(
             traceback.print_exc()
         return 1
 
-def stdlib_notify(msg: str):
-    """Print to stderr so it doesn't break shell piping."""
-    sys.stderr.write(f"{msg}\n")
-    sys.stderr.flush()
-
 
 def stdlib_notify_redirect(command: str):
     """
     Detailed notification for Typer-only commands with platform-specific guidance.
     """
     msg_missing_typer_command = stdlib_notify_missing_command_redirect(command)
-        
-    
     msg = msg_missing_typer_command + MSG_CRYPTO_EXTRA + MSG_FULL_EXTRA
-
-    sys.stderr.write("\n".join(msg) + "\n")
-    sys.stderr.flush()
+    safe_notify(msg)
     
 
 def main():
