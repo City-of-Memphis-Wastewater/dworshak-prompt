@@ -8,7 +8,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ## [0.2.17] – 2026-02-13
 ### Changed:
-- Increase dworshak_prompt to 0.2.1. ConfigManager - > DworshakConfig
+- Increase dworshak_config to 0.2.1. ConfigManager - > DworshakConfig
 
 ---
 
