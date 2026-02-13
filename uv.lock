@@ -211,11 +211,11 @@ wheels = [
 
 [[package]]
 name = "dworshak-config"
-version = "0.1.7"
+version = "0.2.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/e0/57/83df98d0b6847b16e448b870666d4aaee84baa720df46cb4297596703e2f/dworshak_config-0.1.7.tar.gz", hash = "sha256:1bb9b7bc4d6e76359ce36d87f5e65b875dd78614d3234fa310952fc1452e3519", size = 8067, upload-time = "2026-02-13T00:05:51.172Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7a/e7/f485d33f5a422f966d1641f96cf530b9a3facb1b028ba8458ef6df5efcdf/dworshak_config-0.2.1.tar.gz", hash = "sha256:a4b8c803c51d660dc8754f764d99b3614ff53eb9334fc0a1261840c1d4949429", size = 8867, upload-time = "2026-02-13T22:37:36.798Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/13/87/33220fc6e04b25f6892e96d8c8bc3dd96ee3c5d4d8560b8b24aa1af51ecb/dworshak_config-0.1.7-py3-none-any.whl", hash = "sha256:9399a7965b0b6503797d25c0ca598ce4192322af3ce9347a62c084eb9afac3f3", size = 7911, upload-time = "2026-02-13T00:05:49.596Z" },
+    { url = "https://files.pythonhosted.org/packages/0b/c2/42574dc0e09412fd733df42b9a18dc2fa91b3309179195a7ea85bf0f2556/dworshak_config-0.2.1-py3-none-any.whl", hash = "sha256:2c818e5407ffbdecc564fa829cb58bb741a814bd54028c3f5f5ab3b3d57723f7", size = 8836, upload-time = "2026-02-13T22:37:34.483Z" },
 ]
 
 [[package]]
@@ -267,7 +267,7 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "cryptography", marker = "extra == 'crypto'", specifier = ">=46.0.3" },
-    { name = "dworshak-config", specifier = ">=0.1.7" },
+    { name = "dworshak-config", specifier = ">=0.2.1" },
     { name = "dworshak-env", specifier = ">=0.1.2" },
     { name = "dworshak-prompt", extras = ["crypto", "typer"], marker = "extra == 'full'" },
     { name = "dworshak-secret", specifier = ">=1.2.3" },
