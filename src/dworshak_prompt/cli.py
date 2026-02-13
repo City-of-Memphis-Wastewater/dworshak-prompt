@@ -115,7 +115,7 @@ def get_or_set_config(
         item = DworshakPrompt().ask("Item key", avoid = {PromptMode.WEB, PromptMode.GUI})
 
     """Get a configuration value (Storage -> Prompt -> Save)."""
-    val = DworshakObtain.config(
+    val = DworshakObtain().config(
         service=service,
         item=item,
         prompt_message=message,
@@ -147,7 +147,7 @@ def get_or_set_secret(
     if not service or not item:
         raise typer.Exit(1)
     
-    result = DworshakObtain.secret(
+    result = DworshakObtain().secret(
         service=service,
         item=item,
         overwrite=overwrite,

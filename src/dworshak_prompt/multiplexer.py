@@ -51,6 +51,7 @@ class DworshakPrompt:
         self.default_avoid = default_avoid
 
     def ask(
+        self,2
         message: str = "Enter value",
         suggestion: str | None = None,
         default: Any | None = None,

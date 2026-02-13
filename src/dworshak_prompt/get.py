@@ -26,6 +26,7 @@ class DworshakObtain:
         self.secret_path = secret_path
 
     def config(
+        self,
         service: str, 
         item: str, 
         prompt_message: str | None = None,
@@ -59,6 +60,7 @@ class DworshakObtain:
         return new_value or value
 
     def secret(
+        self,
         service: str, 
         item: str, 
         path: str | Path | None = self.secret_path,
