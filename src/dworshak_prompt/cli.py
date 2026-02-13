@@ -93,8 +93,8 @@ def ask(
         print(val)
 
 
-# Create the 'get' sub-app
-get_app = typer.Typer(help="Retrieve values from config or secrets.")
+# Create the 'obtain' sub-app
+obtain_app = typer.Typer(help="Retrieve values from config or secrets.")
 app.add_typer(get_app, name="obtain")
 
 @obtain_app.command(name="config")
