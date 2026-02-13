@@ -51,18 +51,23 @@ class DworshakPrompt:
         self.default_avoid = default_avoid
 
     def ask(
-        self,2
+        self,
         message: str = "Enter value",
         suggestion: str | None = None,
         default: Any | None = None,
         hide_input: bool = False,
-        priority: list[PromptMode] | None = self.default_priority,
-        avoid: set[PromptMode] | None = self.default_avoid,
+        priority: list[PromptMode] | None = None,
+        avoid: set[PromptMode] | None = None,
         interrupt_event: threading.Event | None = None,
         debug: bool = False,  # Added a flag to toggle at runtime
         timeout: int | float | None = None,
     ) -> str | None:
-        
+
+        if priority is None:
+            priority = self.default_priority
+        if avoid is None:
+            avoid = self.default_avoid
+
         # Use existing interrupt_event or create a local one for this call
         if interrupt_event is None:
             interrupt_event = threading.Event()
