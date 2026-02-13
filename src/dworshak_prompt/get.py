@@ -22,13 +22,15 @@ class DworshakGet:
         service: str, 
         item: str, 
         prompt_message: str | None = None,
+        path: str | None = None,
         suggestion: str | None = None,
         overwrite: bool = False,
         forget: bool = False,
         **kwargs # Pass-through for priority, avoid, debug, etc.
     ) -> str | None:
-        mgr = ConfigManager()
-        value = mgr.get_value(service, item)
+    
+        mgr = ConfigManager(path = path)
+        value = mgr.get(service, item)
 
         # Logic: If it exists and we aren't forcing a refresh, return it.
         if value is not None and not overwrite:
@@ -44,7 +46,7 @@ class DworshakGet:
 
         # Persistence logic
         if new_value is not None and not forget:
-            mgr.set_value(service, item, new_value)
+            mgr.set(service, item, new_value)
             
         return new_value or value
 
