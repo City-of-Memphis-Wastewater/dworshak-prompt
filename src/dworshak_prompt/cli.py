@@ -5,8 +5,10 @@ from rich.console import Console
 import os
 from pathlib import Path
 from typing import Optional
-from typer_helptree import add_typer_helptree
-
+try:
+    from typer_helptree import add_typer_helptree
+except:
+    pass
 from .multiplexer import DworshakPrompt, PromptMode 
 from .get import DworshakGet
 
@@ -45,9 +47,10 @@ def main(ctx: typer.Context,
         typer.echo(__version__)
         raise typer.Exit(code=0)
 
-# In cli.py
-add_typer_helptree(app=app, console=console, version = __version__,hidden=True)
-
+try:
+    add_typer_helptree(app=app, console=console, version = __version__,hidden=True)
+except:
+    pass
 
 def resolve_message(ctx: typer.Context, value: str):
     # ctx.params will already contain 'msg_flag' because Options are parsed first

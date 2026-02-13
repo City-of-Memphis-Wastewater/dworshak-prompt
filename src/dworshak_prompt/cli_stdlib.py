@@ -140,7 +140,18 @@ def main():
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
 
+    # --- Typer-Only Commands (Redirects) ---
+    # We add these to the parser so they show up in --help, but they all trigger the same error.
+    typer_only = ["helptree", "get"]
+    for cmd in typer_only:
+        subparsers.add_parser(cmd, help=f"[Requires Typer] Full version of {cmd}", add_help=False)
+
     args = parser.parse_args()
+
+    # Handle Redirections first
+    if args.command in typer_only:
+        stdlib_notify_redirect(args.command)
+        return 1
 
     if args.command == "ask":
         mode_map = {m.value: m for m in PromptMode}
