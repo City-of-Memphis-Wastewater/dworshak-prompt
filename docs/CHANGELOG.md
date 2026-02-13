@@ -12,6 +12,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ### Changed:
 - Make typer an optional dependency group.
+- Standardized extras to typer and crypto, which is consistent across the dworshak ecosystem.
 
 ### Fixed:
 - Reference actual dworshak-config package rather than the hardcoded .whl path.
