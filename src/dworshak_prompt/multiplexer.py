@@ -39,14 +39,25 @@ class PromptMode(Enum):
     WEB = "web"
 
 class DworshakPrompt: 
-@staticmethod
+    def __init__(self,
+        config_path: str | None = None,
+        secret_path: str | None = None,
+        default_priority: list[PromptMode] | None = None,
+        default_avoid: set[PromptMode] | None =None,
+    ):
+        self.config_path = config_path
+        self.secret_path = secret_path
+        self.default_priority = default_priority
+        self.default_avoid = default_avoid
+
+    @staticmethod
     def ask(
         message: str = "Enter value",
         suggestion: str | None = None,
         default: Any | None = None,
         hide_input: bool = False,
-        priority: list[PromptMode] | None = None,
-        avoid: set[PromptMode] | None = None,
+        priority: list[PromptMode] | None = self.default_priority,
+        avoid: set[PromptMode] | None = self.default_avoid,
         interrupt_event: threading.Event | None = None,
         debug: bool = False,  # Added a flag to toggle at runtime
         timeout: int | float | None = None,
