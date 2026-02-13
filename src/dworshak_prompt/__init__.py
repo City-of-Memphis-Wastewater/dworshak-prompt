@@ -13,7 +13,7 @@ def __getattr__(name):
         from .multiplexer import PromptMode
         return PromptMode
 
-    if name == "DworshakPrompt":
+    if name == "DworshakObtain":
         from .get import DworshakObtain
         return DworshakObtain
 

@@ -1,4 +1,5 @@
 # src/dworshak_prompt/__main__.py
+from .cli import app
 try:
     from .cli import app
     def run():
