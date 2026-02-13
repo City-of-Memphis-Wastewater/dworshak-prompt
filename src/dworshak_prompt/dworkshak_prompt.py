@@ -1,5 +1,5 @@
 # src/dworshak_prompt/dworshak_prompt.py
-from __future__ annotations
+from __future__ import annotations
 from .multiplexer import ask as _ask
 from .obtain import obtain as _obtain
 
