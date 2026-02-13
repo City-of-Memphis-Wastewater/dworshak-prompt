@@ -95,7 +95,7 @@ def ask(
 
 # Create the 'obtain' sub-app
 obtain_app = typer.Typer(help="Retrieve values from config or secrets.")
-app.add_typer(get_app, name="obtain")
+app.add_typer(obtain_app, name="obtain")
 
 @obtain_app.command(name="config")
 def get_or_set_config(
