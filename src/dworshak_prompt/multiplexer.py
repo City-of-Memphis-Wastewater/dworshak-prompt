@@ -38,136 +38,131 @@ class PromptMode(Enum):
     GUI = "gui"
     WEB = "web"
 
-class DworshakPrompt:
-    @staticmethod
-    def ask(
-        message: str = "Enter value",
-        suggestion: str | None = None,
-        default: Any | None = None,
-        hide_input: bool = False,
-        priority: list[PromptMode] | None = None,
-        avoid: set[PromptMode] | None = None,
-        interrupt_event: threading.Event | None = None,
-        debug: bool = False,  # Added a flag to toggle at runtime
-        timeout: int | float | None = None,
-    ) -> str | None:
+#class DworshakPrompt: # migrated to dworshak_prompt.py
+#@staticmethod
+def ask(
+    message: str = "Enter value",
+    suggestion: str | None = None,
+    default: Any | None = None,
+    hide_input: bool = False,
+    priority: list[PromptMode] | None = None,
+    avoid: set[PromptMode] | None = None,
+    interrupt_event: threading.Event | None = None,
+    debug: bool = False,  # Added a flag to toggle at runtime
+    timeout: int | float | None = None,
+) -> str | None:
+    
+    # Use existing interrupt_event or create a local one for this call
+    if interrupt_event is None:
+        interrupt_event = threading.Event()
+
+    if debug:
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.WARNING)
+
+    # 1. CI/Headless Detection
+    # If we aren't in a TTY and aren't on a system that can spawn a GUI/Web window,
+    # return the default immediately to avoid the "Time Bomb."
+    if not ph.interactive_terminal_is_available() and \
+    not ph.tkinter_is_available() and \
+    not ph.is_browser_available(): # Hypothetical pyhabitat check
+        logger.debug("[DIAGNOSTIC] Non-interactive environment detected. Using default.")
+        return default
+
+    avoid = avoid or set()
+    if ph.on_wsl():
+        avoid.add(PromptMode.GUI)
+
+    default_order = [PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB]
+    if priority:
+        # User choice first, followed by everything else as a safety net
+        effective_priority = priority + [m for m in default_order if m not in priority]
+    else:
+        effective_priority = default_order
+
+    if timeout:
+        # A background timer to fire the interrupt signal
+        timer = threading.Timer(timeout, lambda: interrupt_event.set())
+        timer.start()
+
+    for mode in effective_priority:
+        if mode in avoid:
+            logger.debug(f"[DIAGNOSTIC] Skipping {mode} (avoided)")
+            continue
+
+        logger.debug(f"\n[DIAGNOSTIC] === Entering Mode: {mode} ===")
         
-        # Use existing interrupt_event or create a local one for this call
-        if interrupt_event is None:
-            interrupt_event = threading.Event()
+        try:
+            if mode == PromptMode.CONSOLE:
+                if not ph.interactive_terminal_is_available():
+                    logger.debug(f"[DIAGNOSTIC] {mode} skipped: No interactive terminal.")
+                    continue
+                
+                val = console_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
+                logger.debug(f"[DIAGNOSTIC] SUCCESS: {mode} returned: {repr(val)}")
+                return val
 
-        if debug:
-            logger.setLevel(logging.DEBUG)
-        else:
-            logger.setLevel(logging.WARNING)
-
-        # 1. CI/Headless Detection
-        # If we aren't in a TTY and aren't on a system that can spawn a GUI/Web window,
-        # return the default immediately to avoid the "Time Bomb."
-        if not ph.interactive_terminal_is_available() and \
-        not ph.tkinter_is_available() and \
-        not ph.is_browser_available(): # Hypothetical pyhabitat check
-            logger.debug("[DIAGNOSTIC] Non-interactive environment detected. Using default.")
-            return default
-
-        avoid = avoid or set()
-        if ph.on_wsl():
-            avoid.add(PromptMode.GUI)
-
-        default_order = [PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB]
-        if priority:
-            # User choice first, followed by everything else as a safety net
-            effective_priority = priority + [m for m in default_order if m not in priority]
-        else:
-            effective_priority = default_order
-
-        if timeout:
-            # A background timer to fire the interrupt signal
-            timer = threading.Timer(timeout, lambda: interrupt_event.set())
-            timer.start()
-
-        for mode in effective_priority:
-            if mode in avoid:
-                logger.debug(f"[DIAGNOSTIC] Skipping {mode} (avoided)")
-                continue
-
-            logger.debug(f"\n[DIAGNOSTIC] === Entering Mode: {mode} ===")
-            
-            try:
-                if mode == PromptMode.CONSOLE:
-                    if not ph.interactive_terminal_is_available():
-                        logger.debug(f"[DIAGNOSTIC] {mode} skipped: No interactive terminal.")
-                        continue
+            elif mode == PromptMode.GUI:
+                if not ph.tkinter_is_available():
+                    logger.debug(f"[DIAGNOSTIC] {mode} skipped: Tkinter unavailable.")
+                    continue
                     
-                    val = console_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
+                val = gui_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
+                if val is not None:
                     logger.debug(f"[DIAGNOSTIC] SUCCESS: {mode} returned: {repr(val)}")
                     return val
+                
+                logger.debug(f"[DIAGNOSTIC] GUI cancelled. Raising PromptCancelled.")
+                raise PromptCancelled()
 
-                elif mode == PromptMode.GUI:
-                    if not ph.tkinter_is_available():
-                        logger.debug(f"[DIAGNOSTIC] {mode} skipped: Tkinter unavailable.")
-                        continue
-                        
-                    val = gui_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
+            elif mode == PromptMode.WEB:
+                local_manager = PromptManager()
+                try:
+                    val = browser_get_input(
+                        message, 
+                        suggestion, 
+                        hide_input, 
+                        manager = local_manager, 
+                        stop_event = interrupt_event
+                        )
                     if val is not None:
                         logger.debug(f"[DIAGNOSTIC] SUCCESS: {mode} returned: {repr(val)}")
                         return val
-                    
-                    logger.debug(f"[DIAGNOSTIC] GUI cancelled. Raising PromptCancelled.")
+                    logger.debug(f"[DIAGNOSTIC] WEB returned None. Raising PromptCancelled.")
                     raise PromptCancelled()
+                finally:
+                    stop_prompt_server()
 
-                elif mode == PromptMode.WEB:
-                    local_manager = PromptManager()
-                    try:
-                        val = browser_get_input(
-                            message, 
-                            suggestion, 
-                            hide_input, 
-                            manager = local_manager, 
-                            stop_event = interrupt_event
-                            )
-                        if val is not None:
-                            logger.debug(f"[DIAGNOSTIC] SUCCESS: {mode} returned: {repr(val)}")
-                            return val
-                        logger.debug(f"[DIAGNOSTIC] WEB returned None. Raising PromptCancelled.")
-                        raise PromptCancelled()
-                    finally:
-                        stop_prompt_server()
+        except BaseException as e:
+            exc_type = type(e)
+            exc_name = exc_type.__name__
+            exc_module = exc_type.__module__
+            
+            logger.debug(f"[DIAGNOSTIC] !!! EXCEPTION TRIGGERED !!!")
+            logger.debug(f"[DIAGNOSTIC] Class Name: {exc_name}")
+            logger.debug(f"[DIAGNOSTIC] Full Path:  {exc_module}.{exc_name}")
+            logger.debug(f"[DIAGNOSTIC] Repr:       {repr(e)}")
+            logger.debug(f"[DIAGNOSTIC] Args:       {e.args}")
 
-            except BaseException as e:
-                exc_type = type(e)
-                exc_name = exc_type.__name__
-                exc_module = exc_type.__module__
-                
-                logger.debug(f"[DIAGNOSTIC] !!! EXCEPTION TRIGGERED !!!")
-                logger.debug(f"[DIAGNOSTIC] Class Name: {exc_name}")
-                logger.debug(f"[DIAGNOSTIC] Full Path:  {exc_module}.{exc_name}")
-                logger.debug(f"[DIAGNOSTIC] Repr:       {repr(e)}")
-                logger.debug(f"[DIAGNOSTIC] Args:       {e.args}")
+            stop_signals = {"KeyboardInterrupt", "Abort", "SystemExit", "EOFError", "PromptCancelled"}
+            
+            if exc_name in stop_signals or isinstance(e, (KeyboardInterrupt, PromptCancelled)):
+                logger.debug(f"[DIAGNOSTIC] >>> MATCHED STOP SIGNAL: {exc_name}. EXITING FUNCTION.")
+                if interrupt_event:
+                    interrupt_event.set()
+                return None
 
-                stop_signals = {"KeyboardInterrupt", "Abort", "SystemExit", "EOFError", "PromptCancelled"}
-                
-                if exc_name in stop_signals or isinstance(e, (KeyboardInterrupt, PromptCancelled)):
-                    logger.debug(f"[DIAGNOSTIC] >>> MATCHED STOP SIGNAL: {exc_name}. EXITING FUNCTION.")
-                    if interrupt_event:
-                        interrupt_event.set()
-                    return None
-
-                # For technical failures, we log the traceback at DEBUG level
-                logger.debug(f"[DIAGNOSTIC] >>> TECHNICAL FAILURE detected. Investigating traceback...")
-                if logger.isEnabledFor(logging.DEBUG):
-                    traceback.print_exc(file=sys.stdout)
-                
-                logger.debug(f"[DIAGNOSTIC] Continuing to fallback mode...")
-                continue
+            # For technical failures, we log the traceback at DEBUG level
+            logger.debug(f"[DIAGNOSTIC] >>> TECHNICAL FAILURE detected. Investigating traceback...")
+            if logger.isEnabledFor(logging.DEBUG):
+                traceback.print_exc(file=sys.stdout)
+            
+            logger.debug(f"[DIAGNOSTIC] Continuing to fallback mode...")
+            continue
 
 
-        logger.debug("[DIAGNOSTIC] All modes exhausted.")
-        raise RuntimeError("No input method succeeded.")
+    logger.debug("[DIAGNOSTIC] All modes exhausted.")
+    raise RuntimeError("No input method succeeded.")
 
-def main():
-    DworshakPrompt.ask(
-        "What is your name?",
-        suggestion="George",
-        debug=True,
-    )
+

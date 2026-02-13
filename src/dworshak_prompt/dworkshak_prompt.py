@@ -46,3 +46,10 @@ class DworshakPrompt:
             forget=forget,
             **prompt_kwargs,
         )
+
+def main():
+    DworshakPrompt.ask(
+        "What is your name?",
+        suggestion="George",
+        debug=True,
+    )
