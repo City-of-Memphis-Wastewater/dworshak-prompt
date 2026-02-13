@@ -9,8 +9,8 @@ try:
     from typer_helptree import add_typer_helptree
 except:
     pass
-from .multiplexer import DworshakPrompt, PromptMode 
-from .get import DworshakGet
+from .__init__ import DworshakPrompt, PromptMode 
+from .get import DworshakObtain
 
 from ._version import __version__
 
@@ -116,7 +116,7 @@ def get_or_set_config(
         item = DworshakPrompt.ask("Item key", avoid = {PromptMode.WEB, PromptMode.GUI})
 
     """Get a configuration value (Storage -> Prompt -> Save)."""
-    val = DworshakGet.config(
+    val = DworshakObtain.config(
         service=service,
         item=item,
         prompt_message=message,
@@ -148,7 +148,7 @@ def get_or_set_secret(
     if not service or not item:
         raise typer.Exit(1)
     
-    result = DworshakGet.secret(
+    result = DworshakObtain.secret(
         service=service,
         item=item,
         overwrite=overwrite,
