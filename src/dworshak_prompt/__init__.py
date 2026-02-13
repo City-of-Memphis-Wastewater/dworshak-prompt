@@ -5,7 +5,7 @@ __all__ = [
 
 def __getattr__(name):
     if name == "DworshakPrompt":
-        from .multiplexer import DworshakPrompt
+        from .dworshak_prompt import DworshakPrompt
         return DworshakPrompt
     
     if name == "PromptMode":
