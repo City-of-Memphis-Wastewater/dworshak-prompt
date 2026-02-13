@@ -16,7 +16,7 @@ class SecretData:
         # Allows 'if result:' to check if a value exists
         return self.value is not None
 
-class DworshakGet:
+class DworshakObtain:
     @staticmethod
     def config(
         service: str, 
@@ -24,6 +24,7 @@ class DworshakGet:
         prompt_message: str | None = None,
         path: str | None = None,
         suggestion: str | None = None,
+        default: str | None = None,
         overwrite: bool = False,
         forget: bool = False,
         **kwargs # Pass-through for priority, avoid, debug, etc.
