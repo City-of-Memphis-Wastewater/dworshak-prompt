@@ -96,9 +96,9 @@ def ask(
 
 # Create the 'get' sub-app
 get_app = typer.Typer(help="Retrieve values from config or secrets.")
-app.add_typer(get_app, name="get")
+app.add_typer(get_app, name="obtain")
 
-@get_app.command(name="config")
+@obtain_app.command(name="config")
 def get_or_set_config(
     service: Optional[str] = typer.Option(None, "--service", "-s", help="Service name."),
     item: Optional[str] = typer.Option(None, "--item", "-i", help="Item key."),
@@ -128,7 +128,7 @@ def get_or_set_config(
     if val:
         print(val)
 
-@get_app.command(name="secret")
+@obtain_app.command(name="secret")
 def get_or_set_secret(
     service: Optional[str] = typer.Option(None, "--service", "-s", help="Service name."),
     item: Optional[str] = typer.Option(None, "--item", "-i", help="Item key."),

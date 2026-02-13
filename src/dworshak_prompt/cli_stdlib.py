@@ -142,7 +142,7 @@ def main():
 
     # --- Typer-Only Commands (Redirects) ---
     # We add these to the parser so they show up in --help, but they all trigger the same error.
-    typer_only = ["helptree", "get"]
+    typer_only = ["helptree", "obtain"]
     for cmd in typer_only:
         subparsers.add_parser(cmd, help=f"[Requires Typer] Full version of {cmd}", add_help=False)
 
