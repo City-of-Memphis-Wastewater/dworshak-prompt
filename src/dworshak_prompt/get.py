@@ -114,5 +114,9 @@ class DworshakObtain:
     
 
 def dworshak_obtain(store: StoreMode = StoreMode.CONFIG,*args,**kwargs):
-    if StoreMode == StoreMode.CONFIG
+    if store == StoreMode.CONFIG:
         return DworshakObtain().config(*args,**kwargs)
+    elif store == StoreMode.SECRET:
+        return DworshakObtain().secret(*args,**kwargs)
+    elif store == StoreMode.ENV:
+        return DworshakObtain().env(*args,**kwargs)
