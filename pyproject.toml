@@ -9,7 +9,8 @@ dependencies = [
     "dworshak-config>=0.1.7",
     "dworshak-secret>=1.2.3",
     "pyhabitat>=1.1.37",
-    "memphisdrip>=0.1.4"
+    "memphisdrip>=0.1.4",
+    "dworshak-env>=0.1.2",
 ]
 
 authors = [
