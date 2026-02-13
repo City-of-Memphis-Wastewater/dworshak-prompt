@@ -30,14 +30,16 @@ class DworshakObtain:
         service: str, 
         item: str, 
         prompt_message: str | None = None,
-        path: str | Path | None = self.config_path,
+        path: str | Path | None = None,
         suggestion: str | None = None,
         default: str | None = None,
         overwrite: bool = False,
         forget: bool = False,
         **kwargs # Pass-through for priority, avoid, debug, etc.
     ) -> str | None:
-    
+        if path is None:
+            path = self.config_path
+            
         mgr = ConfigManager(path = path)
         value = mgr.get(service, item)
 
@@ -63,12 +65,14 @@ class DworshakObtain:
         self,
         service: str, 
         item: str, 
-        path: str | Path | None = self.secret_path,
+        path: str | Path | None = None,
         overwrite: bool = False,
         **kwargs 
         )-> SecretData:
 
-
+        if path is None:
+            path = self.secret_path
+            
         try:
             # Lazy Import dworshak_secret here to avoid top-level crashes
             from dworshak_secret import get_secret, store_secret
