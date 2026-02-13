@@ -1,4 +1,5 @@
 # src/dworshak_prompt/get.py
+from pathlib import Path
 from dataclasses import dataclass
 from dworshak_config import ConfigManager
 from .multiplexer import DworshakPrompt
@@ -17,6 +18,14 @@ class SecretData:
         return self.value is not None
 
 class DworshakObtain:
+class DworshakPrompt:
+    def __init__(self,
+        config_path: str | Path | None = None,
+        secret_path: str | Path | None = None,
+    ):
+        self.config_path = config_path
+        self.secret_path = secret_path
+
     @staticmethod
     def config(
         service: str, 

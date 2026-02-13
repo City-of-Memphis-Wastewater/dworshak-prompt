@@ -50,7 +50,6 @@ class DworshakPrompt:
         self.default_priority = default_priority
         self.default_avoid = default_avoid
 
-    @staticmethod
     def ask(
         message: str = "Enter value",
         suggestion: str | None = None,
