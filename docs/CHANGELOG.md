@@ -9,6 +9,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ## [0.2.16] – 2026-02-13
 ### Fixed:
 - Double dot import error: '.__init__' -> '.'
+
 ---
 
 ## [0.2.15] – 2026-02-13
