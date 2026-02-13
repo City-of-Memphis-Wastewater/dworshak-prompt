@@ -18,7 +18,7 @@ interactive input is possible, preventing broken jobs or timeouts.
 ```python
 from dworshak_prompt import DworshakPrompt
 
-env = DworshakPrompt.ask(
+env = DworshakPrompt().ask(
     message="Target environment",
     suggestion="production",  # human-facing
     default="staging",        # used in CI or headless
@@ -44,7 +44,7 @@ Example:
 ```python
 from dworshak_prompt import DworshakPrompt
 
-api_key = DworshakPrompt.ask(
+api_key = DworshakPrompt().ask(
     message="Enter API key",
     hide_input=True
 )
@@ -67,7 +67,7 @@ Example:
 ```python
 from dworshak_prompt import DworshakPrompt, PromptMode
 
-special_secret = DworshakPrompt.ask(
+special_secret = DworshakPrompt().ask(
     message="Enter special key",
     priority=[PromptMode.CONSOLE, PromptMode.GUI],
     avoid={PromptMode.WEB},
@@ -103,7 +103,7 @@ import threading
 
 cancel_event = threading.Event()
 
-api_key = DworshakPrompt.ask(
+api_key = DworshakPrompt().ask(
     message="Enter API key for agent workflow",
     suggestion="Use your AI service key",  # human-facing
     default="NONE",                         # safe fallback for automation
