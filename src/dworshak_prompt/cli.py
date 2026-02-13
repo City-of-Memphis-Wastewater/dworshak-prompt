@@ -110,6 +110,7 @@ def get_or_set_config(
 ):
     # If the user didn't provide values via flags, prompt for them now.
     if not service:
+        # this is just typer.prompt()
         service = DworshakPrompt.ask("Service name", avoid = {PromptMode.WEB, PromptMode.GUI})
     if not item:
         item = DworshakPrompt.ask("Item key", avoid = {PromptMode.WEB, PromptMode.GUI})
