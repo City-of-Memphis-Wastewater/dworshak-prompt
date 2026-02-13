@@ -25,12 +25,11 @@ class DworshakObtain:
         self.config_path = config_path
         self.secret_path = secret_path
 
-    @staticmethod
     def config(
         service: str, 
         item: str, 
         prompt_message: str | None = None,
-        path: str | None = None,
+        path: str | Path | None = self.config_path,
         suggestion: str | None = None,
         default: str | None = None,
         overwrite: bool = False,
@@ -59,10 +58,10 @@ class DworshakObtain:
             
         return new_value or value
 
-    @staticmethod
     def secret(
         service: str, 
         item: str, 
+        path: str | Path | None = self.secret_path,
         overwrite: bool = False,
         **kwargs 
         )-> SecretData:
