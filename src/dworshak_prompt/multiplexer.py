@@ -182,3 +182,5 @@ class DworshakPrompt:
         raise RuntimeError("No input method succeeded.")
 
 
+def dworshak_ask():
+    DworshakPrompt().ask()

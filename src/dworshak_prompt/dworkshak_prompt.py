@@ -1,5 +1,7 @@
 # src/dworshak_prompt/dworshak_prompt.py
 from __future__ import annotations
+from typing import Any
+
 from .multiplexer import ask as _ask
 from .obtain import obtain as _obtain
 
@@ -47,9 +49,28 @@ class DworshakPrompt:
             **prompt_kwargs,
         )
 
+
+def dworshak_ask(
+    message: str = "Enter value",
+    suggestion: str | None = None,
+    default: Any | None = None,
+    **kwargs: Any
+) -> str | None:
+    """
+    Convenience function to prompt the user for input using the Dworshak Multiplexer.
+    Automatically handles fallback between Console, GUI, and Web modes.
+    """
+    return DworshakPrompt().ask(
+        message=message,
+        suggestion=suggestion,
+        default=default,
+        **kwargs
+    )
+
 def main():
-    DworshakPrompt.ask(
+    DworshakPrompt().ask(
         "What is your name?",
         suggestion="George",
         debug=True,
     )
+

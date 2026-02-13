@@ -2,7 +2,9 @@
 from pathlib import Path
 from dataclasses import dataclass
 from enum import Enum
+
 from dworshak_config import ConfigManager
+from dworshak_env import DworshakEnv
 
 from .multiplexer import DworshakPrompt
 
