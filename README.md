@@ -48,10 +48,10 @@ val = DworshakPrompt().ask(
 Leveraging `dworshak-prompt` for calling and adding configured values.
 
 ```python
-from dworshak_prompt import ConfigManager
+from dworshak_prompt import DworshakConfig
 
 # Custom path for a specific project
-eds_config = ConfigManager("~/.pipeline-eds/config.json")
+eds_config = DworshakConfig("~/.pipeline-eds/config.json")
 api_key = eds_config.get("api_key", prompt_message="Enter EDS API Key")
 ```
 

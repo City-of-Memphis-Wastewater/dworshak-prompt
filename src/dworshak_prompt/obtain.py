@@ -2,7 +2,7 @@
 from __future__ import annotations
 from typing import Literal, Optional
 from dataclasses import dataclass
-from dworshak_config import ConfigManager
+from dworshak_config import DworshakObtain
 
 
 @dataclass
@@ -39,7 +39,7 @@ def obtain(
 
     # ---------- CONFIG ----------
     if store == "config":
-        mgr = ConfigManager(path=prompt.config_path)
+        mgr = DworshakObtain(path=prompt.config_path)
         value = mgr.get(service, item)
 
         if value is not None and not overwrite:
