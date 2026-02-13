@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.17] – 2026-02-13
+### Changed:
+- Increase dworshak_prompt to 0.2.1. ConfigManager - > DworshakConfig
+
+---
+
 ## [0.2.16] – 2026-02-13
 ### Fixed:
 - Double dot import error: '.__init__' -> '.'
