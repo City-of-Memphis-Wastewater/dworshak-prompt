@@ -18,10 +18,10 @@ Automatically skips incompatible modes (e.g., GUI on WSL) via `pyhabitat`.
 from dworshak_prompt import DworshakPrompt, PromptMode
 
 # Basic
-val = DworshakPrompt.ask("Enter value")
+val = DworshakPrompt().ask("Enter value")
 
 # Options
-val = DworshakPrompt.ask(
+val = DworshakPrompt().ask(
     message = "Secure Key",
     hide_input=True,
     priority = [PromptMode.CONSOLE, PromptMode.GUI]
@@ -38,7 +38,7 @@ from dworshak_prompt import DworshakPrompt, PromptMode
 
 # If this runs in GitHub Actions, it returns "staging" immediately.
 # If it runs on a laptop, it pops up a GUI or Console prompt.
-val = DworshakPrompt.ask(
+val = DworshakPrompt().ask(
     message = "Target Environment",
     suggestion="production",  # What the human sees
     default="staging"         # What the CI/Headless system uses

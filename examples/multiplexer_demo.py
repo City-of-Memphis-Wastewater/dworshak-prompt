@@ -11,7 +11,7 @@ def main():
     try:
         # 2. Trigger the 'Monster' Engine
         # We simulate a 'suggestion' for a config value
-        result = DworshakPrompt.ask(
+        result = DworshakPrompt().ask(
             message="Enter a test value",
             suggestion="99",
             hide_input=False,
