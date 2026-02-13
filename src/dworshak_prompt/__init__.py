@@ -2,6 +2,8 @@ __all__ = [
     "DworshakPrompt", 
     "PromptMode"
     "DworshakObtain"
+    "dworshak_obtain"
+    "StoreMode"
     ]
 
 def __getattr__(name):
@@ -16,6 +18,15 @@ def __getattr__(name):
     if name == "DworshakObtain":
         from .get import DworshakObtain
         return DworshakObtain
+    
+    if name == "dworshak_obtain":
+        from .get import dworshak_obtain
+        return dworshak_obtain
+    
+    if name == "StoreMode":
+        from .get import StoreMode
+        return StoreMode
+    
 
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
