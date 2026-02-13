@@ -9,7 +9,7 @@ try:
     from typer_helptree import add_typer_helptree
 except:
     pass
-from .__init__ import DworshakPrompt, PromptMode, DworshakObtain
+from . import DworshakPrompt, PromptMode, DworshakObtain
 
 from ._version import __version__
 
