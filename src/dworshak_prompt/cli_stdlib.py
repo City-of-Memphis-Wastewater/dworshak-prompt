@@ -3,7 +3,7 @@ import argparse
 import sys
 from memphisdrip import safe_notify
 
-from .multiplexer import DworshakPrompt, PromptMode
+from .__init__ import DworshakPrompt, PromptMode
 from .keyboard_interrupt import PromptCancelled
 from ._version import __version__
 
@@ -25,7 +25,7 @@ def run_prompt(
         logging.getLogger("dworshak_prompt").setLevel(logging.DEBUG)
 
     try:
-        value = DworshakPrompt.ask(
+        value = DworshakPrompt().ask(
             message=message,
             suggestion=suggestion,
             hide_input=hide_input,

@@ -45,7 +45,7 @@ class DworshakObtain:
             return value
 
         # If missing or overwriting, we use the multiplexer
-        new_value = DworshakPrompt.ask(
+        new_value = DworshakPrompt().ask(
             message=prompt_message or f"config [{service}][{item}]",
             suggestion=suggestion or value,
             hide_input=False,
@@ -85,7 +85,7 @@ class DworshakObtain:
             return SecretData(value = value, is_new = False)
         print(f"service = {service}")
         print(f"item = {item}")
-        new_value = DworshakPrompt.ask(
+        new_value = DworshakPrompt().ask(
             message=f"{service} / {item}",
             hide_input=True,
             **kwargs 

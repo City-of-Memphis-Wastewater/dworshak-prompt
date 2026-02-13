@@ -82,7 +82,7 @@ def ask(
 ):
 
     """Get user input and print it to stdout."""
-    val = DworshakPrompt.ask(
+    val = DworshakPrompt().ask(
         message=message,
         priority=[mode],
         suggestion = suggestion,
@@ -110,9 +110,9 @@ def get_or_set_config(
     # If the user didn't provide values via flags, prompt for them now.
     if not service:
         # this is just typer.prompt()
-        service = DworshakPrompt.ask("Service name", avoid = {PromptMode.WEB, PromptMode.GUI})
+        service = DworshakPrompt().ask("Service name", avoid = {PromptMode.WEB, PromptMode.GUI})
     if not item:
-        item = DworshakPrompt.ask("Item key", avoid = {PromptMode.WEB, PromptMode.GUI})
+        item = DworshakPrompt().ask("Item key", avoid = {PromptMode.WEB, PromptMode.GUI})
 
     """Get a configuration value (Storage -> Prompt -> Save)."""
     val = DworshakObtain.config(
@@ -139,9 +139,9 @@ def get_or_set_secret(
 
     # If the user didn't provide values via flags, prompt for them now.
     if not service:
-        service = DworshakPrompt.ask("Service name", avoid = {PromptMode.WEB, PromptMode.GUI})
+        service = DworshakPrompt().ask("Service name", avoid = {PromptMode.WEB, PromptMode.GUI})
     if not item:
-        item = DworshakPrompt.ask("Item key", avoid = {PromptMode.WEB, PromptMode.GUI})
+        item = DworshakPrompt().ask("Item key", avoid = {PromptMode.WEB, PromptMode.GUI})
     
     # If they cancelled the prompt, exit gracefully
     if not service or not item:
