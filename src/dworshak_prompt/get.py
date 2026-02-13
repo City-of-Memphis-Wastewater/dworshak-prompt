@@ -1,8 +1,16 @@
 # src/dworshak_prompt/get.py
 from pathlib import Path
 from dataclasses import dataclass
+from enum import Enum
 from dworshak_config import ConfigManager
+
 from .multiplexer import DworshakPrompt
+
+class StoreMode(Enum):
+    CONFIG = "config"
+    SECERT = "secret"
+    ENV = "env"
+
 
 @dataclass
 class SecretData:
@@ -105,3 +113,6 @@ class DworshakObtain:
         return SecretData(value = new_value, is_new = True)
     
 
+def dworshak_obtain(store: StoreMode = StoreMode.CONFIG,*args,**kwargs):
+    if StoreMode == StoreMode.CONFIG
+        return DworshakObtain().config(*args,**kwargs)
