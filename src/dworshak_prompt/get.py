@@ -18,7 +18,6 @@ class SecretData:
         return self.value is not None
 
 class DworshakObtain:
-class DworshakPrompt:
     def __init__(self,
         config_path: str | Path | None = None,
         secret_path: str | Path | None = None,
