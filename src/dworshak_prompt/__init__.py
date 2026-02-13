@@ -1,6 +1,7 @@
 __all__ = [
     "DworshakPrompt", 
     "PromptMode"
+    "DworshakObtain"
     ]
 
 def __getattr__(name):
@@ -11,7 +12,11 @@ def __getattr__(name):
     if name == "PromptMode":
         from .multiplexer import PromptMode
         return PromptMode
-        
+
+    if name == "DworshakPrompt":
+        from .get import DworshakObtain
+        return DworshakObtain
+
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 def __dir__():
