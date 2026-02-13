@@ -13,6 +13,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ### Changed:
 - Make typer an optional dependency group.
 
+### Fixed:
+- Reference actual dworshak-config package rather than the hardcoded .whl path.
+
+### Changed:
+- Make typer an optional dependency group.
+
 ---
 
 ## [0.2.13] – 2026-02-10
