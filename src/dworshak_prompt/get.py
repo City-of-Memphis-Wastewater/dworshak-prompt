@@ -3,7 +3,7 @@ from pathlib import Path
 from dataclasses import dataclass
 from enum import Enum
 
-from dworshak_config import ConfigManager
+from dworshak_config import DworshakConfig
 from dworshak_env import DworshakEnv
 
 from .multiplexer import DworshakPrompt
@@ -50,7 +50,7 @@ class DworshakObtain:
         if path is None:
             path = self.config_path
             
-        mgr = ConfigManager(path = path)
+        mgr = DworshakConfig(path = path)
         value = mgr.get(service, item)
 
         # Logic: If it exists and we aren't forcing a refresh, return it.
