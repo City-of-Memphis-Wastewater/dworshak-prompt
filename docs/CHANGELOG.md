@@ -10,6 +10,9 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ### Added:
 - dworshak-env
 
+### Changed:
+- Set status to beta
+
 ---
 
 ## [0.2.14] – 2026-02-12
