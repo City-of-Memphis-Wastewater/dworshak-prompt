@@ -17,7 +17,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ## [0.2.14] – 2026-02-12
 ### Added:
-- Expose get.py functionality in cli.py 
+- Expose get.py functionality in cli.py. 
 
 ### Changed:
 - Make typer an optional dependency group.
