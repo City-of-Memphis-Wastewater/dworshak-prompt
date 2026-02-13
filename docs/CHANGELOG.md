@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.15] – 2026-02-13
+### Added:
+- dworshak-env
+
+---
+
 ## [0.2.14] – 2026-02-12
 ### Added:
 - Expose get.py functionality in cli.py 
