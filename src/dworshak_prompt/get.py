@@ -51,8 +51,8 @@ class DworshakObtain:
         if path is None:
             path = self.config_path
             
-        mgr = DworshakConfig(path = path)
-        value = mgr.get(service, item)
+        config_mgr = DworshakConfig(path = path)
+        value = config_mgr.get(service, item)
 
         # Logic: If it exists and we aren't forcing a refresh, return it.
         if value is not None and not overwrite:
@@ -68,7 +68,7 @@ class DworshakObtain:
 
         # Persistence logic
         if new_value is not None and not forget:
-            mgr.set(service, item, new_value)
+            config_mgr.set(service, item, new_value)
             
         return new_value or value
 
@@ -115,12 +115,17 @@ class DworshakObtain:
         store_secret(service, item, new_value)
         return SecretData(value = new_value, is_new = True)
     
+    def env(self, item: str, **kwargs) -> str | None:
+        env_mgr = DworshakEnv()
+        return env_mgr.get(item)
+    
 
 def dworshak_obtain(store: StoreMode = StoreMode.CONFIG,*args,**kwargs):
+    handler = DworshakObtain()
     if store == StoreMode.CONFIG:
-        return DworshakObtain().config(*args,**kwargs)
+        return handler.config(*args,**kwargs)
     elif store == StoreMode.SECRET:
-        return DworshakObtain().secret(*args,**kwargs)
+        return handler.secret(*args,**kwargs)
     elif store == StoreMode.ENV:
-        return DworshakObtain().env(*args,**kwargs)
+        return handler.env(*args,**kwargs)
     
