@@ -181,6 +181,27 @@ class DworshakPrompt:
         logger.debug("[DIAGNOSTIC] All modes exhausted.")
         raise RuntimeError("No input method succeeded.")
 
+def dworshak_ask(
+    message: str = "Enter value",
+    suggestion: str | None = None,
+    default: Any | None = None,
+    **kwargs: Any
+) -> str | None:
+    """
+    Convenience function to prompt the user for input using the Dworshak Multiplexer.
+    Automatically handles fallback between Console, GUI, and Web modes.
+    """
+    return DworshakPrompt().ask(
+        message=message,
+        suggestion=suggestion,
+        default=default,
+        **kwargs
+    )
 
-def dworshak_ask():
-    DworshakPrompt().ask()
+
+def main():
+    DworshakPrompt().ask(
+        "What is your name?",
+        suggestion="George",
+        debug=True,
+    )

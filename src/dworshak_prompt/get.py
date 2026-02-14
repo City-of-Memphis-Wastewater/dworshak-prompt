@@ -2,6 +2,7 @@
 from pathlib import Path
 from dataclasses import dataclass
 from enum import Enum
+from typing import Optional
 
 from dworshak_config import DworshakConfig
 from dworshak_env import DworshakEnv
@@ -10,14 +11,14 @@ from .multiplexer import DworshakPrompt
 
 class StoreMode(Enum):
     CONFIG = "config"
-    SECERT = "secret"
+    SECRET = "secret"
     ENV = "env"
 
 
 @dataclass
 class SecretData:
-    value: str = None
-    is_new: bool = False
+    value: Optional[str] = None
+    is_new: Optional[bool] = False
 
     def __repr__(self):
         # This prevents the secret from appearing if the whole object is printed 
@@ -122,3 +123,4 @@ def dworshak_obtain(store: StoreMode = StoreMode.CONFIG,*args,**kwargs):
         return DworshakObtain().secret(*args,**kwargs)
     elif store == StoreMode.ENV:
         return DworshakObtain().env(*args,**kwargs)
+    

@@ -3,7 +3,7 @@ import argparse
 import sys
 from memphisdrip import safe_notify
 
-from .__init__ import DworshakPrompt, PromptMode
+from . import DworshakPrompt, PromptMode
 from .keyboard_interrupt import PromptCancelled
 from ._version import __version__
 
