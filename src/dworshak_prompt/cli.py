@@ -94,38 +94,8 @@ def ask(
 
 
 # Create the 'obtain' sub-app
-obtain_app = typer.Typer(help="Retrieve values from config or secrets.")
+obtain_app = typer.Typer(help="If a value cannot be retrieved, it will be prompted for and set. For secrets, configs, and env values.")
 app.add_typer(obtain_app, name="obtain")
-
-@obtain_app.command(name="config")
-def get_or_set_config(
-    service: Optional[str] = typer.Option(None, "--service", "-s", help="Service name."),
-    item: Optional[str] = typer.Option(None, "--item", "-i", help="Item key."),
-    message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
-    suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
-    overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
-    forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
-    debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
-):
-    # If the user didn't provide values via flags, prompt for them now.
-    if not service:
-        # this is just typer.prompt()
-        service = DworshakPrompt().ask("Service name", avoid = {PromptMode.WEB, PromptMode.GUI})
-    if not item:
-        item = DworshakPrompt().ask("Item key", avoid = {PromptMode.WEB, PromptMode.GUI})
-
-    """Get a configuration value (Storage -> Prompt -> Save)."""
-    val = DworshakObtain().config(
-        service=service,
-        item=item,
-        prompt_message=message,
-        suggestion=suggestion,
-        overwrite=overwrite,
-        forget=forget,
-        debug=debug
-    )
-    if val:
-        print(val)
 
 @obtain_app.command(name="secret")
 def get_or_set_secret(
@@ -159,6 +129,62 @@ def get_or_set_secret(
         print("Secret known.")
     elif result.is_new is None:
         print("Exited.")
+
+@obtain_app.command(name="config")
+def get_or_set_config(
+    service: Optional[str] = typer.Option(None, "--service", "-s", help="Service name."),
+    item: Optional[str] = typer.Option(None, "--item", "-i", help="Item key."),
+    message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
+    suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
+    overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
+    forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
+    debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
+):
+    # If the user didn't provide values via flags, prompt for them now.
+    if not service:
+        # this is just typer.prompt()
+        service = DworshakPrompt().ask("Service name", avoid = {PromptMode.WEB, PromptMode.GUI})
+    if not item:
+        item = DworshakPrompt().ask("Item key", avoid = {PromptMode.WEB, PromptMode.GUI})
+
+    """Get a configuration value (Storage -> Prompt -> Save)."""
+    val = DworshakObtain().config(
+        service=service,
+        item=item,
+        prompt_message=message,
+        suggestion=suggestion,
+        overwrite=overwrite,
+        forget=forget,
+        debug=debug
+    )
+    if val:
+        print(val)
+
+@obtain_app.command(name="env")
+def get_or_set_env(
+    key: Optional[str] = typer.Option(None, "--key", "-k", help="Value key."),
+    message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
+    suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
+    overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
+    forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
+    debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
+):
+    # If the user didn't provide values via flags, prompt for them now.
+    if not key:
+        key = DworshakPrompt().ask("Key", avoid = {PromptMode.WEB, PromptMode.GUI})
+
+    """Get an .env value (Storage -> Prompt -> Save)."""
+    val = DworshakObtain().env(
+        key = key,
+        prompt_message=message,
+        suggestion=suggestion,
+        overwrite=overwrite,
+        forget=forget,
+        debug=debug
+    )
+    if val:
+        print(val)
+
 
 if __name__ == "__main__":
     app()

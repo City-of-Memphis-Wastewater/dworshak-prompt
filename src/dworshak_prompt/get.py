@@ -115,17 +115,25 @@ class DworshakObtain:
         store_secret(service, item, new_value)
         return SecretData(value = new_value, is_new = True)
     
-    def env(self, item: str, **kwargs) -> str | None:
+    def env(self, key: str, **kwargs) -> str | None:
+        """
+        Fetches a raw key from the environment. 
+        The user is responsible for the namespace/prefix.
+        """
         env_mgr = DworshakEnv()
-        return env_mgr.get(item)
+        return env_mgr.get(key)
     
 
-def dworshak_obtain(store: StoreMode = StoreMode.CONFIG,*args,**kwargs):
+def dworshak_obtain(
+        service_or_key: str, 
+        item: str | None = None,
+        store: StoreMode = StoreMode.CONFIG,
+        **kwargs):
     handler = DworshakObtain()
     if store == StoreMode.CONFIG:
-        return handler.config(*args,**kwargs)
+        return handler.config(service = service_or_key, item = item, **kwargs)
     elif store == StoreMode.SECRET:
-        return handler.secret(*args,**kwargs)
+        return handler.secret(service = service_or_key, item = item, **kwargs)
     elif store == StoreMode.ENV:
-        return handler.env(*args,**kwargs)
+        return handler.env(key = service_or_key,**kwargs)
     
