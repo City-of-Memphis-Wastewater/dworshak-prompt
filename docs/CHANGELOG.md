@@ -12,7 +12,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 - 'key' keyword used in dworshak-env 0.1.4, rather than 'item' 
 
 ### Changed:
-- Updates dwroshak ecosystem deps following CLI standardization.
+- Updates dworshak ecosystem deps following CLI standardization.
 - Deleted dworshak_prompt.py and obtain.py
 - Change name of get.py to obtain.py.
 
