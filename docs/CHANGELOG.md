@@ -11,6 +11,9 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 - env command in cli.py
 - 'key' keyword used in dworshak-env 0.1.4, rather than 'item' 
 
+### Changed:
+- Updates dwroshak ecosystem deps following CLI standardization.
+
 ---
 
 ## [0.2.18] – 2026-02-13
