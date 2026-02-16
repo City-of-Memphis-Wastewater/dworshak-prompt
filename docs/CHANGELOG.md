@@ -6,10 +6,22 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.19] – 2026-02-14
+### Added:
+- env command in cli.py
+- 'key' keyword used in dworshak-env 0.1.4, rather than 'item' 
+
+---
+
+## [0.2.18] – 2026-02-13
+### Internal:
+- Release after time delay to allow PyPI to propogate
+
+---
+
 ## [0.2.17] – 2026-02-13
 ### Changed:
-- Increase dworshak_config to 0.2.1. ConfigManager - > DworshakConfig
-
+- Increase dworshak_config to 0.2.1 ConfigManager - > DworshakConfig
 ---
 
 ## [0.2.16] – 2026-02-13

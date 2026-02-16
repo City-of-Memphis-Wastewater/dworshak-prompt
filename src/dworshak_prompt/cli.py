@@ -98,24 +98,14 @@ obtain_app = typer.Typer(help="If a value cannot be retrieved, it will be prompt
 app.add_typer(obtain_app, name="obtain")
 
 @obtain_app.command(name="secret")
-def get_or_set_secret(
-    service: Optional[str] = typer.Option(None, "--service", "-s", help="Service name."),
-    item: Optional[str] = typer.Option(None, "--item", "-i", help="Item key."),
+def obtain_secret(
+    service: str = typer.Argument(..., help="The service name (e.g., maxson-eds)."),
+    item: str = typer.Argument(..., help="The item key (e.g., port)."),
     overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
     """Get a secret value (Vault -> Prompt -> Save)."""
 
-
-    # If the user didn't provide values via flags, prompt for them now.
-    if not service:
-        service = DworshakPrompt().ask("Service name", avoid = {PromptMode.WEB, PromptMode.GUI})
-    if not item:
-        item = DworshakPrompt().ask("Item key", avoid = {PromptMode.WEB, PromptMode.GUI})
-    
-    # If they cancelled the prompt, exit gracefully
-    if not service or not item:
-        raise typer.Exit(1)
     
     result = DworshakObtain().secret(
         service=service,
@@ -131,21 +121,15 @@ def get_or_set_secret(
         print("Exited.")
 
 @obtain_app.command(name="config")
-def get_or_set_config(
-    service: Optional[str] = typer.Option(None, "--service", "-s", help="Service name."),
-    item: Optional[str] = typer.Option(None, "--item", "-i", help="Item key."),
+def obtain_config(
+    service: str = typer.Argument(..., help="The service name (e.g., maxson-eds)."),
+    item: str = typer.Argument(..., help="The item key (e.g., port)."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
     overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
-    # If the user didn't provide values via flags, prompt for them now.
-    if not service:
-        # this is just typer.prompt()
-        service = DworshakPrompt().ask("Service name", avoid = {PromptMode.WEB, PromptMode.GUI})
-    if not item:
-        item = DworshakPrompt().ask("Item key", avoid = {PromptMode.WEB, PromptMode.GUI})
 
     """Get a configuration value (Storage -> Prompt -> Save)."""
     val = DworshakObtain().config(
@@ -161,18 +145,15 @@ def get_or_set_config(
         print(val)
 
 @obtain_app.command(name="env")
-def get_or_set_env(
-    key: Optional[str] = typer.Option(None, "--key", "-k", help="Value key."),
+def obtain_env(
+    key: str = typer.Argument(..., help="The value key (e.g., API_URL)."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
     overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
-    # If the user didn't provide values via flags, prompt for them now.
-    if not key:
-        key = DworshakPrompt().ask("Key", avoid = {PromptMode.WEB, PromptMode.GUI})
-
+    
     """Get an .env value (Storage -> Prompt -> Save)."""
     val = DworshakObtain().env(
         key = key,
