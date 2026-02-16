@@ -21,15 +21,15 @@ def __getattr__(name):
         return PromptMode
 
     if name == "DworshakObtain":
-        from .get import DworshakObtain
+        from .obtain import DworshakObtain
         return DworshakObtain
     
     if name == "dworshak_obtain":
-        from .get import dworshak_obtain
+        from .obtain import dworshak_obtain
         return dworshak_obtain
     
     if name == "StoreMode":
-        from .get import StoreMode
+        from .obtain import StoreMode
         return StoreMode
     
 

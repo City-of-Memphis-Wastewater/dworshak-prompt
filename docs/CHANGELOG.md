@@ -13,6 +13,8 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ### Changed:
 - Updates dwroshak ecosystem deps following CLI standardization.
+- Deleted dworshak_prompt.py and obtain.py
+- Change name of get.py to obtain.py.
 
 ---
 
