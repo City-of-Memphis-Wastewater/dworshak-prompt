@@ -131,21 +131,23 @@ class DworshakObtain:
     
 
 def dworshak_obtain(
-        service_or_key: str, 
-        item: str | None = None,
-        store: StoreMode = StoreMode.CONFIG,
-        **kwargs):
+    service_or_key: str,
+    item: str | None = None,
+    store: StoreMode = StoreMode.CONFIG,
+    default: Any | None = None,  # Added back
+    **kwargs
+) -> Any:
     """
     Functional entry point for the Obtain engine.
     Allows for one-liner access to secrets, configs, or env vars.
     """
     handler = DworshakObtain()
     if store == StoreMode.CONFIG:
-        return handler.config(service = service_or_key, item = item, **kwargs)
+        return handler.config(service=service_or_key, item=item, default=default, **kwargs)
     elif store == StoreMode.SECRET:
-        return handler.secret(service = service_or_key, item = item, **kwargs)
+        # Note: returns SecretData object
+        return handler.secret(service=service_or_key, item=item, default=default, **kwargs)
     elif store == StoreMode.ENV:
-        return handler.env(key = service_or_key,**kwargs)
+        return handler.env(key=service_or_key)
     
     raise ValueError(f"Unsupported StoreMode: {store}")
-    
