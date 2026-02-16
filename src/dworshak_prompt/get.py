@@ -2,11 +2,11 @@
 from pathlib import Path
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import Optional, Any
+import sys
 
 from dworshak_config import DworshakConfig
 from dworshak_env import DworshakEnv
-
 from .multiplexer import DworshakPrompt
 
 class StoreMode(Enum):
@@ -17,6 +17,10 @@ class StoreMode(Enum):
 
 @dataclass
 class SecretData:
+    """
+    Container for secret retrieval results. 
+    The __repr__ ensures secrets don't leak into logs/consoles if the object is printed.
+    """
     value: Optional[str] = None
     is_new: Optional[bool] = False
 
@@ -43,7 +47,7 @@ class DworshakObtain:
         prompt_message: str | None = None,
         path: str | Path | None = None,
         suggestion: str | None = None,
-        default: str | None = None,
+        default: Any | None = None,
         overwrite: bool = False,
         forget: bool = False,
         **kwargs # Pass-through for priority, avoid, debug, etc.
@@ -70,14 +74,16 @@ class DworshakObtain:
         if new_value is not None and not forget:
             config_mgr.set(service, item, new_value)
             
-        return new_value or value
+        return new_value if new_value is not None else value
 
     def secret(
         self,
         service: str, 
         item: str, 
+        default: Any | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
+        forget: bool = False,
         **kwargs 
         )-> SecretData:
 
@@ -100,8 +106,7 @@ class DworshakObtain:
         value = get_secret(service, item)
         if value is not None and not overwrite:
             return SecretData(value = value, is_new = False)
-        print(f"service = {service}")
-        print(f"item = {item}")
+        
         new_value = DworshakPrompt().ask(
             message=f"{service} / {item}",
             hide_input=True,
@@ -112,7 +117,8 @@ class DworshakObtain:
             # User cancelled (KeyboardInterrupt)
             return SecretData(value=None, is_new=None)
         
-        store_secret(service, item, new_value)
+        if not forget:
+            store_secret(service, item, new_value)
         return SecretData(value = new_value, is_new = True)
     
     def env(self, key: str, **kwargs) -> str | None:
@@ -129,6 +135,10 @@ def dworshak_obtain(
         item: str | None = None,
         store: StoreMode = StoreMode.CONFIG,
         **kwargs):
+    """
+    Functional entry point for the Obtain engine.
+    Allows for one-liner access to secrets, configs, or env vars.
+    """
     handler = DworshakObtain()
     if store == StoreMode.CONFIG:
         return handler.config(service = service_or_key, item = item, **kwargs)
@@ -136,4 +146,6 @@ def dworshak_obtain(
         return handler.secret(service = service_or_key, item = item, **kwargs)
     elif store == StoreMode.ENV:
         return handler.env(key = service_or_key,**kwargs)
+    
+    raise ValueError(f"Unsupported StoreMode: {store}")
     

@@ -80,6 +80,10 @@ class DworshakPrompt:
         # 1. CI/Headless Detection
         # If we aren't in a TTY and aren't on a system that can spawn a GUI/Web window,
         # return the default immediately to avoid the "Time Bomb."
+        if ph.is_likely_ci_or_non_interactive():
+            logger.debug("[DIAGNOSTIC] CI/Non-interactive environment. Returning default.")
+            return default
+
         if not ph.interactive_terminal_is_available() and \
         not ph.tkinter_is_available() and \
         not ph.is_browser_available(): # Hypothetical pyhabitat check
