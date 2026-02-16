@@ -6,10 +6,10 @@ description = "Multiplexed user input via console, GUI, and web, depending on av
 requires-python = ">=3.9"
 readme = "README.md"
 dependencies = [
-    "dworshak-config>=0.2.1",
-    "dworshak-secret>=1.2.3",
-    "dworshak-env>=0.1.3",
-    "pyhabitat>=1.1.37",
+    "dworshak-config>=0.2.2",
+    "dworshak-secret>=1.2.6",
+    "dworshak-env>=0.1.4",
+    "pyhabitat>=1.2.2",
     "memphisdrip>=0.1.4",
 ]
 
