@@ -40,6 +40,13 @@ class DworshakObtain:
         self.config_path = config_path
         self.secret_path = secret_path
 
+    def ask(self, *args, **kwargs):
+        """Proxy to the multiplexer for direct questions."""
+        return DworshakPrompt(
+            config_path=self.config_path, 
+            secret_path=self.secret_path
+        ).ask(*args, **kwargs)
+    
     def config(
         self,
         service: str, 
