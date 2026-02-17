@@ -36,9 +36,11 @@ class DworshakObtain:
     def __init__(self,
         config_path: str | Path | None = None,
         secret_path: str | Path | None = None,
+        env_path: str | Path | None = None,
     ):
         self.config_path = config_path
         self.secret_path = secret_path
+        self.env_path = env_path
 
     def ask(self, *args, **kwargs):
         """Proxy to the multiplexer for direct questions."""
@@ -51,7 +53,7 @@ class DworshakObtain:
         self,
         service: str, 
         item: str, 
-        prompt_message: str | None = None,
+        message: str | None = None,
         path: str | Path | None = None,
         suggestion: str | None = None,
         default: Any | None = None,
@@ -71,7 +73,7 @@ class DworshakObtain:
 
         # If missing or overwriting, we use the multiplexer
         new_value = DworshakPrompt().ask(
-            message=prompt_message or f"config [{service}][{item}]",
+            message=message or f"config [{service}][{item}]",
             suggestion=suggestion or value,
             hide_input=False,
             **kwargs # Pass-through for priority, avoid, debug, etc.
@@ -87,6 +89,7 @@ class DworshakObtain:
         self,
         service: str, 
         item: str, 
+        message: str | None = None,
         default: Any | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
@@ -99,13 +102,14 @@ class DworshakObtain:
             
         try:
             # Lazy Import dworshak_secret here to avoid top-level crashes
+            import cryptography
             from dworshak_secret import get_secret, store_secret
         except:
             # Trigger the "Lifeboat" redirection error
             from memphisdrip import safe_notify
             from .messages import notify_missing_function_redirect, MSG_CRYPTO_EXTRA
             # We pass a specific context so the user knows why it failed
-            full_msg = notify_missing_function_redirect("DworshakGet.secret()") + MSG_CRYPTO_EXTRA
+            full_msg = notify_missing_function_redirect("DworshakObtain.secret()") + MSG_CRYPTO_EXTRA
             safe_notify(full_msg)
             raise SystemExit(1)
         
@@ -115,7 +119,7 @@ class DworshakObtain:
             return SecretData(value = value, is_new = False)
         
         new_value = DworshakPrompt().ask(
-            message=f"{service} / {item}",
+            message=message or f"{service} / {item}",
             hide_input=True,
             **kwargs 
         )
@@ -128,20 +132,51 @@ class DworshakObtain:
             store_secret(service, item, new_value)
         return SecretData(value = new_value, is_new = True)
     
-    def env(self, key: str, **kwargs) -> str | None:
+    def env(
+        self, 
+        key: str, 
+        message: str | None = None,
+        default: Any | None = None,
+        path: str | Path | None = None,
+        overwrite: bool = False,
+        forget: bool = False,
+        **kwargs
+    ) -> str | None:
         """
-        Fetches a raw key from the environment. 
-        The user is responsible for the namespace/prefix.
+        Checks key from os.environ or .env file, using the dworshak-env library. 
+        Prompts user if not found or overwrite is True.
         """
-        env_mgr = DworshakEnv()
-        return env_mgr.get(key)
-    
+        if path is None:
+            path = self.env_path # Defaults to None, DworshakEnv handles Path(".env")
+
+        env_mgr = DworshakEnv(path=path)
+        value = env_mgr.get(key)
+
+        # Logic: If it exists and we aren't forcing a refresh, return it.
+        if value is not None and not overwrite:
+            return value
+
+        # If missing or overwriting, we use the multiplexer
+        new_value = DworshakPrompt().ask(
+            message=message or f"env [{key}]",
+            suggestion=value or default,
+            hide_input=False,
+            **kwargs
+        )
+
+        # Persistence logic: Save to .env file if not forgotten
+        if new_value is not None and not forget:
+            env_mgr.set(key, new_value, overwrite=overwrite)
+            return new_value
+
+        return new_value if new_value is not None else value
 
 def dworshak_obtain(
     service_or_key: str,
     item: str | None = None,
     store: StoreMode = StoreMode.CONFIG,
-    default: Any | None = None,  # Added back
+    message: str | None = None, # Standardized
+    default: Any | None = None,
     **kwargs
 ) -> Any:
     """
@@ -150,11 +185,11 @@ def dworshak_obtain(
     """
     handler = DworshakObtain()
     if store == StoreMode.CONFIG:
-        return handler.config(service=service_or_key, item=item, default=default, **kwargs)
+        return handler.config(service=service_or_key, item=item, message=message, default=default, **kwargs)
     elif store == StoreMode.SECRET:
-        # Note: returns SecretData object
-        return handler.secret(service=service_or_key, item=item, default=default, **kwargs)
+        return handler.secret(service=service_or_key, item=item, message=message, default=default, **kwargs)
     elif store == StoreMode.ENV:
-        return handler.env(key=service_or_key)
+        # Note: for ENV, service_or_key is the actual key
+        return handler.env(key=service_or_key, message=message, default=default, **kwargs)
     
     raise ValueError(f"Unsupported StoreMode: {store}")

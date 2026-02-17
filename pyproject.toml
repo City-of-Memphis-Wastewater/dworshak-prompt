@@ -63,7 +63,7 @@ typer = [
 ]
 crypto = [
     "cryptography>=46.0.3",
-    "dworshak-secret[crypto]", # without this, DworshakGet.secret() will show an error message()
+    "dworshak-secret[crypto]", # without this, DworshakObtain.secret() will show an error message()
 ]
 full = [
     "dworshak-prompt[typer,crypto]"

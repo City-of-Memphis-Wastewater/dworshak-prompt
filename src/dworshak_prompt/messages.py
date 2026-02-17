@@ -35,7 +35,7 @@ def notify_missing_function_redirect(_function: str):
     Detailed notification missing functions, generically.
     """
     msg_missing_function = [
-        f"dworshak-prompt [lite]: The '{_function}' function is not available. Check installed extras.",
+        f"dworshak-prompt: The '{_function}' function is not available. Check installed extras.",
         "",
         ]
     return msg_missing_function

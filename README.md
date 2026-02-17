@@ -66,7 +66,7 @@ from dworshak_prompt import DworshakConfig
 
 # Custom path for a specific project
 eds_config = DworshakConfig("~/.pipeline-eds/config.json")
-api_key = eds_config.get("api_key", prompt_message="Enter EDS API Key")
+api_key = eds_config.get("api_key", message="Enter EDS API Key")
 ```
 
 The default config file path is "~/.dworshak/config.json".

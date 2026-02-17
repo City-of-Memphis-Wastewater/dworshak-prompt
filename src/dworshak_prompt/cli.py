@@ -135,7 +135,7 @@ def obtain_config(
     val = DworshakObtain().config(
         service=service,
         item=item,
-        prompt_message=message,
+        message=message,
         suggestion=suggestion,
         overwrite=overwrite,
         forget=forget,
@@ -157,7 +157,7 @@ def obtain_env(
     """Get an .env value (Storage -> Prompt -> Save)."""
     val = DworshakObtain().env(
         key = key,
-        prompt_message=message,
+        message=message,
         suggestion=suggestion,
         overwrite=overwrite,
         forget=forget,

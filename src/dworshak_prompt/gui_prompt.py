@@ -73,7 +73,7 @@ class CustomPromptDialog:
     def on_cancel(self):
         self.top.destroy()
 
-def gui_get_input(prompt_message: str, suggestion: str | None = None, hide_input: bool = False) -> Optional[str]:
+def gui_get_input(message: str, suggestion: str | None = None, hide_input: bool = False) -> Optional[str]:
     """
     Displays a custom modal GUI popup with an optional Show/Hide toggle.
     """
@@ -82,7 +82,7 @@ def gui_get_input(prompt_message: str, suggestion: str | None = None, hide_input
         root.withdraw()
 
         # Use our custom dialog instead of simpledialog
-        dialog = CustomPromptDialog(root, "dworshak-prompt", prompt_message, suggestion, hide_input)
+        dialog = CustomPromptDialog(root, "dworshak-prompt", message, suggestion, hide_input)
         
         return dialog.result
 
