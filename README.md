@@ -1,4 +1,4 @@
-# dworshak-prompt
+'# dworshak-prompt
 
 A Python utility that ensures you can always get user input by falling back through multiple interfaces.
 
@@ -12,7 +12,21 @@ It captures input by cycling through modes based on environment availability:
 
 Automatically skips incompatible modes (e.g., GUI on WSL) via `pyhabitat`.
 
+
 ### Usage
+
+### Leverage dwroshak-config, dworshak-config, and dworshak-env to handle values
+
+```python
+from dworshak_prompt import DworshakObtain
+
+DworshakObtain.config("")
+DworshakObtain.secret("")
+DworshakObtain.env("")
+
+```
+
+###H Handle values yourself
 
 ```python
 from dworshak_prompt import DworshakPrompt, PromptMode
