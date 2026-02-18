@@ -270,7 +270,7 @@ requires-dist = [
     { name = "dworshak-config", specifier = ">=0.2.2" },
     { name = "dworshak-env", specifier = ">=0.1.4" },
     { name = "dworshak-prompt", extras = ["crypto", "typer"], marker = "extra == 'full'" },
-    { name = "dworshak-secret", specifier = ">=1.2.6" },
+    { name = "dworshak-secret", specifier = ">=1.2.7" },
     { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'crypto'" },
     { name = "memphisdrip", specifier = ">=0.1.4" },
     { name = "memphisdrip", extras = ["typer"], marker = "extra == 'typer'", specifier = ">=0.1.4" },
@@ -286,14 +286,14 @@ test = [{ name = "pytest", specifier = ">=8.4.2" }]
 
 [[package]]
 name = "dworshak-secret"
-version = "1.2.6"
+version = "1.2.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyhabitat" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ba/20/b95169295e75325ea088ba44ea90ebc65c916558f3630d022bf31b51bb14/dworshak_secret-1.2.6.tar.gz", hash = "sha256:65f85a5fb6262baac9f69cf568639fddebda1479f0b11312fe08f1a5881056e4", size = 19362, upload-time = "2026-02-16T20:20:27.955Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e4/6b/f8e39c719de3af118c723e6ed200d6d49862edd75c0a20497ae81fe6a8b2/dworshak_secret-1.2.7.tar.gz", hash = "sha256:bcaacdca0cbd6f1e87beca726d208559601c3618a67cf9855089dbe0e5f6aed4", size = 19644, upload-time = "2026-02-18T01:15:06.066Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/68/25/92213dc9c72eb66f8c17c8cc401ebbac2b1be8589f8720a1645ae65b7e17/dworshak_secret-1.2.6-py3-none-any.whl", hash = "sha256:8874c07a84a922cdd142b1dcfdcbb6d9a40fe3261f585493904f286aea8e3680", size = 20550, upload-time = "2026-02-16T20:20:26.797Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/17/c76571004734fcc16d7d361da5bbbd6dca90c2d96d4fe7e04532df969797/dworshak_secret-1.2.7-py3-none-any.whl", hash = "sha256:da892458a6a9c47ddd97a14200915ed6ee7a1db8b969b175be5f82a8370535bc", size = 21888, upload-time = "2026-02-18T01:15:04.973Z" },
 ]
 
 [package.optional-dependencies]
