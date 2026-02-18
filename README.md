@@ -15,7 +15,8 @@ Automatically skips incompatible modes (e.g., GUI on WSL) via `pyhabitat`.
 
 ### Usage
 
-### Leverage dworshak-config, dworshak-config, and dworshak-env to handle values
+### Obtain
+Leverage dworshak-config, dworshak-config, and dworshak-env to automatically handle values.
 
 ```python
 from dworshak_prompt import DworshakObtain
@@ -26,7 +27,9 @@ DworshakObtain.env("")
 
 ```
 
-###H Handle values yourself
+### Ask
+
+Prompt the user then handle values manually.
 
 ```python
 from dworshak_prompt import DworshakPrompt, PromptMode
