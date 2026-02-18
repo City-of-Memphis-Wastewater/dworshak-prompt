@@ -54,9 +54,9 @@ class DworshakObtain:
         service: str, 
         item: str, 
         message: str | None = None,
-        path: str | Path | None = None,
         suggestion: str | None = None,
         default: Any | None = None,
+        path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
         **kwargs # Pass-through for priority, avoid, debug, etc.
@@ -90,6 +90,7 @@ class DworshakObtain:
         service: str, 
         item: str, 
         message: str | None = None,
+        suggestion: str | None = None,
         default: Any | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
@@ -136,6 +137,7 @@ class DworshakObtain:
         self, 
         key: str, 
         message: str | None = None,
+        suggestion: str | None = None,
         default: Any | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
@@ -175,7 +177,8 @@ def dworshak_obtain(
     service_or_key: str,
     item: str | None = None,
     store: StoreMode = StoreMode.CONFIG,
-    message: str | None = None, # Standardized
+    message: str | None = None,
+    suggestion: str | None = None,
     default: Any | None = None,
     **kwargs
 ) -> Any:
