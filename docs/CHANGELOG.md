@@ -6,6 +6,15 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.20] – 2026-02-17
+### Changed:
+- Increase dworshak-secret to 1.2.8 which now handles:
+    - 'Overwite' arg
+    - Optional custom vault pathing
+    - Has the DworshakSecret class (in parallel with the DworshakEnv and DworshakConfig classes in their respective libraries) 
+
+---
+
 ## [0.2.19] – 2026-02-14
 ### Added:
 - env command in cli.py
