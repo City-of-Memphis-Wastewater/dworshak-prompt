@@ -15,7 +15,7 @@ Automatically skips incompatible modes (e.g., GUI on WSL) via `pyhabitat`.
 
 ### Usage
 
-### Leverage dwroshak-config, dworshak-config, and dworshak-env to handle values
+### Leverage dworshak-config, dworshak-config, and dworshak-env to handle values
 
 ```python
 from dworshak_prompt import DworshakObtain
