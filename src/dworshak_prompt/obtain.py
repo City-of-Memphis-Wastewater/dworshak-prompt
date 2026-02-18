@@ -81,7 +81,7 @@ class DworshakObtain:
 
         # Persistence logic
         if new_value is not None and not forget:
-            config_mgr.set(service, item, new_value)
+            config_mgr.set(service, item, new_value, overwrite=overwrite)
             
         return new_value if new_value is not None else value
 
@@ -129,7 +129,7 @@ class DworshakObtain:
             return SecretData(value=None, is_new=None)
         
         if not forget:
-            store_secret(service, item, new_value)
+            store_secret(service, item, new_value, overwrite=overwrite)
         return SecretData(value = new_value, is_new = True)
     
     def env(
