@@ -106,3 +106,22 @@ Without this, the CLI and console_prompt functionality are still stable, due to 
 ## More Information
 
 - [User Stories](https://github.com/City-of-Memphis-Wastewater/dworshak-prompt/blob/main/docs/USERS.md)
+
+---
+
+## Sister Projects in the Dworshak Ecosystem
+
+* **CLI/Orchestrator:** [dworshak](https://github.com/City-of-Memphis-Wastewater/dworshak)
+* **Interactive UI:** [dworshak-prompt](https://github.com/City-of-Memphis-Wastewater/dworshak-prompt)
+* **Secrets Storage:** [dworshak-secret](https://github.com/City-of-Memphis-Wastewater/dworshak-secret)
+* **Plaintext Pathed Configs:** [dworshak-config](https://github.com/City-of-Memphis-Wastewater/dworshak-config)
+* **Classic .env Injection:** [dworshak-env](https://github.com/City-of-Memphis-Wastewater/dworshak-env)
+
+```python
+pipx install dworshak
+pip install dworshak-secret
+pip install dworshak-config
+pip install dworshak-env
+pip install dworshak-prompt
+
+```
