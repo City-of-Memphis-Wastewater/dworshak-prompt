@@ -104,7 +104,7 @@ class DworshakObtain:
         try:
             # Lazy Import dworshak_secret here to avoid top-level crashes
             import cryptography
-            from dworshak_secret import get_secret, store_secret
+            from dworshak_secret import DworshakSecret, get_secret, store_secret
         except:
             # Trigger the "Lifeboat" redirection error
             from memphisdrip import safe_notify
