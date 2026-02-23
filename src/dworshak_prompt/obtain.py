@@ -9,11 +9,14 @@ from dworshak_config import DworshakConfig
 from dworshak_env import DworshakEnv
 from .multiplexer import DworshakPrompt
 
+"""
+
+"""
+
 class StoreMode(Enum):
     CONFIG = "config"
     SECRET = "secret"
     ENV = "env"
-
 
 @dataclass
 class SecretData:
@@ -43,7 +46,10 @@ class DworshakObtain:
         self.env_path = env_path
 
     def ask(self, *args, **kwargs):
-        """Proxy to the multiplexer for direct questions."""
+        """
+        Proxy to the multiplexer for direct questions.
+        I don't this we need this, it is bad hygiene.
+        """
         return DworshakPrompt(
             config_path=self.config_path, 
             secret_path=self.secret_path
@@ -56,10 +62,12 @@ class DworshakObtain:
         message: str | None = None,
         suggestion: str | None = None,
         default: Any | None = None,
+        priority_interface: str | None = None,
+        avoid_interface: str | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
-        **kwargs # Pass-through for priority, avoid, debug, etc.
+        **kwargs # Pass-through for priority_interface, avoid_interface, debug, etc.
     ) -> str | None:
         if path is None:
             path = self.config_path
@@ -75,8 +83,10 @@ class DworshakObtain:
         new_value = DworshakPrompt().ask(
             message=message or f"config [{service}][{item}]",
             suggestion=suggestion or value,
+            priority_interface = priority_interface,
+            avoid_interface = avoid_interface, 
             hide_input=False,
-            **kwargs # Pass-through for priority, avoid, debug, etc.
+            **kwargs # Pass-through for priority_interface, avoid_interface, debug, etc.
         )
 
         # Persistence logic
@@ -92,6 +102,8 @@ class DworshakObtain:
         message: str | None = None,
         suggestion: str | None = None,
         default: Any | None = None,
+        priority_interface: str | None = None,
+        avoid_interface: str | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
@@ -102,7 +114,7 @@ class DworshakObtain:
             path = self.secret_path
             
         try:
-            # Lazy Import dworshak_secret here to avoid top-level crashes
+            # Lazy Import dworshak_secret here to mitigate top-level crashes
             import cryptography
             from dworshak_secret import DworshakSecret, get_secret, store_secret
         except:
@@ -122,6 +134,8 @@ class DworshakObtain:
         new_value = DworshakPrompt().ask(
             message=message or f"{service} / {item}",
             hide_input=True,
+            priority_interface = priority_interface,
+            avoid_interface = avoid_interface, 
             **kwargs 
         )
         
@@ -139,6 +153,8 @@ class DworshakObtain:
         message: str | None = None,
         suggestion: str | None = None,
         default: Any | None = None,
+        priority_interface: str | None = None,
+        avoid_interface: str | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
@@ -162,6 +178,8 @@ class DworshakObtain:
         new_value = DworshakPrompt().ask(
             message=message or f"env [{key}]",
             suggestion=value or default,
+            priority_interface = priority_interface,
+            avoid_interface = avoid_interface, 
             hide_input=False,
             **kwargs
         )

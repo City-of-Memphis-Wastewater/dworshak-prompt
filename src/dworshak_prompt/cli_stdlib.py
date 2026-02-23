@@ -114,8 +114,7 @@ def main():
         help="Hide input (password mode)",
     )
     ask_parser.add_argument(
-        "--mode",
-        "-m",
+        "--interface", "-i", 
         choices=[m.value for m in PromptMode], 
         default=PromptMode.CONSOLE.value,
         type=str.lower,

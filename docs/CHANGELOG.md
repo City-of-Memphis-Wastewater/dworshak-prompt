@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.21] – 2026-02-23
+### Changed:
+- priority -> priorty_interface, PromptMode -> PromptMode, avoid -> avoid_interface
+
+---
+
 ## [0.2.20] – 2026-02-17
 ### Changed:
 - Increase dworshak-secret to 1.2.8 which now handles:

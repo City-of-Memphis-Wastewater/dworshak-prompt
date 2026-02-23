@@ -42,13 +42,13 @@ class DworshakPrompt:
     def __init__(self,
         config_path: str | None = None,
         secret_path: str | None = None,
-        default_priority: list[PromptMode] | None = None,
-        default_avoid: set[PromptMode] | None =None,
+        default_priority_interface: list[PromptMode] | None = None,
+        default_avoid_interface: set[PromptMode] | None =None,
     ):
         self.config_path = config_path
         self.secret_path = secret_path
-        self.default_priority = default_priority
-        self.default_avoid = default_avoid
+        self.default_priority_interface = default_priority_interface
+        self.default_avoid_interface = default_avoid_interface
 
     def ask(
         self,
@@ -56,17 +56,19 @@ class DworshakPrompt:
         suggestion: str | None = None,
         default: Any | None = None,
         hide_input: bool = False,
-        priority: list[PromptMode] | None = None,
-        avoid: set[PromptMode] | None = None,
+        #priority: list[PromptMode] | None = None,
+        #avoid: set[PromptMode] | None = None,
+        priority_interface: list[PromptMode] | None = None,
+        avoid_interface: set[PromptMode] | None = None,
         interrupt_event: threading.Event | None = None,
         debug: bool = False,  # Added a flag to toggle at runtime
         timeout: int | float | None = None,
     ) -> str | None:
 
-        if priority is None:
-            priority = self.default_priority
-        if avoid is None:
-            avoid = self.default_avoid
+        if priority_interface is None:
+            priority_interface = self.default_priority_interface
+        if avoid_interface is None:
+            avoid_interface = self.default_avoid_interface
 
         # Use existing interrupt_event or create a local one for this call
         if interrupt_event is None:
@@ -79,7 +81,7 @@ class DworshakPrompt:
 
         # 1. CI/Headless Detection
         # If we aren't in a TTY and aren't on a system that can spawn a GUI/Web window,
-        # return the default immediately to avoid the "Time Bomb."
+        # return the default immediately to mitigate a potential Dworshak failure mode in CI.
         if ph.is_likely_ci_or_non_interactive():
             logger.debug("[DIAGNOSTIC] CI/Non-interactive environment. Returning default.")
             return default
@@ -90,53 +92,53 @@ class DworshakPrompt:
             logger.debug("[DIAGNOSTIC] Non-interactive environment detected. Using default.")
             return default
 
-        avoid = avoid or set()
+        avoid_interface = avoid_interface or set()
         if ph.on_wsl():
-            avoid.add(PromptMode.GUI)
+            avoid_interface.add(PromptMode.GUI)
 
         default_order = [PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB]
-        if priority:
+        if priority_interface:
             # User choice first, followed by everything else as a safety net
-            effective_priority = priority + [m for m in default_order if m not in priority]
+            effective_priority_interface = priority_interface + [m for m in default_order if m not in priority_interface]
         else:
-            effective_priority = default_order
+            effective_priority_interface = default_order
 
         if timeout:
             # A background timer to fire the interrupt signal
             timer = threading.Timer(timeout, lambda: interrupt_event.set())
             timer.start()
 
-        for mode in effective_priority:
-            if mode in avoid:
-                logger.debug(f"[DIAGNOSTIC] Skipping {mode} (avoided)")
+        for interface_mode in effective_priority_interface:
+            if interface_mode in avoid_interface:
+                logger.debug(f"[DIAGNOSTIC] Skipping {interface_mode} (avoided)")
                 continue
 
-            logger.debug(f"\n[DIAGNOSTIC] === Entering Mode: {mode} ===")
+            logger.debug(f"\n[DIAGNOSTIC] === Interface Mode: {interface_mode} ===")
             
             try:
-                if mode == PromptMode.CONSOLE:
+                if interface_mode == PromptMode.CONSOLE:
                     if not ph.interactive_terminal_is_available():
-                        logger.debug(f"[DIAGNOSTIC] {mode} skipped: No interactive terminal.")
+                        logger.debug(f"[DIAGNOSTIC] {interface_mode} skipped: No interactive terminal.")
                         continue
                     
                     val = console_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
-                    logger.debug(f"[DIAGNOSTIC] SUCCESS: {mode} returned: {repr(val)}")
+                    logger.debug(f"[DIAGNOSTIC] SUCCESS: {interface_mode} returned: {repr(val)}")
                     return val
 
-                elif mode == PromptMode.GUI:
+                elif interface_mode == PromptMode.GUI:
                     if not ph.tkinter_is_available():
-                        logger.debug(f"[DIAGNOSTIC] {mode} skipped: Tkinter unavailable.")
+                        logger.debug(f"[DIAGNOSTIC] {interface_mode} skipped: Tkinter unavailable.")
                         continue
                         
                     val = gui_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
                     if val is not None:
-                        logger.debug(f"[DIAGNOSTIC] SUCCESS: {mode} returned: {repr(val)}")
+                        logger.debug(f"[DIAGNOSTIC] SUCCESS: {interface_mode} returned: {repr(val)}")
                         return val
                     
                     logger.debug(f"[DIAGNOSTIC] GUI cancelled. Raising PromptCancelled.")
                     raise PromptCancelled()
 
-                elif mode == PromptMode.WEB:
+                elif interface_mode == PromptMode.WEB:
                     local_manager = PromptManager()
                     try:
                         val = browser_get_input(
@@ -147,7 +149,7 @@ class DworshakPrompt:
                             stop_event = interrupt_event
                             )
                         if val is not None:
-                            logger.debug(f"[DIAGNOSTIC] SUCCESS: {mode} returned: {repr(val)}")
+                            logger.debug(f"[DIAGNOSTIC] SUCCESS: {interface_mode} returned: {repr(val)}")
                             return val
                         logger.debug(f"[DIAGNOSTIC] WEB returned None. Raising PromptCancelled.")
                         raise PromptCancelled()
@@ -178,30 +180,33 @@ class DworshakPrompt:
                 if logger.isEnabledFor(logging.DEBUG):
                     traceback.print_exc(file=sys.stdout)
                 
-                logger.debug(f"[DIAGNOSTIC] Continuing to fallback mode...")
+                logger.debug(f"[DIAGNOSTIC] Continuing to fallback interface mode...")
                 continue
 
 
-        logger.debug("[DIAGNOSTIC] All modes exhausted.")
+        logger.debug("[DIAGNOSTIC] All interface modes exhausted.")
         raise RuntimeError("No input method succeeded.")
 
 def dworshak_ask(
     message: str = "Enter value",
     suggestion: str | None = None,
     default: Any | None = None,
+    priority_interface: list[PromptMode] | None = None,
+    avoid_interface: set[PromptMode] | None = None,
     **kwargs: Any
 ) -> str | None:
     """
     Convenience function to prompt the user for input using the Dworshak Multiplexer.
-    Automatically handles fallback between Console, GUI, and Web modes.
+    Automatically handles fallback between Console, GUI, and Web interface modes.
     """
     return DworshakPrompt().ask(
         message=message,
         suggestion=suggestion,
         default=default,
-        **kwargs
+        priority_interface=priority_interface,
+        avoid_interface=avoid_interface,
+        **kwargs 
     )
-
 
 def main():
     DworshakPrompt().ask(

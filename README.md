@@ -82,7 +82,7 @@ The default config file path is "~/.dworshak/config.json".
 pipx install "dworshak-prompt[typer]"
 dworshak-prompt --version
 dworshak-prompt --help
-dworshak-prompt ask --message "Please state name" --mode web
+dworshak-prompt ask --message "Please state name" --interace web
 ```
 
 ---
