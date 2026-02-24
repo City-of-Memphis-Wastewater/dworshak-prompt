@@ -4,7 +4,7 @@ import typer
 from rich.console import Console
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 try:
     from typer_helptree import add_typer_helptree
 except:
@@ -69,14 +69,14 @@ def ask(
         None, "--message", "-M", 
         help="Flag alias for message."
     ),
-    priority_interface: PromptMode = typer.Option( 
-        PromptMode.CONSOLE,
-        "--interface", "-i", 
-        help="Preferred input mode."),
-    avoid_interface: PromptMode = typer.Option( 
-        None,
-        "--avoid", "-a", 
-        help="Avoid an input mode."),
+    priority_interface: Optional[List[PromptMode]] = typer.Option(
+        None, "--interface", "-i",
+        help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
+    ),
+    avoid_interface: Optional[List[PromptMode]] = typer.Option(
+        None, "--avoid", "-a",
+        help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
+    ),
     suggestion: Optional[str] = typer.Option(
         None, 
         "--suggestion", "-s", 
@@ -89,11 +89,14 @@ def ask(
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
 
+    priority_interface_list = priority_interface if priority_interface is not None else None
+    avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
+
     """Get user input and print it to stdout."""
     val = DworshakPrompt().ask(
         message=message,
-        priority_interface=[priority_interface],
-        avoid_interface=avoid_interface,
+        priority_interface=priority_interface_list,
+        avoid_interface=avoid_interface_set,
         suggestion = suggestion,
         hide_input = hide,
         debug=debug, 
@@ -112,27 +115,29 @@ def obtain_secret(
     item: str = typer.Argument(..., help="The item key (e.g., port)."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
-    priority_interface: PromptMode = typer.Option( 
-        PromptMode.CONSOLE,
-        "--interface", "-i", 
-        help="Preferred input mode."),
-    avoid_interface: PromptMode = typer.Option( 
-        None,
-        "--avoid", "-a", 
-        help="Avoid an input mode."),
+    priority_interface: Optional[List[PromptMode]] = typer.Option(
+        None, "--interface", "-i",
+        help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
+    ),
+    avoid_interface: Optional[List[PromptMode]] = typer.Option(
+        None, "--avoid", "-a",
+        help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
+    ),
     overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
     """Get a secret value (Vault -> Prompt -> Save)."""
 
+    priority_interface_list = priority_interface if priority_interface is not None else None
+    avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
     
     result = DworshakObtain().secret(
         service=service,
         item=item,
         message=message,
         suggestion=suggestion,
-        priority_interface=priority_interface, 
-        avoid_interface=avoid_interface, 
+        priority_interface=priority_interface_list, 
+        avoid_interface=avoid_interface_set, 
         overwrite=overwrite,
         debug=debug
     )
@@ -149,18 +154,20 @@ def obtain_config(
     item: str = typer.Argument(..., help="The item key (e.g., port)."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
-    priority_interface: PromptMode = typer.Option( 
-        PromptMode.CONSOLE,
-        "--interface", "-i", 
-        help="Preferred input mode."),
-    avoid_interface: PromptMode = typer.Option( 
-        None,
-        "--avoid", "-a", 
-        help="Avoid an input mode."),
+    priority_interface: Optional[List[PromptMode]] = typer.Option(
+        None, "--interface", "-i",
+        help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
+    ),
+    avoid_interface: Optional[List[PromptMode]] = typer.Option(
+        None, "--avoid", "-a",
+        help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
+    ),
     overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
+    priority_interface_list = priority_interface if priority_interface is not None else None
+    avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
 
     """Get a configuration value (Storage -> Prompt -> Save)."""
     val = DworshakObtain().config(
@@ -169,8 +176,8 @@ def obtain_config(
         message=message,
         suggestion=suggestion,
         overwrite=overwrite,
-        priority_interface=priority_interface,
-        avoid_interface=avoid_interface,
+        priority_interface=priority_interface_list,
+        avoid_interface=avoid_interface_set,
         forget=forget,
         debug=debug
     )
@@ -182,27 +189,29 @@ def obtain_env(
     key: str = typer.Argument(..., help="The value key (e.g., API_URL)."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
-    priority_interface: PromptMode = typer.Option( 
-        PromptMode.CONSOLE,
-        "--interface", "-i", 
-        help="Preferred input mode."),
-    avoid_interface: PromptMode = typer.Option( 
-        None,
-        "--avoid", "-a", 
-        help="Avoid an input mode."),
+    priority_interface: Optional[List[PromptMode]] = typer.Option(
+        None, "--interface", "-i",
+        help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
+    ),
+    avoid_interface: Optional[List[PromptMode]] = typer.Option(
+        None, "--avoid", "-a",
+        help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
+    ),
     overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
-    
+    priority_interface_list = priority_interface if priority_interface is not None else None
+    avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
+
     """Get an .env value (Storage -> Prompt -> Save)."""
     val = DworshakObtain().env(
         key = key,
         message=message,
         suggestion=suggestion,
         overwrite=overwrite,
-        priority_interface=priority_interface,
-        avoid_interface=avoid_interface,
+        priority_interface=priority_interface_list,
+        avoid_interface=avoid_interface_set,
         forget=forget,
         debug=debug
     )

@@ -17,7 +17,7 @@ def __getattr__(name):
         return dworshak_ask
     
     if name == "PromptMode":
-        from .multiplexer import PromptMode
+        from .helpers import PromptMode
         return PromptMode
 
     if name == "DworshakObtain":

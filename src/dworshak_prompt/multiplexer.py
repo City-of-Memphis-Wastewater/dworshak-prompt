@@ -21,6 +21,7 @@ from .web_prompt import browser_get_input
 from .keyboard_interrupt import PromptCancelled
 from .server import stop_prompt_server
 from .prompt_manager import PromptManager
+from .helpers import PromptMode, resolve_str_to_list, resolve_str_to_set
     
 # Setup logger
 logger = logging.getLogger("dworshak_prompt")
@@ -32,11 +33,6 @@ if not logger.handlers:
     _handler.setFormatter(logging.Formatter('%(message)s'))
     logger.addHandler(_handler)
 
-
-class PromptMode(Enum):
-    CONSOLE = "console"
-    GUI = "gui"
-    WEB = "web"
 
 class DworshakPrompt: 
     def __init__(self,
@@ -93,6 +89,9 @@ class DworshakPrompt:
             return default
 
         avoid_interface = avoid_interface or set()
+        avoid_interface = resolve_str_to_set(avoid_interface)
+        priority_interface = resolve_str_to_list(priority_interface)
+        
         if ph.on_wsl():
             avoid_interface.add(PromptMode.GUI)
 
@@ -207,6 +206,8 @@ def dworshak_ask(
         avoid_interface=avoid_interface,
         **kwargs 
     )
+
+# --- Demo entry ---
 
 def main():
     DworshakPrompt().ask(
