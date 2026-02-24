@@ -18,7 +18,7 @@ def run_prompt(
     suggestion: str | None = None,
     hide_input: bool = False,
     debug: bool = False,
-    priority: list[PromptMode] | None = None,
+    priority_interface: list[PromptMode] | None = None,
 ) -> int:
     if debug:
         import logging
@@ -29,7 +29,7 @@ def run_prompt(
             message=message,
             suggestion=suggestion,
             hide_input=hide_input,
-            priority=priority,
+            priority_interface=priority_interface,
             debug=debug,
         )
         if value is not None:
@@ -98,7 +98,7 @@ def main():
         "-M",
         #default="Enter value",
         default=None,
-        dest="message_flag",      # Store it separately to avoid conflict
+        dest="message_flag",      # Store it separately to mitigate conflict
         help="The prompt message to display (overwrites positional argument)",
     )
     ask_parser.add_argument(
@@ -165,7 +165,7 @@ def main():
             suggestion=args.suggestion,
             hide_input=args.hide,
             debug=args.debug,
-            priority=[selected_mode],
+            priority_interface=[selected_mode],
         )
         sys.exit(exit_code)
 

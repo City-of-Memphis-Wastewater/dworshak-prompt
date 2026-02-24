@@ -76,10 +76,14 @@ def ask(
     avoid_interface: PromptMode = typer.Option( 
         None,
         "--avoid", "-a", 
-        help="Avoid an input mode.")
+        help="Avoid an input mode."),
     suggestion: Optional[str] = typer.Option(
         None, 
         "--suggestion", "-s", 
+        help="The user will be suggested this value."),
+    default: Optional[str] = typer.Option(
+        None, 
+        "--default", "-d", 
         help="The user will be suggested this value."),
     hide: bool = typer.Option(False, "--hide", "-H", help="Hide input (for passwords)"),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
