@@ -123,7 +123,7 @@ def obtain_secret(
         None, "--avoid", "-a",
         help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
     ),
-    overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
+    overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
     """Get a secret value (Vault -> Prompt -> Save)."""
@@ -162,7 +162,7 @@ def obtain_config(
         None, "--avoid", "-a",
         help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
     ),
-    overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
+    overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
@@ -197,7 +197,7 @@ def obtain_env(
         None, "--avoid", "-a",
         help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
     ),
-    overwrite: bool = typer.Option(False, "--overwrite", help="Force a new prompt."),
+    overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
     debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
 ):
