@@ -7,6 +7,7 @@ import threading
 import traceback
 import sys
 import logging
+import os
 
 try:
     from .console_prompt import console_get_input
@@ -94,8 +95,10 @@ class DworshakPrompt:
         priority_interface = resolve_str_to_list(priority_interface)
         
         if ph.on_wsl():
-            avoid_interface.add(PromptMode.GUI)
-            print(get_tkinter_hint())
+            if not os.getenv("TRY_TKINTER_ON_WSL", default=False):
+                logger.debug(f"[VERBOSE] PromptMode.GUI avoided for WSL; to try it, set echo TRY_TKINTER_ON_WSL=1 ")
+                avoid_interface.add(PromptMode.GUI)
+                print(get_tkinter_hint())
 
         default_order = [PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB]
         if priority_interface:

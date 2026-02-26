@@ -19,6 +19,9 @@ class PromptManager:
         # Key: request_id (str), Value: submitted_value (str)
         self.prompt_results: Dict[str, str] = {}
         self.results_lock = threading.Lock()
+
+        # Set of cancelled request_ids
+        self._cancelled: set[str] = set()
         
         # Store the dynamically found server URL
         self.server_host_port: str = ""
@@ -51,6 +54,10 @@ class PromptManager:
 
     def submit_result(self, request_id: str, value: str):
         """Stores a submitted result and clears the active request."""
+        # ignore if already cancelled
+        if request_id in self._cancelled:
+            return
+
         with self.results_lock:
             self.prompt_results[request_id] = value
         
@@ -61,6 +68,18 @@ class PromptManager:
         """Retrieves a result and removes it to unblock the waiting thread."""
         with self.results_lock:
             return self.prompt_results.pop(request_id, None)
+
+    def cancel_prompt(self, request_id: str):
+        """Mark prompt as cancelled and clear active request."""
+        self._cancelled.add(request_id)
+        with self.active_prompt_lock:
+            self.active_prompt_request.pop(request_id, None)
+        with self.results_lock:
+            if request_id in self.prompt_results:
+                self.prompt_results[request_id] = None  # Ensure polling sees None
+
+    def is_cancelled(self, request_id: str) -> bool:
+        return request_id in self._cancelled
             
     def set_server_host_port(self, host_port_str: str):
         """Sets the dynamically found server host and port."""

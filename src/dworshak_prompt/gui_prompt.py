@@ -22,7 +22,7 @@ class CustomPromptDialog:
         
         # Set a minimum width and padding
         # We target ~400px width to ensure the title isn't truncated
-        min_w, min_h = 400, 110
+        min_w, min_h = 400, 150
         screen_w = parent.winfo_screenwidth()
         screen_h = parent.winfo_screenheight()
         

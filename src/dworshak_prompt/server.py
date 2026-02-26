@@ -78,7 +78,7 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             </script>
             """
 
-        html = f"""<!DOCTYPE html>
+        html2 = f"""<!DOCTYPE html>
         <html>
         <head>
             <title>Dworshak Prompt</title>
@@ -136,6 +136,63 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
                     <button type="submit">Submit</button>
                 </form>
             </div>
+        </body></html>"""
+
+        html = f"""<!DOCTYPE html>
+        <html>
+        <head>
+            <title>Dworshak Prompt</title>
+            <style>
+                body {{ font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f2f5; }}
+                .card {{ background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 100%; max-width: 400px; }}
+                h2 {{ margin-top: 0; color: #1c1e21; font-size: 1.2rem; }}
+                .input-group {{ display: flex; margin: 20px 0; }}
+                input {{ flex-grow: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; }}
+                button {{ background: #007bff; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }}
+                button:hover {{ opacity: 0.9; }}
+                .cancel-btn {{ background: #dc2626; margin-right: 10px; }}  /* red for visibility */
+                .actions {{ display: flex; justify-content: flex-end; align-items: center; }}
+            </style>
+        </head>
+        <body>
+            <div class="card">
+                <h2>{msg}</h2>
+                <form action="/api/submit_config" method="post">
+                    <input type="hidden" name="request_id" value="{req_id}">
+                    <div class="input-group">
+                        <input id="input_field"
+                            type="{input_type}"
+                            name="input_value"
+                            value="{suggestion}"
+                            autofocus
+                            onfocus="this.select()"
+                            autocomplete="off"
+                            spellcheck="false"
+                            required>
+                        {toggle_html}
+                    </div>
+                    <div class="actions">
+                        <button type="button" class="cancel-btn" onclick="cancelPrompt()">Cancel</button>
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+            {toggle_script}
+            <script>
+                function cancelPrompt() {{
+                    if (confirm('Cancel input?')) {{
+                        fetch('/api/cancel', {{
+                            method: 'POST',
+                            headers: {{ 'Content-Type': 'application/x-www-form-urlencoded' }},
+                            body: 'request_id={req_id}'
+                        }}).then(() => {{
+                            document.body.innerHTML = '<h2 style="text-align:center;">Cancelled</h2><p>You may now close this tab.</p>';
+                        }}).catch(err => {{
+                            console.error('Cancel failed:', err);
+                        }});
+                    }}
+                }}
+            </script>
         </body></html>"""
         self._send_response(html, "text/html")
 
