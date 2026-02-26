@@ -2,7 +2,7 @@
 from __future__ import annotations
 from .logging_setup import setup_logging
 # Initialize logging before anything else
-setup_logging(verbose=False, debug=False)  # Default off
+logger=setup_logging(verbose=False, debug=False)  # Default off
 import typer
 from rich.console import Console
 import os

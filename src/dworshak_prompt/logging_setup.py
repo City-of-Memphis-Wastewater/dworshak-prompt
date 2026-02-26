@@ -1,6 +1,7 @@
 # src/dworshak_prompt/logging_setup.py
 import logging
 import sys
+import traceback
 
 def setup_logging(verbose: bool = False, debug: bool = False):
     """
@@ -43,3 +44,8 @@ def setup_logging(verbose: bool = False, debug: bool = False):
 
     logger.debug("Logging initialized at level %s", logging.getLevelName(level))
     return logger
+
+
+def log_traceback(logger):
+    if logger.level <= logging.DEBUG:
+        traceback.print_exc(file=sys.stdout)

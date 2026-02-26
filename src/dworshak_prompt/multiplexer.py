@@ -23,18 +23,6 @@ from .keyboard_interrupt import PromptCancelled
 from .server import stop_prompt_server
 from .prompt_manager import PromptManager
 from .helpers import PromptMode, resolve_str_to_list, resolve_str_to_set
-    
-"""# Setup logger
-import logging
-logger = logging.getLogger("dworshak_prompt")
-# Default to INFO to hide diagnostics; change to DEBUG to see them
-#logger.setLevel(logging.INFO) 
-logger.setLevel(logging.WARNING) 
-if not logger.handlers:
-    _handler = logging.StreamHandler(sys.stdout)
-    _handler.setFormatter(logging.Formatter('%(message)s'))
-    logger.addHandler(_handler)
-"""
 
 class DworshakPrompt: 
     def __init__(self,
@@ -64,7 +52,7 @@ class DworshakPrompt:
         timeout: int | float | None = None,
     ) -> str | None:
         from .logging_setup import setup_logging
-        setup_logging(verbose=verbose, debug=debug)
+        logger = setup_logging(verbose=verbose, debug=debug)
 
         if priority_interface is None:
             priority_interface = self.default_priority_interface
@@ -170,7 +158,7 @@ class DworshakPrompt:
                 logger.debug(f"[DIAGNOSTIC] Full Path:  {exc_module}.{exc_name}")
                 logger.debug(f"[DIAGNOSTIC] Repr:       {repr(e)}")
                 logger.debug(f"[DIAGNOSTIC] Args:       {e.args}")
-
+                
                 stop_signals = {"KeyboardInterrupt", "Abort", "SystemExit", "EOFError", "PromptCancelled"}
                 
                 if exc_name in stop_signals or isinstance(e, (KeyboardInterrupt, PromptCancelled)):
@@ -178,18 +166,15 @@ class DworshakPrompt:
                     if interrupt_event:
                         interrupt_event.set()
                     return None
-
-                # For technical failures, we log the traceback at DEBUG level
-                logger.debug(f"[DIAGNOSTIC] >>> TECHNICAL FAILURE detected. Investigating traceback...")
-                if logger.isEnabledFor(logging.DEBUG):
-                    traceback.print_exc(file=sys.stdout)
                 
+                # For technical failures
+                logger.debug(f"[DIAGNOSTIC] >>> TECHNICAL FAILURE detected. Investigating traceback...")
+                log_traceback(logger)  # ← new helper call
                 logger.debug(f"[DIAGNOSTIC] Continuing to fallback interface mode...")
                 continue
 
-
-        logger.debug("[DIAGNOSTIC] All interface modes exhausted.")
-        raise RuntimeError("No input method succeeded.")
+            logger.debug("[DIAGNOSTIC] All interface modes exhausted.")
+            raise RuntimeError("No input method succeeded.")
 
 def dworshak_ask(
     message: str = "Enter value",
