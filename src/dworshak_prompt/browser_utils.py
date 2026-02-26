@@ -10,8 +10,12 @@ import concurrent.futures
 import socket
 import urllib.request
 import urllib.error
-
 import pyhabitat
+
+# Setup Logging
+import logging
+logger = logging.getLogger("dworshak_prompt")
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Constants & User Messages
@@ -79,7 +83,7 @@ def try_wslview(url: str) -> bool:
     if not shutil.which("wslview"):
         return False
     try:
-        print("[WEBPROMPT] Launching with wslview...")
+        logger.info("[WEBPROMPT] Launching with wslview...")
         subprocess.Popen(
             ["wslview", url],
             stdout=subprocess.DEVNULL,
@@ -88,7 +92,7 @@ def try_wslview(url: str) -> bool:
         )
         return True
     except Exception as e:
-        print(f"[WEBPROMPT] wslview failed: {e}", file=sys.stderr)
+        logger.warning(f"[WEBPROMPT] wslview failed: {e}", file=sys.stderr)
         return False
 
 

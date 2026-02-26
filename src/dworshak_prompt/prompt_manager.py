@@ -4,6 +4,7 @@ import threading
 import uuid
 from typing import Dict, Any, Optional
 
+# Setup Logging
 import logging
 logger = logging.getLogger("dworshak_prompt")
 
