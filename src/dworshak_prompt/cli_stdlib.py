@@ -27,6 +27,8 @@ def run_prompt(
     avoid_interface: list[PromptMode] | None = None,
 ) -> int:
 
+    setup_logging(verbose=verbose, debug=debug)
+
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
     
@@ -72,6 +74,16 @@ def stdlib_notify_redirect(command: str):
     
 
 def main():
+    # --- Typer-Only Commands ---
+    # Pre-check sys.argv for Typer-only commands (fast, no parsing)
+    argv_lower = [arg.lower() for arg in sys.argv[1:]]
+    typer_only = {"obtain", "helptree"}
+
+    for cmd in typer_only:
+        if cmd in argv_lower:
+            stdlib_notify_redirect(cmd)
+            return 1
+
     parser = argparse.ArgumentParser(
         prog="dworshak-prompt",
         description=f"Multiplexed user input via console, GUI, and web. (v{__version__})",
@@ -134,7 +146,7 @@ def main():
         choices=[m.value for m in PromptMode], 
         default=None,
         type=str.lower,
-        help="Preferred input mode (case-insensitive)",
+        help="Avoided input mode (case-insensitive)",
     )
     ask_parser.add_argument(
         "--debug",
@@ -160,25 +172,33 @@ def main():
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
 
-    # --- Typer-Only Commands (Redirects) ---
-    # We add these to the parser so they show up in --help, but they all trigger the same error.
-    typer_only = ["helptree", "obtain"]
-    for cmd in typer_only:
-        subparsers.add_parser(cmd, help=f"[Requires Typer] Full version of {cmd}", add_help=False)
-
     args = parser.parse_args()
 
-    # Handle Redirections first
-    if args.command in typer_only:
-        stdlib_notify_redirect(args.command)
-        return 1
-
     if args.command == "ask":
-        mode_map = {m.value: m for m in PromptMode}
-        selected_mode = mode_map[args.mode]
+        interface_mode_map = {m.value: m for m in PromptMode}
 
-        # If -M was used, it takes precedence over the positional argument
-        #message_used = args.message_flag if args.message_flag else args.message
+        # Convert repeated --interface to ordered list of PromptMode
+        priority_interface_list = None
+        if args.interface:
+            # If single value (str), wrap in list; if repeated (list), use as-is
+            interfaces = [args.interface] if isinstance(args.interface, str) else args.interface
+            try:
+                priority_interface_list = [interface_mode_map[mode.lower()] for mode in interfaces]
+            except KeyError as e:
+                print(f"Error: Invalid interface mode '{e.args[0]}'")
+                sys.exit(1)
+
+        # Same for --avoid (order doesn't matter, so set)
+        avoid_interface_set = None
+        if args.avoid:
+            avoids = [args.avoid] if isinstance(args.avoid, str) else args.avoid
+            try:
+                avoid_interface_set = {interface_mode_map[mode.lower()] for mode in avoids}
+            except KeyError as e:
+                print(f"Error: Invalid avoid mode '{e.args[0]}'")
+                sys.exit(1)
+
+       
         message_used = args.message_flag or args.message or "Enter value"
 
         exit_code = run_prompt(
@@ -187,8 +207,8 @@ def main():
             hide_input=args.hide,
             debug=args.debug,
             verbose=args.verbose,
-            priority_interface=[selected_mode],
-            avoid_interface=[selected_mode],
+            priority_interface=priority_interface_list,
+            avoid_interface=avoid_interface_set,
         )
         sys.exit(exit_code)
 
