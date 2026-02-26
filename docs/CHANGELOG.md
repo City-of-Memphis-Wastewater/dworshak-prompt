@@ -13,6 +13,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ### Added:
 - Add cancel button to web interface.
 - Add messages for missing tkinter functionality.
+- Dedicated logging_setup module (WIP)
 
 ---
 
