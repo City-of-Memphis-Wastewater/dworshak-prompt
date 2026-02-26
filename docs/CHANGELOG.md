@@ -10,6 +10,10 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ### Changed:
 - priority -> priorty_interface, PromptMode -> PromptMode, avoid -> avoid_interface
 
+### Added:
+- Add cancel button to web interface.
+- Add messages for missing tkinter functionality.
+
 ---
 
 ## [0.2.20] – 2026-02-17
