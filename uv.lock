@@ -211,11 +211,11 @@ wheels = [
 
 [[package]]
 name = "dworshak-config"
-version = "0.2.2"
+version = "0.2.3"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/5f/6b/de291a639a5313d812aff2f9d49077b961f19d4160b76789f56dbc56b800/dworshak_config-0.2.2.tar.gz", hash = "sha256:4a700749d770cabffc7d52352752cd5714761b1cb8d327e8c39e8d0cc9fbb212", size = 9008, upload-time = "2026-02-16T20:15:29.044Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ac/32/dc538a6da65a744eb36fa414a6bb25e660ab380de7c4a6f991626577f5d9/dworshak_config-0.2.3.tar.gz", hash = "sha256:2ec4d4b86d76f9ff2d148f03d12a6284a9b9ca0c2f43bb50837a628a6724b99b", size = 9891, upload-time = "2026-02-26T16:40:43.55Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/64/c5/1a02f2f10e2f38abe22171e401df3be2e43d3d7c56a88cf5067324e641ea/dworshak_config-0.2.2-py3-none-any.whl", hash = "sha256:9f79e68f23a7322c09ff30f5ede8d7fd5230bf925985aead97ca391c96916126", size = 8895, upload-time = "2026-02-16T20:15:27.332Z" },
+    { url = "https://files.pythonhosted.org/packages/85/b6/36ff773756a1d1d146b75a8c05d28224010275b37538d6cb61969d34c4aa/dworshak_config-0.2.3-py3-none-any.whl", hash = "sha256:87bcda4dffad9603bedc910c69709eb7b26425d8a5db3a14ec216832996621d3", size = 9850, upload-time = "2026-02-26T16:40:41.224Z" },
 ]
 
 [[package]]

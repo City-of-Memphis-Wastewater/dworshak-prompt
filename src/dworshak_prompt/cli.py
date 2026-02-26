@@ -86,7 +86,7 @@ def ask(
         "--default", "-d", 
         help="The user will be suggested this value."),
     hide: bool = typer.Option(False, "--hide", "-H", help="Hide input (for passwords)"),
-    debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
+    debug: bool = typer.Option(False, "--debug", "--verbose", help="Enable diagnostic logging."),
 ):
 
     priority_interface_list = priority_interface if priority_interface is not None else None
@@ -164,7 +164,7 @@ def obtain_config(
     ),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
-    debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
+    debug: bool = typer.Option(False, "--debug", "--verbose", help="Enable diagnostic logging."),
 ):
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
@@ -199,7 +199,7 @@ def obtain_env(
     ),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
-    debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
+    debug: bool = typer.Option(False, "--debug", "--verbose", help="Enable diagnostic logging."),
 ):
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
