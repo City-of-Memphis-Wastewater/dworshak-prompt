@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.22] – 2026-02-26
+### Fixed:
+- Handling the TRY_TKINTER_ON_WSL env var
+
+---
+
 ## [0.2.21] – 2026-02-23
 ### Changed:
 - priority -> priorty_interface, PromptMode -> PromptMode, avoid -> avoid_interface
