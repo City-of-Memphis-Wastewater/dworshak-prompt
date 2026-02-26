@@ -3,11 +3,12 @@ from __future__ import annotations # Delays annotation evaluation, allowing mode
 import threading
 import uuid
 from typing import Dict, Any, Optional
+
+
+"""# Setup logger
 import logging
-
-# Setup logger
 logger = logging.getLogger("dworshak_prompt")
-
+"""
 class PromptManager:
     """
     Manages the state of active configuration prompts and submitted results.

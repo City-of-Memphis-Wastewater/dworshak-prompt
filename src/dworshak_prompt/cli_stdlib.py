@@ -22,19 +22,24 @@ def run_prompt(
     suggestion: str | None = None,
     hide_input: bool = False,
     debug: bool = False,
+    verbose: bool = False,
     priority_interface: list[PromptMode] | None = None,
+    avoid_interface: list[PromptMode] | None = None,
 ) -> int:
-    if debug:
-        import logging
-        logging.getLogger("dworshak_prompt").setLevel(logging.DEBUG)
+
+    priority_interface_list = priority_interface if priority_interface is not None else None
+    avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
+    
 
     try:
         value = DworshakPrompt().ask(
             message=message,
             suggestion=suggestion,
             hide_input=hide_input,
-            priority_interface=priority_interface,
+            priority_interface=priority_interface_list,
+            avoid_interface = avoid_interface_set,
             debug=debug,
+            verbose=verbose,
         )
         if value is not None:
             safe_notify(value)
@@ -120,7 +125,14 @@ def main():
     ask_parser.add_argument(
         "--interface", "-i", 
         choices=[m.value for m in PromptMode], 
-        default=PromptMode.CONSOLE.value,
+        default=None,#PromptMode.CONSOLE.value,
+        type=str.lower,
+        help="Preferred input mode (case-insensitive)",
+    )
+    ask_parser.add_argument(
+        "--avoid", "-a", 
+        choices=[m.value for m in PromptMode], 
+        default=None,
         type=str.lower,
         help="Preferred input mode (case-insensitive)",
     )
@@ -128,6 +140,11 @@ def main():
         "--debug",
         action="store_true",
         help="Enable debug logging",
+    )
+    ask_parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Enable verbose logging",
     )
 
     # Help flags at both levels
@@ -169,7 +186,9 @@ def main():
             suggestion=args.suggestion,
             hide_input=args.hide,
             debug=args.debug,
+            verbose=args.verbose,
             priority_interface=[selected_mode],
+            avoid_interface=[selected_mode],
         )
         sys.exit(exit_code)
 

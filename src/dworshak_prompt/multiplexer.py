@@ -6,7 +6,6 @@ from typing import Set, Any
 import threading
 import traceback
 import sys
-import logging
 import os
 
 try:
@@ -25,7 +24,8 @@ from .server import stop_prompt_server
 from .prompt_manager import PromptManager
 from .helpers import PromptMode, resolve_str_to_list, resolve_str_to_set
     
-# Setup logger
+"""# Setup logger
+import logging
 logger = logging.getLogger("dworshak_prompt")
 # Default to INFO to hide diagnostics; change to DEBUG to see them
 #logger.setLevel(logging.INFO) 
@@ -34,7 +34,7 @@ if not logger.handlers:
     _handler = logging.StreamHandler(sys.stdout)
     _handler.setFormatter(logging.Formatter('%(message)s'))
     logger.addHandler(_handler)
-
+"""
 
 class DworshakPrompt: 
     def __init__(self,

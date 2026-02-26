@@ -4,14 +4,13 @@ import threading
 import urllib.parse 
 import time
 from typing import Any
-import logging 
-
 from .prompt_manager import PromptManager # for type hinting
 from .browser_utils import launch_browser, is_server_running
 
-# Setup logger
+"""# Setup logger
+import logging 
 logger = logging.getLogger("dworshak_prompt")
-
+"""
 def browser_get_input(
     message: str, 
     suggestion: str | None = None, 
