@@ -15,6 +15,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 - Add messages for missing tkinter functionality.
 - Dedicated logging_setup module (WIP)
 
+### Internal:
+- To add logger to a file, use `logger = logging.getLogger("dworshak_prompt")`
+- For --debug flag, use logger.debug()
+- For --verbose flag, use logger.info()
+- For no flag, use logger.warning()
+
 ---
 
 ## [0.2.20] – 2026-02-17
