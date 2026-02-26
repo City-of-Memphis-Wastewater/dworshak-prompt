@@ -3,7 +3,7 @@ import logging
 import sys
 import traceback
 
-def setup_logging(verbose: bool = False, debug: bool = False):
+def setup_logging(verbose: bool = False, debug: bool = False, initial: bool=False):
     """
     Configure the root 'dworshak_prompt' logger.
     Priority: debug > verbose > default (WARNING)
@@ -41,8 +41,8 @@ def setup_logging(verbose: bool = False, debug: bool = False):
     # file_handler.setLevel(logging.DEBUG)
     # file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s [%(name)s] %(message)s'))
     # logger.addHandler(file_handler)
-
-    logger.debug("Logging initialized at level %s", logging.getLevelName(level))
+    if initial:
+        logger.debug("Logging initialized at level %s", logging.getLevelName(level))
     return logger
 
 

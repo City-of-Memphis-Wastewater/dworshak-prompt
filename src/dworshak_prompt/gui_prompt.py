@@ -97,7 +97,7 @@ def gui_get_input(message: str, suggestion: str | None = None, hide_input: bool 
 def get_tkinter_hint() -> str:
     os_name = platform.system().lower()
     hint_base = (
-        "[VERBOSE] GUI mode skipped: Tkinter unavailable.\n"
+        "GUI mode skipped: Tkinter unavailable.\n"
         "Tkinter is Python's standard GUI library, but it may need installation or configuration.\n"
         "Common fixes:\n"
     )
@@ -144,5 +144,3 @@ def get_tkinter_hint() -> str:
             "• Test: python -m tkinter (should open a window).\n"
             "More: https://docs.python.org/3/library/tkinter.html#installing-tk"
         )
-
-# Then print(get_tkinter_hint()) where needed

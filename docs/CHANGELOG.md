@@ -21,6 +21,9 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 - For --verbose flag, use logger.info()
 - For no flag, use logger.warning()
 
+### Fixed:
+- Bring cli_stdlib.py into (lite) parallel with cli.py; why the heck are we doing this? Because it is likely the only entry point that will live on in fifty years, if someone can't find the right typer wheel (typer will probably live too, but all bets are off).
+
 ---
 
 ## [0.2.20] – 2026-02-17

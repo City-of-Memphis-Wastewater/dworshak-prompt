@@ -51,7 +51,7 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             if req_id and val is not None:
                 # --- THE HANDOFF VIA ATTACHED MANAGER ---
                 self.server.manager.submit_result(req_id, val) 
-                self._send_response("<h1>Success</h1><p>Input received. You may now close this tab.</p>")
+                self._send_response("<h1>Success</h1><br><p>Input received. You may now close this tab.</p>")
             else:
                 self.send_error(400, "Missing request_id or input_value")
         # allow user to hit the cancel button
@@ -63,7 +63,7 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             if req_id:
                 logger.debug(f"[SERVER] Received cancel request for req_id={req_id}")
                 self.server.manager.cancel_prompt(req_id)
-                self._send_response("<h2>Cancelled</h2><p>You may now close this tab.</p>")
+                self._send_response("<h2>Cancelled</h2><br><p>You may now close this tab.</p>")
                 logger.debug(f"[SERVER] Cancel processed for req_id={req_id}")
             else:
                 self.send_error(400, "Missing request_id")
@@ -188,7 +188,7 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
                             headers: {{ 'Content-Type': 'application/x-www-form-urlencoded' }},
                             body: 'request_id={req_id}'
                         }}).then(() => {{
-                            document.body.innerHTML = '<h2 style="text-align:center;">Cancelled</h2><p>You may now close this tab.</p>';
+                            document.body.innerHTML = '<h2 style="text-align:center;">Cancelled</h2><br><p>You may now close this tab.</p>';
                         }}).catch(err => {{
                             console.error('Cancel failed:', err);
                         }});

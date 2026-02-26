@@ -41,9 +41,7 @@ class DworshakPrompt:
         message: str = "Enter value",
         suggestion: str | None = None,
         default: Any | None = None,
-        hide_input: bool = False,
-        #priority: list[PromptMode] | None = None,
-        #avoid: set[PromptMode] | None = None,
+        hide_input: bool = False, 
         priority_interface: list[PromptMode] | None = None,
         avoid_interface: set[PromptMode] | None = None,
         interrupt_event: threading.Event | None = None,
@@ -52,7 +50,7 @@ class DworshakPrompt:
         timeout: int | float | None = None,
     ) -> str | None:
         from .logging_setup import setup_logging
-        logger = setup_logging(verbose=verbose, debug=debug)
+        logger = setup_logging(verbose=verbose, debug=debug, initial=True)
 
         if priority_interface is None:
             priority_interface = self.default_priority_interface
@@ -67,24 +65,35 @@ class DworshakPrompt:
         # If we aren't in a TTY and aren't on a system that can spawn a GUI/Web window,
         # return the default immediately to mitigate a potential Dworshak failure mode in CI.
         if ph.is_likely_ci_or_non_interactive():
-            logger.debug("[DIAGNOSTIC] CI/Non-interactive environment. Returning default.")
+            logger.debug("CI/Non-interactive environment. Returning default.")
             return default
 
         if not ph.interactive_terminal_is_available() and \
         not ph.tkinter_is_available() and \
         not ph.is_browser_available(): # Hypothetical pyhabitat check
-            logger.debug("[DIAGNOSTIC] Non-interactive environment detected. Using default.")
+            logger.debug("Non-interactive environment detected. Using default.")
             return default
 
         avoid_interface = avoid_interface or set()
         avoid_interface = resolve_str_to_set(avoid_interface)
         priority_interface = resolve_str_to_list(priority_interface)
-        
+         
         if ph.on_wsl():
-            if not os.getenv("TRY_TKINTER_ON_WSL", default=False):
-                logger.debug(f"[VERBOSE] PromptMode.GUI avoided for WSL; to try it, set echo TRY_TKINTER_ON_WSL=1 ")
+            raw_val = os.getenv("TRY_TKINTER_ON_WSL")
+            logger.debug(f"raw TRY_TKINTER_ON_WSL = {raw_val!r}")
+            
+            # Convert common truthy strings to boolean
+            if raw_val is not None:
+                try_tkinter_on_wsl = raw_val.lower() in ('1', 'true', 'yes', 'on', 'enable')
+            else:
+                try_tkinter_on_wsl = False
+            
+            logger.debug(f"try_tkinter_on_wsl interpreted as {try_tkinter_on_wsl}")
+            
+            if not try_tkinter_on_wsl:
+                logger.warning(f"PromptMode.GUI avoided for WSL; to try it, set `export TRY_TKINTER_ON_WSL=1` ")
                 avoid_interface.add(PromptMode.GUI)
-                print(get_tkinter_hint())
+                
 
         default_order = [PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB]
         if priority_interface:
@@ -100,34 +109,35 @@ class DworshakPrompt:
 
         for interface_mode in effective_priority_interface:
             if interface_mode in avoid_interface:
-                logger.debug(f"[DIAGNOSTIC] Skipping {interface_mode} (avoided)")
+                logger.debug(f"Skipping {interface_mode} (avoided)")
                 continue
 
-            logger.debug(f"\n[DIAGNOSTIC] === Interface Mode: {interface_mode} ===")
+            logger.debug(f"\n=== Interface Mode: {interface_mode} ===")
             
             try:
                 if interface_mode == PromptMode.CONSOLE:
                     if not ph.interactive_terminal_is_available():
-                        logger.debug(f"[DIAGNOSTIC] {interface_mode} skipped: No interactive terminal.")
+                        logger.debug(f"{interface_mode} skipped: No interactive terminal.")
                         continue
                     
                     val = console_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
-                    logger.debug(f"[DIAGNOSTIC] SUCCESS: {interface_mode} returned: {repr(val)}")
+                    logger.debug(f"SUCCESS: {interface_mode} returned: {repr(val)}")
                     return val
 
                 elif interface_mode == PromptMode.GUI:
+                    print(f"ph.tkinter_is_available() = {ph.tkinter_is_available()}")
                     if not ph.tkinter_is_available():
-                        logger.debug(f"[DIAGNOSTIC] {interface_mode} skipped: Tkinter unavailable.")
-                        if debug:
-                            print(get_tkinter_hint())  
+                        logger.warning(f"{interface_mode} skipped: Tkinter unavailable.")
+                        logger.debug(get_tkinter_hint())  
                         continue
+
                         
                     val = gui_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
                     if val is not None:
-                        logger.debug(f"[DIAGNOSTIC] SUCCESS: {interface_mode} returned: {repr(val)}")
+                        logger.debug(f"SUCCESS: {interface_mode} returned: {repr(val)}")
                         return val
                     
-                    logger.debug(f"[DIAGNOSTIC] GUI cancelled. Raising PromptCancelled.")
+                    logger.debug(f"GUI cancelled. Raising PromptCancelled.")
                     raise PromptCancelled()
 
                 elif interface_mode == PromptMode.WEB:
@@ -141,9 +151,9 @@ class DworshakPrompt:
                             stop_event = interrupt_event
                             )
                         if val is not None:
-                            logger.debug(f"[DIAGNOSTIC] SUCCESS: {interface_mode} returned: {repr(val)}")
+                            logger.debug(f"SUCCESS: {interface_mode} returned: {repr(val)}")
                             return val
-                        logger.debug(f"[DIAGNOSTIC] WEB returned None. Raising PromptCancelled.")
+                        logger.debug(f"WEB returned None. Raising PromptCancelled.")
                         raise PromptCancelled()
                     finally:
                         stop_prompt_server()
@@ -155,58 +165,29 @@ class DworshakPrompt:
                 exc_name = exc_type.__name__
                 exc_module = exc_type.__module__
                 
-                logger.debug(f"[DIAGNOSTIC] !!! EXCEPTION TRIGGERED !!!")
-                logger.debug(f"[DIAGNOSTIC] Class Name: {exc_name}")
-                logger.debug(f"[DIAGNOSTIC] Full Path:  {exc_module}.{exc_name}")
-                logger.debug(f"[DIAGNOSTIC] Repr:       {repr(e)}")
-                logger.debug(f"[DIAGNOSTIC] Args:       {e.args}")
+                logger.debug(f"!!! EXCEPTION TRIGGERED !!!")
+                logger.debug(f"Class Name: {exc_name}")
+                logger.debug(f"Full Path:  {exc_module}.{exc_name}")
+                logger.debug(f"Repr:       {repr(e)}")
+                logger.debug(f"Args:       {e.args}")
 
                 stop_signals = {"KeyboardInterrupt", "Abort", "SystemExit", "EOFError", "PromptCancelled"}
                 
                 if exc_name in stop_signals or isinstance(e, (KeyboardInterrupt, PromptCancelled)):
-                    logger.debug(f"[DIAGNOSTIC] >>> MATCHED STOP SIGNAL: {exc_name}. EXITING FUNCTION.")
+                    logger.debug(f">>> MATCHED STOP SIGNAL: {exc_name}. EXITING FUNCTION.")
                     if interrupt_event:
                         interrupt_event.set()
                     return None
 
                 # For technical failures, we log the traceback at DEBUG level
-                logger.debug(f"[DIAGNOSTIC] >>> TECHNICAL FAILURE detected. Investigating traceback...")
+                logger.debug(f">>> TECHNICAL FAILURE detected. Investigating traceback...")
                 if logger.isEnabledFor(logging.DEBUG):
                     traceback.print_exc(file=sys.stdout)
                 
-                logger.debug(f"[DIAGNOSTIC] Continuing to fallback interface mode...")
+                logger.debug(f"Continuing to fallback interface mode...")
                 continue
 
-
-            """except BaseException as e:
-
-                from .logging_setup import log_traceback
-
-                exc_type = type(e)
-                exc_name = exc_type.__name__
-                exc_module = exc_type.__module__
-                
-                logger.debug(f"[DIAGNOSTIC] !!! EXCEPTION TRIGGERED !!!")
-                logger.debug(f"[DIAGNOSTIC] Class Name: {exc_name}")
-                logger.debug(f"[DIAGNOSTIC] Full Path:  {exc_module}.{exc_name}")
-                logger.debug(f"[DIAGNOSTIC] Repr:       {repr(e)}")
-                logger.debug(f"[DIAGNOSTIC] Args:       {e.args}")
-                
-                stop_signals = {"KeyboardInterrupt", "Abort", "SystemExit", "EOFError", "PromptCancelled"}
-                
-                if exc_name in stop_signals or isinstance(e, (KeyboardInterrupt, PromptCancelled)):
-                    logger.debug(f"[DIAGNOSTIC] >>> MATCHED STOP SIGNAL: {exc_name}. EXITING FUNCTION.")
-                    if interrupt_event:
-                        interrupt_event.set()
-                    return None
-                
-                # For technical failures
-                logger.debug(f"[DIAGNOSTIC] >>> TECHNICAL FAILURE detected. Investigating traceback...")
-                log_traceback(logger)  # ← new helper call
-                logger.debug(f"[DIAGNOSTIC] Continuing to fallback interface mode...")
-                continue"""
-
-            logger.debug("[DIAGNOSTIC] All interface modes exhausted.")
+            logger.debug("All interface modes exhausted.")
             raise RuntimeError("No input method succeeded.")
 
 def dworshak_ask(
