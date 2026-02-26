@@ -59,9 +59,12 @@ class DworshakPrompt:
         priority_interface: list[PromptMode] | None = None,
         avoid_interface: set[PromptMode] | None = None,
         interrupt_event: threading.Event | None = None,
-        debug: bool = False,  # Added a flag to toggle at runtime
+        debug: bool = False, 
+        verbose: bool = False, 
         timeout: int | float | None = None,
     ) -> str | None:
+        from .logging_setup import setup_logging
+        setup_logging(verbose=verbose, debug=debug)
 
         if priority_interface is None:
             priority_interface = self.default_priority_interface
@@ -71,11 +74,6 @@ class DworshakPrompt:
         # Use existing interrupt_event or create a local one for this call
         if interrupt_event is None:
             interrupt_event = threading.Event()
-
-        if debug:
-            logger.setLevel(logging.DEBUG)
-        else:
-            logger.setLevel(logging.WARNING)
 
         # 1. CI/Headless Detection
         # If we aren't in a TTY and aren't on a system that can spawn a GUI/Web window,

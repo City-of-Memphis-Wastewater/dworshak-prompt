@@ -1,4 +1,8 @@
 # src/dworshak_prompt/cli_stdlib.py
+from __future__ import annotations
+from .logging_setup import setup_logging
+# Initialize logging before anything else
+setup_logging(verbose=False, debug=False)  # Default off
 import argparse
 import sys
 from memphisdrip import safe_notify

@@ -1,6 +1,9 @@
 # src/dworshak_prompt/cli.py
+from __future__ import annotations
+from .logging_setup import setup_logging
+# Initialize logging before anything else
+setup_logging(verbose=False, debug=False)  # Default off
 import typer
-#$from typer.models import OptionInfo
 from rich.console import Console
 import os
 from pathlib import Path
@@ -86,7 +89,9 @@ def ask(
         "--default", "-d", 
         help="The user will be suggested this value."),
     hide: bool = typer.Option(False, "--hide", "-H", help="Hide input (for passwords)"),
-    debug: bool = typer.Option(False, "--debug", "--verbose", help="Enable diagnostic logging."),
+    debug: bool = typer.Option(False, "--debug", help="Enable low-level diagnostics and tracebacks."),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended).")
+    
 ):
 
     priority_interface_list = priority_interface if priority_interface is not None else None
@@ -100,6 +105,7 @@ def ask(
         suggestion = suggestion,
         hide_input = hide,
         debug=debug, 
+        verbose=verbose,
     )
     if val:
         print(val)
@@ -124,7 +130,8 @@ def obtain_secret(
         help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
     ),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
-    debug: bool = typer.Option(False, "--debug", "--verbose", help="Enable diagnostic logging."),
+    debug: bool = typer.Option(False, "--debug", help="Enable low-level diagnostics and tracebacks."),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended).")
 ):
     """Get a secret value (Vault -> Prompt -> Save)."""
 
@@ -139,7 +146,8 @@ def obtain_secret(
         priority_interface=priority_interface_list, 
         avoid_interface=avoid_interface_set, 
         overwrite=overwrite,
-        debug=debug
+        debug=debug,
+        verbose=verbose,
     )
     if result.is_new is True:
         print("Secret stored.")
@@ -164,7 +172,8 @@ def obtain_config(
     ),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
-    debug: bool = typer.Option(False, "--debug", "--verbose", help="Enable diagnostic logging."),
+    debug: bool = typer.Option(False, "--debug", help="Enable low-level diagnostics and tracebacks."),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended).")
 ):
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
@@ -179,7 +188,8 @@ def obtain_config(
         priority_interface=priority_interface_list,
         avoid_interface=avoid_interface_set,
         forget=forget,
-        debug=debug
+        debug=debug,
+        verbose=verbose
     )
     if val:
         print(val)
@@ -199,7 +209,8 @@ def obtain_env(
     ),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
-    debug: bool = typer.Option(False, "--debug", "--verbose", help="Enable diagnostic logging."),
+    debug: bool = typer.Option(False, "--debug", help="Enable low-level diagnostics and tracebacks."),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended).")
 ):
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
@@ -213,7 +224,8 @@ def obtain_env(
         priority_interface=priority_interface_list,
         avoid_interface=avoid_interface_set,
         forget=forget,
-        debug=debug
+        debug=debug,
+        verbose=verbose
     )
     if val:
         print(val)
