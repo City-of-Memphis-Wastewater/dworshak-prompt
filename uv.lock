@@ -270,7 +270,7 @@ requires-dist = [
     { name = "dworshak-config", specifier = ">=0.2.2" },
     { name = "dworshak-env", specifier = ">=0.1.4" },
     { name = "dworshak-prompt", extras = ["crypto", "typer"], marker = "extra == 'full'" },
-    { name = "dworshak-secret", specifier = ">=1.2.8" },
+    { name = "dworshak-secret", specifier = "==1.2.10" },
     { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'crypto'" },
     { name = "memphisdrip", specifier = ">=0.1.4" },
     { name = "memphisdrip", extras = ["typer"], marker = "extra == 'typer'", specifier = ">=0.1.4" },
@@ -286,14 +286,14 @@ test = [{ name = "pytest", specifier = ">=8.4.2" }]
 
 [[package]]
 name = "dworshak-secret"
-version = "1.2.8"
+version = "1.2.10"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyhabitat" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/79/b6/aa3a79d5aca086e2115db0f30c8ab154431f7fcfe570928fb092428d710e/dworshak_secret-1.2.8.tar.gz", hash = "sha256:38a48298149e79ef565e29cbd08b6b7d36d5401f21e8de04764193116fb3bdec", size = 19772, upload-time = "2026-02-18T01:27:45.867Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/38/fd/3b514a2542c679f5326d7db3d8a62acdb79eec318f02ddfa1cf16ef1c5c7/dworshak_secret-1.2.10.tar.gz", hash = "sha256:0c27a6fec977d3d62f6a7ab24743f1cc0cd9da78cbbc961e286ae8ad3dae70aa", size = 20627, upload-time = "2026-02-18T18:10:55.951Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d4/86/3f612c7f80205081c5f8ec9314c221463ddf40b2e94ebc26c4aa3bbf238b/dworshak_secret-1.2.8-py3-none-any.whl", hash = "sha256:694517044b2c7f888a072c4913dde1c0b25bab7eda2705efe08c7e1043c1b858", size = 22046, upload-time = "2026-02-18T01:27:43.937Z" },
+    { url = "https://files.pythonhosted.org/packages/4e/3e/12aa1b42baa8554515082cd1791af9a8c85ee12cd06613fc5c1495a4b30f/dworshak_secret-1.2.10-py3-none-any.whl", hash = "sha256:81317a0e5ab3026517e2d6334a47bb786c6a0c6ab964948487181fe602b036f5", size = 22404, upload-time = "2026-02-18T18:10:54.329Z" },
 ]
 
 [package.optional-dependencies]
