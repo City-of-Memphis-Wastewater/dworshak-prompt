@@ -4,11 +4,9 @@ import threading
 import uuid
 from typing import Dict, Any, Optional
 
-
-"""# Setup logger
 import logging
 logger = logging.getLogger("dworshak_prompt")
-"""
+
 class PromptManager:
     """
     Manages the state of active configuration prompts and submitted results.

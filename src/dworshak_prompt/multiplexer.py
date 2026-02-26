@@ -148,7 +148,40 @@ class DworshakPrompt:
                     finally:
                         stop_prompt_server()
 
+            
             except BaseException as e:
+                import logging
+                exc_type = type(e)
+                exc_name = exc_type.__name__
+                exc_module = exc_type.__module__
+                
+                logger.debug(f"[DIAGNOSTIC] !!! EXCEPTION TRIGGERED !!!")
+                logger.debug(f"[DIAGNOSTIC] Class Name: {exc_name}")
+                logger.debug(f"[DIAGNOSTIC] Full Path:  {exc_module}.{exc_name}")
+                logger.debug(f"[DIAGNOSTIC] Repr:       {repr(e)}")
+                logger.debug(f"[DIAGNOSTIC] Args:       {e.args}")
+
+                stop_signals = {"KeyboardInterrupt", "Abort", "SystemExit", "EOFError", "PromptCancelled"}
+                
+                if exc_name in stop_signals or isinstance(e, (KeyboardInterrupt, PromptCancelled)):
+                    logger.debug(f"[DIAGNOSTIC] >>> MATCHED STOP SIGNAL: {exc_name}. EXITING FUNCTION.")
+                    if interrupt_event:
+                        interrupt_event.set()
+                    return None
+
+                # For technical failures, we log the traceback at DEBUG level
+                logger.debug(f"[DIAGNOSTIC] >>> TECHNICAL FAILURE detected. Investigating traceback...")
+                if logger.isEnabledFor(logging.DEBUG):
+                    traceback.print_exc(file=sys.stdout)
+                
+                logger.debug(f"[DIAGNOSTIC] Continuing to fallback interface mode...")
+                continue
+
+
+            """except BaseException as e:
+
+                from .logging_setup import log_traceback
+
                 exc_type = type(e)
                 exc_name = exc_type.__name__
                 exc_module = exc_type.__module__
@@ -171,7 +204,7 @@ class DworshakPrompt:
                 logger.debug(f"[DIAGNOSTIC] >>> TECHNICAL FAILURE detected. Investigating traceback...")
                 log_traceback(logger)  # ← new helper call
                 logger.debug(f"[DIAGNOSTIC] Continuing to fallback interface mode...")
-                continue
+                continue"""
 
             logger.debug("[DIAGNOSTIC] All interface modes exhausted.")
             raise RuntimeError("No input method succeeded.")

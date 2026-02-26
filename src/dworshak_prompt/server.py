@@ -5,12 +5,13 @@ import socketserver
 import json
 import urllib.parse
 import threading
-from .browser_utils import find_open_port
 
-"""# Setup logger
+# Setup logger
 import logging
 logger = logging.getLogger("dworshak_prompt")
-"""
+
+from .browser_utils import find_open_port
+
 class PromptHandler(http.server.BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         pass  # Silence the console noise
