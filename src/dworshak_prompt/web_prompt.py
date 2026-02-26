@@ -4,14 +4,23 @@ import threading
 import urllib.parse 
 import time
 from typing import Any
+import logging 
 
 from .prompt_manager import PromptManager # for type hinting
 from .browser_utils import launch_browser, is_server_running
 
-def browser_get_input(message: str, suggestion: str | None = None, hide: bool = False, manager: PromptManager = None, stop_event: threading.Event | None = None) -> str | None:
+# Setup logger
+logger = logging.getLogger("dworshak_prompt")
+
+def browser_get_input(
+    message: str, 
+    suggestion: str | None = None, 
+    hide: bool = False, 
+    manager: PromptManager = None, 
+    stop_event: threading.Event | None = None
+    ) -> str | None:
     
     url = manager.get_server_url()
-    # Launch logic remains the same
     if not is_server_running(url):
         from .server import run_prompt_server_in_thread
         run_prompt_server_in_thread(manager)
@@ -23,6 +32,8 @@ def browser_get_input(message: str, suggestion: str | None = None, hide: bool = 
     full_url = f"{url}/config_modal?request_id={req_id}&message={encoded_msg}&hide_input={hide}&suggestion={encoded_sug}"
     launch_browser(full_url)
     
+    logger.debug(f"[WEBPROMPT] Started polling for req_id={req_id}")
+
     # small timeout to auto-cancel after inactivity (e.g. 10 minutes)
     start_time = time.time()
     MAX_WAIT_SEC = 600
@@ -30,27 +41,32 @@ def browser_get_input(message: str, suggestion: str | None = None, hide: bool = 
     # The Polling Loop
     while True:
         # 1. Check if the external shutdown event was triggered
-        if stop_event and stop_event.is_set(): 
+        if stop_event and stop_event.is_set():
+            logger.debug(f"[WEBPROMPT] Stop event set → cancelling req_id={req_id}") 
             manager.cancel_prompt(req_id)  # Cleanup
             return None
         
         # Check explicit user cancel
         if manager.is_cancelled(req_id):
+            logger.debug(f"[WEBPROMPT] Detected cancel for req_id={req_id} → returning None")
             return None
 
         # Check if the user submitted data
         val = manager.get_and_clear_result(req_id)
-        if val is not None: return val
+        if val is not None: 
+            logger.debug(f"[WEBPROMPT] Got result for req_id={req_id}: {repr(val)}")
+            return val
 
-        # Responsive Sleep: wait for the event OR the timeout
-        # This makes Ctrl+C feel instant
-        if stop_event:
-            if stop_event.wait(timeout=0.5):
-                return None
-        else:
-            time.sleep(0.5)
-
-        #  auto-cancel on long inactivity
+        # Inactivity timeout
         if time.time() - start_time > MAX_WAIT_SEC:
+            logger.debug(f"[WEBPROMPT] Inactivity timeout ({MAX_WAIT_SEC}s) → cancelling")
             manager.cancel_prompt(req_id)
             return None
+
+        # Responsive sleep (0.3s is snappier for cancel detection)
+        sleep_time = 0.3
+        if stop_event:
+            if stop_event.wait(timeout=sleep_time):
+                return None
+        else:
+            time.sleep(sleep_time)

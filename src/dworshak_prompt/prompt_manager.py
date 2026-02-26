@@ -3,6 +3,10 @@ from __future__ import annotations # Delays annotation evaluation, allowing mode
 import threading
 import uuid
 from typing import Dict, Any, Optional
+import logging
+
+# Setup logger
+logger = logging.getLogger("dworshak_prompt")
 
 class PromptManager:
     """
@@ -56,7 +60,9 @@ class PromptManager:
         """Stores a submitted result and clears the active request."""
         # ignore if already cancelled
         if request_id in self._cancelled:
+            logger.debug(f"[MANAGER] Ignoring submit for cancelled req_id={request_id}")
             return
+        logger.debug(f"[MANAGER] Submitting result for {request_id}")
 
         with self.results_lock:
             self.prompt_results[request_id] = value
@@ -71,12 +77,14 @@ class PromptManager:
 
     def cancel_prompt(self, request_id: str):
         """Mark prompt as cancelled and clear active request."""
+        logger.debug(f"[MANAGER] Cancelling prompt {request_id}")
         self._cancelled.add(request_id)
         with self.active_prompt_lock:
             self.active_prompt_request.pop(request_id, None)
         with self.results_lock:
             if request_id in self.prompt_results:
                 self.prompt_results[request_id] = None  # Ensure polling sees None
+        logger.debug(f"[MANAGER] Cancel complete for {request_id}")
 
     def is_cancelled(self, request_id: str) -> bool:
         return request_id in self._cancelled

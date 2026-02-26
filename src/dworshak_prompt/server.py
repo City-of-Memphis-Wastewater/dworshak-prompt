@@ -5,7 +5,11 @@ import socketserver
 import json
 import urllib.parse
 import threading
+import logging
 from .browser_utils import find_open_port
+
+# Setup logger
+logger = logging.getLogger("dworshak_prompt")
 
 class PromptHandler(http.server.BaseHTTPRequestHandler):
     def log_message(self, format, *args):
@@ -26,7 +30,9 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             self.send_error(404)
 
     def do_POST(self):
-        if self.path == "/api/submit_config":
+        parsed_url = urllib.parse.urlparse(self.path)
+        params = urllib.parse.parse_qs(parsed_url.query)
+        if parsed_url.path == "/api/submit_config":
             # 1. Determine how much data to read
             content_length = int(self.headers.get('Content-Length', 0))
             if content_length == 0:
@@ -47,6 +53,20 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
                 self._send_response("<h1>Success</h1><p>Input received. You may now close this tab.</p>")
             else:
                 self.send_error(400, "Missing request_id or input_value")
+        # allow user to hit the cancel button
+        elif parsed_url.path == "/api/cancel":
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length or 0).decode('utf-8')
+            fields = urllib.parse.parse_qs(post_data)
+            req_id = fields.get('request_id', [None])[0]
+            if req_id:
+                logger.debug(f"[SERVER] Received cancel request for req_id={req_id}")
+                self.server.manager.cancel_prompt(req_id)
+                self._send_response("<h2>Cancelled</h2><p>You may now close this tab.</p>")
+                logger.debug(f"[SERVER] Cancel processed for req_id={req_id}")
+            else:
+                self.send_error(400, "Missing request_id")
+                logger.warning(f"[SERVER] Cancel request missing req_id")
         else:
             self.send_error(404)
 
@@ -118,26 +138,7 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             {toggle_script}
         </body></html>"""
 
-        # Inlined HTML to keep it zero-dep and avoid resource-loading drama
-        html_ = f"""<!DOCTYPE html>
-        <html>
-        <head><title>Prompt</title><style>
-            body {{ font-family: sans-serif; padding: 20px; background: #f0f2f5; }}
-            .card {{ background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
-            input {{ width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }}
-            button {{ background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }}
-        </style></head>
-        <body>
-            <div class="card">
-                <h2>{msg}</h2>
-                <form action="/api/submit_config" method="post">
-                    <input type="hidden" name="request_id" value="{req_id}">
-                    <input type="{input_type}" name="input_value" value="{suggestion}" autofocus onfocus="this.select()" required>
-                    <button type="submit">Submit</button>
-                </form>
-            </div>
-        </body></html>"""
-
+        # cancel button added
         html = f"""<!DOCTYPE html>
         <html>
         <head>
