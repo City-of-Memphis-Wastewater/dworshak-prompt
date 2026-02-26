@@ -81,7 +81,7 @@ class DworshakObtain:
 
         # If missing or overwriting, we use the multiplexer
         new_value = DworshakPrompt().ask(
-            message=message or f"config [{service}][{item}]",
+            message=message or f"Please input CONFIG value (service = {service}, item = {item})",
             suggestion=suggestion or value,
             priority_interface = priority_interface,
             avoid_interface = avoid_interface, 
@@ -132,7 +132,7 @@ class DworshakObtain:
             return SecretData(value = value, is_new = False)
         
         new_value = DworshakPrompt().ask(
-            message=message or f"{service} / {item}",
+            message=message or f"Please input SECRET value (service = {service}, item = {item})",
             hide_input=True,
             priority_interface = priority_interface,
             avoid_interface = avoid_interface, 
@@ -176,7 +176,7 @@ class DworshakObtain:
 
         # If missing or overwriting, we use the multiplexer
         new_value = DworshakPrompt().ask(
-            message=message or f"env [{key}]",
+            message=message or f"Please input ENV value (key = {key})",
             suggestion=value or default,
             priority_interface = priority_interface,
             avoid_interface = avoid_interface, 
