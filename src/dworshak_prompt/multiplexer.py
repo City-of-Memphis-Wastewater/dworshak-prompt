@@ -13,6 +13,7 @@ try:
 except ImportError:
     from .console_prompt_stdlib import console_get_input_stdlib as console_get_input
     
+from .gui_prompt import get_tkinter_hint
 if ph.tkinter_is_available():
     from .gui_prompt import gui_get_input
 else:
@@ -94,6 +95,7 @@ class DworshakPrompt:
         
         if ph.on_wsl():
             avoid_interface.add(PromptMode.GUI)
+            print(get_tkinter_hint())
 
         default_order = [PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB]
         if priority_interface:
@@ -127,6 +129,8 @@ class DworshakPrompt:
                 elif interface_mode == PromptMode.GUI:
                     if not ph.tkinter_is_available():
                         logger.debug(f"[DIAGNOSTIC] {interface_mode} skipped: Tkinter unavailable.")
+                        if debug:
+                            print(get_tkinter_hint())  
                         continue
                         
                     val = gui_get_input(message = message, suggestion = suggestion, hide_input = hide_input)

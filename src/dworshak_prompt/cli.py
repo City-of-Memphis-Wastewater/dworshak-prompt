@@ -124,7 +124,7 @@ def obtain_secret(
         help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
     ),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
-    debug: bool = typer.Option(False, "--debug", help="Enable diagnostic logging."),
+    debug: bool = typer.Option(False, "--debug", "--verbose", help="Enable diagnostic logging."),
 ):
     """Get a secret value (Vault -> Prompt -> Save)."""
 

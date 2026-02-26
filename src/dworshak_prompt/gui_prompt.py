@@ -113,6 +113,7 @@ def get_tkinter_hint() -> str:
         if pyhabitat.on_termux():
             return hint_base + (
                 "• In Termux: Install python-tkinter (pkg install python-tkinter ).\n"
+                "• For GUI support, set up X11 forwarding (https://wiki.termux.com/wiki/Graphical_Environment).\n"
                 "More: https://wiki.termux.com/wiki/Python"
             )
         elif pyhabitat.on_wsl():  # WSL-specific
