@@ -6,6 +6,23 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.23] – 2026-02-27
+### Changed:
+- PromptManager -> PromptManagerWeb; prompt_manager.py -> prompt_manager_web.py
+
+### Fixed:
+- `--debug` -> `--debug/-d` consistently.
+- `--verbose` -> `--verbose/-v` consistently.
+
+### Added:
+- Add `--path/-p` cli flag to obtain commands, to allow users to specify non-default paths.
+- Descriptions for obtain subcommmands.
+
+### Internal:
+- Updates have been made in and dworshak-env, dworshak-config; update these before tagging dworshak-prompt v0.2.23.
+
+---
+
 ## [0.2.22] – 2026-02-26
 ### Fixed:
 - Handling the TRY_TKINTER_ON_WSL env var
