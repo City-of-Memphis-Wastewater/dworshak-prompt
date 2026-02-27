@@ -9,14 +9,14 @@ from typing import Any
 import logging
 logger = logging.getLogger("dworshak_prompt")
 
-from .prompt_manager import PromptManager # for type hinting
+from .prompt_manager_web import PromptManagerWeb # for type hinting
 from .browser_utils import launch_browser, is_server_running
 
 def browser_get_input(
     message: str, 
     suggestion: str | None = None, 
     hide: bool = False, 
-    manager: PromptManager = None, 
+    manager: PromptManagerWeb = None, 
     stop_event: threading.Event | None = None
     ) -> str | None:
     

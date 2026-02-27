@@ -149,12 +149,12 @@ def main():
         help="Avoided input mode (case-insensitive)",
     )
     ask_parser.add_argument(
-        "--debug",
+        "--debug", "-d",
         action="store_true",
         help="Enable debug logging",
     )
     ask_parser.add_argument(
-        "--verbose",
+        "--verbose","-v",
         action="store_true",
         help="Enable verbose logging",
     )

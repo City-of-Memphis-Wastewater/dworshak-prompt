@@ -21,7 +21,7 @@ else:
 from .web_prompt import browser_get_input
 from .keyboard_interrupt import PromptCancelled
 from .server import stop_prompt_server
-from .prompt_manager import PromptManager
+from .prompt_manager_web import PromptManagerWeb
 from .helpers import PromptMode, resolve_str_to_list, resolve_str_to_set
 
 class DworshakPrompt: 
@@ -141,7 +141,7 @@ class DworshakPrompt:
                     raise PromptCancelled()
 
                 elif interface_mode == PromptMode.WEB:
-                    local_manager = PromptManager()
+                    local_manager = PromptManagerWeb()
                     try:
                         val = browser_get_input(
                             message, 

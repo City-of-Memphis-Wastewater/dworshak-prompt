@@ -1,4 +1,4 @@
-# pipeline/prompt_manager.py
+# pipeline/prompt_manager_web.py
 from __future__ import annotations # Delays annotation evaluation, allowing modern 3.10+ type syntax and forward references in older Python versions 3.8 and 3.9
 import threading
 import uuid
@@ -8,7 +8,7 @@ from typing import Dict, Any, Optional
 import logging
 logger = logging.getLogger("dworshak_prompt")
 
-class PromptManager:
+class PromptManagerWeb:
     """
     Manages the state of active configuration prompts and submitted results.
     Designed to be instantiated once and shared across threads.

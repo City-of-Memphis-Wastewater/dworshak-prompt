@@ -97,7 +97,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ## [0.2.13] – 2026-02-10
 ### Changed:
-- PromptManager is no longer a singleton but it instantiated per request.
+- PromptManagerWeb is no longer a singleton but it instantiated per request.
 
 ---
 
