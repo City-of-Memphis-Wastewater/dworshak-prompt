@@ -1,4 +1,9 @@
 # src/dworshak_prompt/cli.py
+
+"""
+"Lazy Loading with Persistence" or a "Configuration Bootstrapper."
+Waterfall logic for configuration.
+"""
 from __future__ import annotations
 from .logging_setup import setup_logging
 # Initialize logging before anything else
@@ -84,12 +89,9 @@ def ask(
         None, 
         "--suggestion", "-s", 
         help="The user will be suggested this value."),
-    default: Optional[str] = typer.Option(
-        None, 
-        "--default", "-d", 
-        help="The user will be suggested this value."),
+
     hide: bool = typer.Option(False, "--hide", "-H", help="Hide input (for passwords)"),
-    debug: bool = typer.Option(False, "--debug", help="Enable low-level diagnostics and tracebacks."),
+    debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended).")
     
 ):
@@ -112,13 +114,14 @@ def ask(
 
 
 # Create the 'obtain' sub-app
-obtain_app = typer.Typer(help="If a value cannot be retrieved, it will be prompted for and set. For secrets, configs, and env values.")
+obtain_app = typer.Typer(help="If a value cannot be retrieved, it will be prompted for and set.")
 app.add_typer(obtain_app, name="obtain")
 
-@obtain_app.command(name="secret")
+@obtain_app.command(name="secret", help = "Obtain a secret value (Check Vault -> Prompt -> Save).")
 def obtain_secret(
     service: str = typer.Argument(..., help="The service name (e.g., maxson-eds)."),
     item: str = typer.Argument(..., help="The item key (e.g., port)."),
+    path: Path = typer.Option(None, "--path","-p", help="Custom encrypted database file path."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
     priority_interface: Optional[List[PromptMode]] = typer.Option(
@@ -130,15 +133,15 @@ def obtain_secret(
         help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
     ),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
-    debug: bool = typer.Option(False, "--debug", help="Enable low-level diagnostics and tracebacks."),
+    debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended).")
 ):
-    """Get a secret value (Vault -> Prompt -> Save)."""
+    """Obtain a secret value (Check Vault -> Prompt -> Save)."""
 
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
     
-    result = DworshakObtain().secret(
+    result = DworshakObtain(path=path).secret(
         service=service,
         item=item,
         message=message,
@@ -156,10 +159,11 @@ def obtain_secret(
     elif result.is_new is None:
         print("Exited.")
 
-@obtain_app.command(name="config")
+@obtain_app.command(name="config", help = "Obtain a config value (Check config file -> Prompt -> Save).")
 def obtain_config(
     service: str = typer.Argument(..., help="The service name (e.g., maxson-eds)."),
     item: str = typer.Argument(..., help="The item key (e.g., port)."),
+    path: Path = typer.Option(None, "--path","-p", help="Custom config file path."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
     priority_interface: Optional[List[PromptMode]] = typer.Option(
@@ -172,14 +176,14 @@ def obtain_config(
     ),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
-    debug: bool = typer.Option(False, "--debug", help="Enable low-level diagnostics and tracebacks."),
+    debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended).")
 ):
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
 
     """Get a configuration value (Storage -> Prompt -> Save)."""
-    val = DworshakObtain().config(
+    val = DworshakObtain(path=path).config(
         service=service,
         item=item,
         message=message,
@@ -194,9 +198,10 @@ def obtain_config(
     if val:
         print(val)
 
-@obtain_app.command(name="env")
+@obtain_app.command(name="env", help = "Obtain an app setting (Check .env file -> Prompt -> Save).")
 def obtain_env(
     key: str = typer.Argument(..., help="The value key (e.g., API_URL)."),
+    path: Path = typer.Option(None, "--path","-p", help="Custom .env file path."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
     priority_interface: Optional[List[PromptMode]] = typer.Option(
@@ -209,14 +214,14 @@ def obtain_env(
     ),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
-    debug: bool = typer.Option(False, "--debug", help="Enable low-level diagnostics and tracebacks."),
+    debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended).")
 ):
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
 
-    """Get an .env value (Storage -> Prompt -> Save)."""
-    val = DworshakObtain().env(
+    """Retrieve a setting; falls back to interactive setup if the key is undefined."""
+    val = DworshakObtain(path=path).env(
         key = key,
         message=message,
         suggestion=suggestion,
