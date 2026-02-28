@@ -9,6 +9,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ## [0.2.23] – 2026-02-27
 ### Changed:
 - PromptManager -> PromptManagerWeb; prompt_manager.py -> prompt_manager_web.py
+- Update dworshak-env to 0.1.5, dworshak-config to 0.2.4.
 
 ### Fixed:
 - `--debug` -> `--debug/-d` consistently.
@@ -17,6 +18,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ### Added:
 - Add `--path/-p` cli flag to obtain commands, to allow users to specify non-default paths.
 - Descriptions for obtain subcommmands.
+- Improve cryptography messaging to encourge user to set up venv with access to system site packages 
 
 ### Internal:
 - Updates have been made in and dworshak-env, dworshak-config; update these before tagging dworshak-prompt v0.2.23.
