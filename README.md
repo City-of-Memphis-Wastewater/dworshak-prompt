@@ -76,7 +76,9 @@ The default config file path is "~/.dworshak/config.json".
 
 ---
 
-## Install as CLI (for demo purposes)
+## Install as CLI
+
+The [dworshak](https://github.com/City-of-Memphis-Wastewater/dworshak) layer is intended to be the primary CLI entry point, rather thank using the `dworshak-prompt` CLI directly.
 
 ```bash
 pipx install "dworshak-prompt[typer]"
@@ -85,7 +87,7 @@ dworshak-prompt --help
 dworshak-prompt ask --message "Please state name" --interace web
 ```
 
-See the entire Typer CLI structure.
+See the `dworshak-prompt` Typer CLI structure.
 ```
 dworshak-prompt helptree
 ```
