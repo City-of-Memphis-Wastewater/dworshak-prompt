@@ -21,9 +21,9 @@ Leverage dworshak-config, dworshak-config, and dworshak-env to automatically han
 ```python
 from dworshak_prompt import DworshakObtain
 
-DworshakObtain.config(service, item, message)
-DworshakObtain.secret(service, item, message)
-DworshakObtain.env(key, message)
+DworshakObtain().config(service, item, message)
+DworshakObtain().secret(service, item, message)
+DworshakObtain().env(key, message)
 
 ```
 
@@ -76,9 +76,9 @@ The default config file path is "~/.dworshak/config.json".
 
 ---
 
-## Install as CLI
+## CLI
 
-The [dworshak](https://github.com/City-of-Memphis-Wastewater/dworshak) layer is intended to be the primary CLI entry point, rather thank using the `dworshak-prompt` CLI directly.
+The [dworshak](https://github.com/City-of-Memphis-Wastewater/dworshak) layer is the intended primary CLI entry point, but the `dworshak-prompt` CLI can be used directly.
 
 ```bash
 pipx install "dworshak-prompt[typer]"
