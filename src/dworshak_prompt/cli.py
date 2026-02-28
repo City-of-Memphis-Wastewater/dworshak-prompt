@@ -141,7 +141,7 @@ def obtain_secret(
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
     
-    result = DworshakObtain(path=path).secret(
+    result = DworshakObtain(secret_path=path).secret(
         service=service,
         item=item,
         message=message,
@@ -183,7 +183,7 @@ def obtain_config(
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
 
     """Get a configuration value (Storage -> Prompt -> Save)."""
-    val = DworshakObtain(path=path).config(
+    val = DworshakObtain(config_path=path).config(
         service=service,
         item=item,
         message=message,
@@ -221,7 +221,7 @@ def obtain_env(
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
 
     """Retrieve a setting; falls back to interactive setup if the key is undefined."""
-    val = DworshakObtain(path=path).env(
+    val = DworshakObtain(env_path=path).env(
         key = key,
         message=message,
         suggestion=suggestion,
