@@ -7,7 +7,9 @@ MSG_CRYPTO_EXTRA = [
     "",
     "If 'cryptography' fails to build on your platform, install it via your manager first:",
     "  * Termux:     pkg install python-cryptography",
-    "  * iSH/Alpine: apk add py3-cryptography"
+    "  * iSH/Alpine: apk add py3-cryptography",
+    "To access the cryptography like this, your venv must be exposed to system site packages.",
+    "Like this: uv venv --system-site-packages." 
 ]
 
 MSG_TYPER_EXTRA = [
