@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.24] – 2026-02-28
+### Changed:
+- Increase dworshak-secret to 0.2.11, where manage-vault -> vault.
+
+---
+
 ## [0.2.23] – 2026-02-27
 ### Changed:
 - PromptManager -> PromptManagerWeb; prompt_manager.py -> prompt_manager_web.py

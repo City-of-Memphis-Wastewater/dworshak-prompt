@@ -8,7 +8,7 @@ readme = "README.md"
 dependencies = [
     "dworshak-config>=0.2.4",
     "dworshak-env>=0.1.5",
-    "dworshak-secret==1.2.10",
+    "dworshak-secret==1.2.11",
     "pyhabitat>=1.2.2",
     "memphisdrip>=0.1.4",
 ]
