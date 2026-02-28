@@ -65,11 +65,11 @@ val = DworshakPrompt().ask(
 Leveraging `dworshak-prompt` for calling and adding configured values.
 
 ```python
-from dworshak_prompt import DworshakConfig
+from dworshak_prompt import DworshakObtain
 
 # Custom path for a specific project
-eds_config = DworshakConfig("~/.pipeline-eds/config.json")
-api_key = eds_config.get("api_key", message="Enter EDS API Key")
+obtain_mgr = DworshakObtain(config_path="~/.pipeline-eds/config.json")
+api_key = obtain_mgr.config("api_key", message="Enter EDS API Key")
 ```
 
 The default config file path is "~/.dworshak/config.json".
