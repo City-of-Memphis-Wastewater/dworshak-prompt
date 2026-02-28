@@ -112,8 +112,8 @@ class DworshakObtain:
 
         if path is None:
             path = self.secret_path
-        import cryptography
-        from dworshak_secret import DworshakSecret, get_secret, store_secret
+        #import cryptography
+        #from dworshak_secret import DworshakSecret, get_secret, store_secret
         try:
             # Lazy Import dworshak_secret here to mitigate top-level crashes
             import cryptography
