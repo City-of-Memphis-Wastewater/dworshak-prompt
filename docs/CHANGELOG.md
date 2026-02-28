@@ -9,6 +9,13 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ## [0.2.24] – 2026-02-28
 ### Changed:
 - Increase dworshak-secret to 0.2.11, where manage-vault -> vault.
+- README section about DworshakObtain needs to.show.class instantiation parentheses.
+
+### Added:
+- README section for the typer-helptree.
+
+### Fixed:
+- Add commas to __all__ in __init__.py, so that dir(dworshak_prompt) is accurate.
 
 ---
 
