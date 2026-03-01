@@ -87,6 +87,9 @@ dworshak-prompt --help
 dworshak-prompt ask --message "Please state name" --interace web
 ```
 
+`dworshak-prompt` is designed to be useful even without Python code. 
+It can be used directly from shell scripts, CI pipelines, and ops tooling to safely obtain, persist, and reuse configuration values.
+
 See the `dworshak-prompt` Typer CLI structure.
 ```
 dworshak-prompt helptree

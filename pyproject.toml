@@ -29,7 +29,7 @@ classifiers=[
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
+    #"Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent",
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -40,11 +40,43 @@ classifiers=[
 ]
 
 keywords = [
-    "credentials",
+    # Core concept
     "prompt",
-    "input",
+    "user-input",
+    "interactive",
+
+    # Environment awareness
+    "ci",
+    "cd",
+    "ci-cd",
+    "headless",
+    "non-interactive",
+
+    # Shell & scripting
+    "cli",
+    "shell",
+    "bash",
+    "scripting",
+
+    # Config & secrets
     "configuration",
-    "config"
+    "config-management",
+    "secrets",
+    "secret-management",
+    "credentials",
+    "environment-variables",
+    "dotenv",
+
+    # Use cases / pain points
+    "devops",
+    "automation",
+    "pipelines",
+    "github-actions",
+
+    # Ecosystem / architecture
+    "fallback",
+    "cross-platform",
+    "wsl"
 ]
 
 [project.urls]
