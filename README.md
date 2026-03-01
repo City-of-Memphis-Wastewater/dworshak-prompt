@@ -1,6 +1,7 @@
 '# dworshak-prompt
 
 A Python utility that ensures you can always get user input by falling back through multiple interfaces.
+`dworshak-prompt` is a CI-safe, shell-friendly prompting engine that integrates with persistent config and secret storage.
 
 ### How it works
 
