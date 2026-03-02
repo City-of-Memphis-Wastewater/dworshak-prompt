@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.25] – 2026-03-02
+### Changed:
+- '--suggestion' flag single char flag changed from '-S' to '-s' for consistency with the wider ecosystem.
+
+---
+
 ## [0.2.24] – 2026-02-28
 ### Changed:
 - Increase dworshak-secret to 0.2.11, where manage-vault -> vault.
