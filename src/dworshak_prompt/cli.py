@@ -123,7 +123,7 @@ def obtain_secret(
     item: str = typer.Argument(..., help="The item key (e.g., port)."),
     path: Path = typer.Option(None, "--path","-p", help="Custom encrypted database file path."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
-    suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
+    suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
     priority_interface: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
         help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
@@ -165,7 +165,7 @@ def obtain_config(
     item: str = typer.Argument(..., help="The item key (e.g., port)."),
     path: Path = typer.Option(None, "--path","-p", help="Custom config file path."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
-    suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
+    suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
     priority_interface: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
         help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
@@ -203,7 +203,7 @@ def obtain_env(
     key: str = typer.Argument(..., help="The value key (e.g., API_URL)."),
     path: Path = typer.Option(None, "--path","-p", help="Custom .env file path."),
     message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
-    suggestion: Optional[str] = typer.Option(None, "--suggestion", "-S", help="Suggested value."),
+    suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
     priority_interface: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
         help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
