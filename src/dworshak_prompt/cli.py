@@ -109,7 +109,6 @@ def ask(
         debug=debug, 
         verbose=verbose,
     )
-    print(f"hide = {hide}")
     if not hide and val:
         print(val)
 
