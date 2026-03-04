@@ -3,7 +3,12 @@ import typer # keep at the top to enable failure, to hit the std lib fallback
 
 from .keyboard_interrupt import PromptCancelled
 
-def console_get_input(message: str, suggestion: str | None = None, hide_input: bool = False) -> str:
+def console_get_input(
+    message: str, 
+    suggestion: str | None = None, 
+    hide_input: bool = False,
+    default: Any | None = None,
+    ) -> str | None:
     try:        
         if hide_input:
             # Explicitly add the hint so the user isn't confused by lack of feedback

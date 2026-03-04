@@ -24,6 +24,13 @@ from .server import stop_prompt_server
 from .prompt_manager_web import PromptManagerWeb
 from .helpers import PromptMode, resolve_str_to_list, resolve_str_to_set
 
+def has_real_tty():
+    try:
+        return os.isatty(sys.stderr.fileno())
+    except Exception:
+        return False
+
+
 class DworshakPrompt: 
     def __init__(self,
         config_path: str | None = None,
@@ -64,6 +71,10 @@ class DworshakPrompt:
         # 1. CI/Headless Detection
         # If we aren't in a TTY and aren't on a system that can spawn a GUI/Web window,
         # return the default immediately to mitigate a potential Dworshak failure mode in CI.
+        #if ph.is_likely_ci_or_non_interactive() and not has_real_tty():
+        #    logger.debug("CI/Non-interactive environment. Returning default.")
+        #    return default
+
         if ph.is_likely_ci_or_non_interactive():
             logger.debug("CI/Non-interactive environment. Returning default.")
             return default
