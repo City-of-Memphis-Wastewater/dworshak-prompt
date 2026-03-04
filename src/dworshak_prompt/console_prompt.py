@@ -7,7 +7,7 @@ def console_get_input(
     message: str, 
     suggestion: str | None = None, 
     hide_input: bool = False,
-    default: Any | None = None,
+    default: str | None = None,
     ) -> str | None:
     try:        
         if hide_input:
