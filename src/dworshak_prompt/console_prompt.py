@@ -1,4 +1,8 @@
 # src/dworshak_prompt/console_prompt.py
+"""
+Typer-based console prompt. Non ideal for tty.
+"""
+
 import typer # keep at the top to enable failure, to hit the std lib fallback
 
 from .keyboard_interrupt import PromptCancelled
