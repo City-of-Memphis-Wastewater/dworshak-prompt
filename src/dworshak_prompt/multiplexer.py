@@ -71,17 +71,17 @@ class DworshakPrompt:
         # 1. CI/Headless Detection
         # If we aren't in a TTY and aren't on a system that can spawn a GUI/Web window,
         # return the default immediately to mitigate a potential Dworshak failure mode in CI.
-        #if ph.is_likely_ci_or_non_interactive() and not has_real_tty():
-        #    logger.debug("CI/Non-interactive environment. Returning default.")
-        #    return default
-
-        if ph.is_likely_ci_or_non_interactive():
+        if ph.is_likely_ci_or_non_interactive() and not has_real_tty():
             logger.debug("CI/Non-interactive environment. Returning default.")
             return default
 
+        #if ph.is_likely_ci_or_non_interactive():
+        #    logger.debug("CI/Non-interactive environment. Returning default.")
+        #    return default
+
         if not ph.interactive_terminal_is_available() and \
         not ph.tkinter_is_available() and \
-        not ph.is_browser_available(): # Hypothetical pyhabitat check
+        not ph.web_browser_is_available(): # Hypothetical pyhabitat check
             logger.debug("Non-interactive environment detected. Using default.")
             return default
 
