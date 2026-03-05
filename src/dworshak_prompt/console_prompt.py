@@ -2,7 +2,7 @@
 """
 Typer-based console prompt. Non ideal for tty.
 """
-
+from __future__ import annotations
 import typer # keep at the top to enable failure, to hit the std lib fallback
 
 from .keyboard_interrupt import PromptCancelled

@@ -132,7 +132,8 @@ class DworshakPrompt:
                         continue
                     
                     val = console_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
-                    logger.debug(f"SUCCESS: {interface_mode} returned: {repr(val)}")
+                    log_val = "'********'" if hide_input else repr(val)
+                    logger.debug(f"SUCCESS: {interface_mode} returned: {log_val}")
                     return val
 
                 elif interface_mode == PromptMode.GUI:
@@ -145,7 +146,8 @@ class DworshakPrompt:
                         
                     val = gui_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
                     if val is not None:
-                        logger.debug(f"SUCCESS: {interface_mode} returned: {repr(val)}")
+                        log_val = "'********'" if hide_input else repr(val)
+                        logger.debug(f"SUCCESS: {interface_mode} returned: {log_val}")
                         return val
                     
                     logger.debug(f"GUI cancelled. Raising PromptCancelled.")
@@ -162,7 +164,8 @@ class DworshakPrompt:
                             stop_event = interrupt_event
                             )
                         if val is not None:
-                            logger.debug(f"SUCCESS: {interface_mode} returned: {repr(val)}")
+                            log_val = "'********'" if hide_input else repr(val)
+                            logger.debug(f"SUCCESS: {interface_mode} returned: {log_val}")
                             return val
                         logger.debug(f"WEB returned None. Raising PromptCancelled.")
                         raise PromptCancelled()
@@ -179,8 +182,14 @@ class DworshakPrompt:
                 logger.debug(f"!!! EXCEPTION TRIGGERED !!!")
                 logger.debug(f"Class Name: {exc_name}")
                 logger.debug(f"Full Path:  {exc_module}.{exc_name}")
-                logger.debug(f"Repr:       {repr(e)}")
-                logger.debug(f"Args:       {e.args}")
+                logger.debug(f"Exception Type: {exc_name}")
+                # MASKING LOGIC to prevent secret value leaks
+                if hide_input:
+                    logger.debug("Repr:       <Masked due to hide_input=True>")
+                    logger.debug("Args:       <Masked>")
+                else:
+                    logger.debug(f"Repr:       {repr(e)}")
+                    logger.debug(f"Args:       {e.args}")
 
                 stop_signals = {"KeyboardInterrupt", "Abort", "SystemExit", "EOFError", "PromptCancelled"}
                 

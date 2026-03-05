@@ -20,11 +20,11 @@ Automatically skips incompatible modes (e.g., GUI on WSL) via `pyhabitat`.
 Leverage dworshak-config, dworshak-config, and dworshak-env to automatically handle values.
 
 ```python
-from dworshak_prompt import DworshakObtain
+from dworshak_prompt import Obtain
 
-DworshakObtain().config(service, item, message)
-DworshakObtain().secret(service, item, message)
-DworshakObtain().env(key, message)
+Obtain().config(service, item, message)
+Obtain().secret(service, item, message)
+Obtain().env(key, message)
 
 ```
 
@@ -66,10 +66,10 @@ val = DworshakPrompt().ask(
 Leveraging `dworshak-prompt` for calling and adding configured values.
 
 ```python
-from dworshak_prompt import DworshakObtain
+from dworshak_prompt import Obtain
 
 # Custom path for a specific project
-obtain_mgr = DworshakObtain(config_path="~/.pipeline-eds/config.json")
+obtain_mgr = Obtain(config_path="~/.pipeline-eds/config.json")
 api_key = obtain_mgr.config("api_key", message="Enter EDS API Key")
 ```
 

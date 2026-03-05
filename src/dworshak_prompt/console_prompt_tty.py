@@ -26,10 +26,29 @@ def tty_prompt(message: str, suggestion: str | None = None, hide_input: bool = F
                 buf = []
                 while True:
                     ch = tty_in.read(1)
+
+                    # Handle Enter/Return
                     if ch in ("\n", "\r"):
                         break
+                    # Handle Ctrl+C (Interrupt)
                     if ch == "\x03":
                         raise KeyboardInterrupt
+                    
+                    # Handle Backspace (\x7f is modern, \x08 is legacy)
+                    if ch in ("\x7f", "\x08"):
+                        if buf:
+                            buf.pop()
+                            # If you were echoing asterisks, you'd need to 
+                            # print "\b \b" to tty_out here. 
+                            # Since we are totally hidden, we just pop the list.
+                        continue
+
+                    # Handle Ctrl+D (EOF)
+                    if ch == "\x04":
+                        if not buf:
+                            raise EOFError
+                        break
+
                     buf.append(ch)
                 print(file=tty_out)
                 return "".join(buf)

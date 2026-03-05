@@ -11,6 +11,7 @@ logger = logging.getLogger("dworshak_prompt")
 
 from .prompt_manager_web import PromptManagerWeb # for type hinting
 from .browser_utils import launch_browser, is_server_running
+from .types import SensitiveStr 
 
 def browser_get_input(
     message: str, 
@@ -54,7 +55,9 @@ def browser_get_input(
         # Check if the user submitted data
         val = manager.get_and_clear_result(req_id)
         if val is not None: 
-            logger.debug(f"[WEBPROMPT] Got result for req_id={req_id}: {repr(val)}")
+            # FIX: Mask the log output if 'hide' is True
+            log_val = "'********'" if hide else repr(val)
+            logger.debug(f"[WEBPROMPT] Got result for req_id={req_id}: {log_val}")
             return val
 
         # Inactivity timeout

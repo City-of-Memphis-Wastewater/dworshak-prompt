@@ -2,7 +2,7 @@ __all__ = [
     "DworshakPrompt", 
     "dworshak_ask",
     "PromptMode",
-    "DworshakObtain",
+    "Obtain",
     "dworshak_obtain",
     "StoreMode"
     ]
@@ -20,9 +20,9 @@ def __getattr__(name):
         from .helpers import PromptMode
         return PromptMode
 
-    if name == "DworshakObtain":
-        from .obtain import DworshakObtain
-        return DworshakObtain
+    if name == "Obtain":
+        from .obtain import Obtain
+        return Obtain
     
     if name == "dworshak_obtain":
         from .obtain import dworshak_obtain
