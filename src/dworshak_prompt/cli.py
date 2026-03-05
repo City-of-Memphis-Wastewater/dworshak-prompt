@@ -17,7 +17,7 @@ try:
     from typer_helptree import add_typer_helptree
 except:
     pass
-from . import DworshakPrompt, PromptMode, DworshakObtain
+from . import DworshakPrompt, PromptMode, Obtain
 
 from ._version import __version__
 
@@ -43,7 +43,7 @@ def finalize_protocol_output(
 ):
     # 1. Human Plane (stderr)
     if status_msg:
-        typer.echo(status_msg, err=True)
+        typer.echo(f"[*] {status_msg}", err=True)
 
     if verbose and v_msg:
         typer.echo(f"VERBOSE: {v_msg}", err=True)
@@ -53,7 +53,7 @@ def finalize_protocol_output(
         if emit:
             # Raw output for redirection
             # Use sys.stdout.write(value) if you want to avoid the trailing newline
-            print(value)
+            typer.echo(value)
         else:
             typer.echo("(use --emit to emit value)", err=True)
     else:
@@ -173,7 +173,7 @@ def obtain_secret(
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
     
-    result = DworshakObtain(secret_path=path).secret(
+    result = Obtain(secret_path=path).secret(
         service=service,
         item=item,
         message=message,
@@ -184,17 +184,8 @@ def obtain_secret(
         debug=debug,
         verbose=verbose,
     )
-    """
-    if result.is_new is True:
-        print("Secret stored.")
-    elif result.is_new is False:
-        print("Secret known.")
-    elif result.is_new is None:
-        print("Exited.")
-    """
 
-    status = {True: "Secret stored.", False: "Secret known."}.get(result.is_new, "Exited.")
-    finalize_protocol_output(result.value, emit, verbose, status)
+    finalize_protocol_output(result.value, emit, verbose, result.status_message)
 
 @obtain_app.command(name="config", help = "Obtain a config value (Check config file -> Prompt -> Save).")
 def obtain_config(
@@ -221,7 +212,7 @@ def obtain_config(
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
 
     """Get a configuration value (Storage -> Prompt -> Save)."""
-    val = DworshakObtain(config_path=path).config(
+    result = Obtain(config_path=path).config(
         service=service,
         item=item,
         message=message,
@@ -233,10 +224,13 @@ def obtain_config(
         debug=debug,
         verbose=verbose
     )
-    status = f"Config '{item}' resolved." if val else "Config not found."
-    v_info = f"Path: {path or 'default'}"
+    #status = f"Config '{item}' resolved." if val else "Config not found."
+    #v_info = f"Path: {path or 'default'}"
+    #finalize_protocol_output(val, emit, verbose, status, v_info)
+
+    finalize_protocol_output(result.value, emit, verbose, result.status_message)
     
-    finalize_protocol_output(val, emit, verbose, status, v_info)
+    
     
 @obtain_app.command(name="env", help = "Obtain an app setting (Check .env file -> Prompt -> Save).")
 def obtain_env(
@@ -262,7 +256,7 @@ def obtain_env(
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
 
     """Retrieve a setting; falls back to interactive setup if the key is undefined."""
-    val = DworshakObtain(env_path=path).env(
+    result = Obtain(env_path=path).env(
         key = key,
         message=message,
         suggestion=suggestion,
@@ -274,11 +268,10 @@ def obtain_env(
         verbose=verbose
     )
 
-    status = f"Env var '{key}' resolved." if val else f"'{key}' not set."
-    v_info = f"Searching .env at: {path or os.getcwd()}"
-    
-    finalize_protocol_output(val, emit, verbose, status, v_info)
-
+    #status = f"Env var '{key}' resolved." if val else f"'{key}' not set."
+    #v_info = f"Searching .env at: {path or os.getcwd()}"
+    #finalize_protocol_output(val, emit, verbose, status, v_info)
+    finalize_protocol_output(result.value, emit, verbose, result.status_message)
 
 if __name__ == "__main__":
     app()

@@ -1,4 +1,4 @@
-# src/dworshak_prompt/get.py
+# src/dworshak_prompt/obtain.py
 from pathlib import Path
 from dataclasses import dataclass
 from enum import Enum
@@ -19,23 +19,41 @@ class StoreMode(Enum):
     ENV = "env"
 
 @dataclass
-class SecretData:
-    """
-    Container for secret retrieval results. 
-    The __repr__ ensures secrets don't leak into logs/consoles if the object is printed.
-    """
+class ObtainResult:
     value: Optional[str] = None
-    is_new: Optional[bool] = False
+    is_new: Optional[bool] = False  # True=New, False=Known, None=Cancelled
 
-    def __repr__(self):
-        # This prevents the secret from appearing if the whole object is printed 
-        return f"SecretData(is_new={self.is_new}, value='********')"
-    
+    @property
+    def status_message(self) -> str:
+        """Generic statuses that work for any key/service."""
+        return {
+            True: "Value stored.",
+            False: "Value resolved.",
+            None: "Exited."
+        }.get(self.is_new, "Error.")
+
     def __bool__(self):
-        # Allows 'if result:' to check if a value exists
         return self.value is not None
 
-class DworshakObtain:
+@dataclass
+class SecretData(ObtainResult):
+    """Overrides status for secret-specific phrasing."""
+    @property
+    def status_message(self) -> str:
+        return {
+            True: "Secret stored.",
+            False: "Secret known.",
+            None: "Exited."
+        }.get(self.is_new, "Error.")
+
+    def __repr__(self):
+        return f"SecretData(is_new={self.is_new}, value='********')"
+
+# Alias for clarity, or specialized if Config needs different status phrasing
+ConfigData = ObtainResult
+EnvData = ObtainResult
+
+class Obtain:
     def __init__(self,
         config_path: str | Path | None = None,
         secret_path: str | Path | None = None,
@@ -68,7 +86,7 @@ class DworshakObtain:
         overwrite: bool = False,
         forget: bool = False,
         **kwargs # Pass-through for priority_interface, avoid_interface, debug, etc.
-    ) -> str | None:
+    ) -> ConfigData:
         if path is None:
             path = self.config_path
             
@@ -77,7 +95,7 @@ class DworshakObtain:
 
         # Logic: If it exists and we aren't forcing a refresh, return it.
         if value is not None and not overwrite:
-            return value
+            return ConfigData(value=value, is_new=False)
 
         # If missing or overwriting, we use the multiplexer
         new_value = DworshakPrompt().ask(
@@ -90,10 +108,13 @@ class DworshakObtain:
         )
 
         # Persistence logic
-        if new_value is not None and not forget:
+        if new_value is None:
+            return ConfigData(value=None, is_new=None)
+            
+        if not forget:
             config_mgr.set(service, item, new_value, overwrite=overwrite)
             
-        return new_value if new_value is not None else value
+        return ConfigData(value=new_value, is_new=True)
 
     def secret(
         self,
@@ -123,7 +144,7 @@ class DworshakObtain:
             from memphisdrip import safe_notify
             from .messages import notify_missing_function_redirect, MSG_CRYPTO_EXTRA
             # We pass a specific context so the user knows why it failed
-            full_msg = notify_missing_function_redirect("DworshakObtain.secret()") + MSG_CRYPTO_EXTRA
+            full_msg = notify_missing_function_redirect("Obtain.secret()") + MSG_CRYPTO_EXTRA
             safe_notify(full_msg)
             raise SystemExit(1)
         
@@ -160,7 +181,7 @@ class DworshakObtain:
         overwrite: bool = False,
         forget: bool = False,
         **kwargs
-    ) -> str | None:
+    ) -> EnvData:
         """
         Checks key from os.environ or .env file, using the dworshak-env library. 
         Prompts user if not found or overwrite is True.
@@ -173,7 +194,7 @@ class DworshakObtain:
 
         # Logic: If it exists and we aren't forcing a refresh, return it.
         if value is not None and not overwrite:
-            return value
+            return EnvData(value=value, is_new=False)
 
         # If missing or overwriting, we use the multiplexer
         new_value = DworshakPrompt().ask(
@@ -186,11 +207,13 @@ class DworshakObtain:
         )
 
         # Persistence logic: Save to .env file if not forgotten
-        if new_value is not None and not forget:
-            env_mgr.set(key, new_value, overwrite=overwrite)
-            return new_value
+        if new_value is None:
+            return EnvData(value=None, is_new=None)
 
-        return new_value if new_value is not None else value
+        if not forget:
+            env_mgr.set(key, new_value, overwrite=overwrite)
+
+        return EnvData(value=new_value, is_new=True)
 
 def dworshak_obtain(
     service_or_key: str,
@@ -205,7 +228,7 @@ def dworshak_obtain(
     Functional entry point for the Obtain engine.
     Allows for one-liner access to secrets, configs, or env vars.
     """
-    handler = DworshakObtain()
+    handler = Obtain()
     if store == StoreMode.CONFIG:
         return handler.config(service=service_or_key, item=item, message=message, default=default, **kwargs)
     elif store == StoreMode.SECRET:
