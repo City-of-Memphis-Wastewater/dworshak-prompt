@@ -7,11 +7,6 @@ import threading
 import traceback
 import sys
 import os
-
-try:
-    from .console_prompt import console_get_input
-except ImportError:
-    from .console_prompt_stdlib import console_get_input_stdlib as console_get_input
     
 from .gui_prompt import get_tkinter_hint
 if ph.tkinter_is_available():
@@ -23,13 +18,7 @@ from .keyboard_interrupt import PromptCancelled
 from .server import stop_prompt_server
 from .prompt_manager_web import PromptManagerWeb
 from .helpers import PromptMode, resolve_str_to_list, resolve_str_to_set
-
-def has_real_tty():
-    try:
-        return os.isatty(sys.stderr.fileno())
-    except Exception:
-        return False
-
+from .environment import has_real_tty, get_console_provider, is_likely_ci_or_non_interactive
 
 class DworshakPrompt: 
     def __init__(self,
@@ -71,18 +60,15 @@ class DworshakPrompt:
         # 1. CI/Headless Detection
         # If we aren't in a TTY and aren't on a system that can spawn a GUI/Web window,
         # return the default immediately to mitigate a potential Dworshak failure mode in CI.
-        if ph.is_likely_ci_or_non_interactive() and not has_real_tty():
+        if is_likely_ci_or_non_interactive() and not has_real_tty():
             logger.debug("CI/Non-interactive environment. Returning default.")
             return default
 
-        #if ph.is_likely_ci_or_non_interactive():
-        #    logger.debug("CI/Non-interactive environment. Returning default.")
-        #    return default
-
+        #if not has_real_tty() and \
         if not ph.interactive_terminal_is_available() and \
         not ph.tkinter_is_available() and \
         not ph.web_browser_is_available(): # Hypothetical pyhabitat check
-            logger.debug("Non-interactive environment detected. Using default.")
+            logger.debug("Non-interactive environment detected. Default value assigned.")
             return default
 
         avoid_interface = avoid_interface or set()
@@ -127,10 +113,12 @@ class DworshakPrompt:
             
             try:
                 if interface_mode == PromptMode.CONSOLE:
+                    # if not has_real_tty():
                     if not ph.interactive_terminal_is_available():
                         logger.debug(f"{interface_mode} skipped: No interactive terminal.")
                         continue
-                    
+
+                    console_get_input = get_console_provider()
                     val = console_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
                     log_val = "'********'" if hide_input else repr(val)
                     logger.debug(f"SUCCESS: {interface_mode} returned: {log_val}")
