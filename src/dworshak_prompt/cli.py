@@ -32,6 +32,37 @@ os.environ["TERM"] = "xterm-256color"
 
 DEFAULT_PROMPT_MSG = "Enter value"
 
+# --- helper ---
+
+def finalize_protocol_output(
+    value: Optional[str],
+    emit: bool,
+    verbose: bool,
+    status_msg: str,
+    v_msg: Optional[str] = None
+):
+    # 1. Human Plane (stderr)
+    if status_msg:
+        typer.echo(status_msg, err=True)
+
+    if verbose and v_msg:
+        typer.echo(f"VERBOSE: {v_msg}", err=True)
+
+    # 2. Data Plane (stdout)
+    if value is not None:
+        if emit:
+            # Raw output for redirection
+            # Use sys.stdout.write(value) if you want to avoid the trailing newline
+            print(value)
+        else:
+            typer.echo("(use --emit to emit value)", err=True)
+    else:
+        # If we expected a value but got None, signal failure to the shell
+        if emit:
+            typer.echo("Error: No value to emit.", err=True)
+            raise typer.Exit(code=1)
+
+# --- app ---
 app = typer.Typer(
     name="dworshak-prompt",
     help=f"Multiplexed user input via console, GUI, and web. (v{__version__})",
@@ -92,8 +123,8 @@ def ask(
 
     hide: bool = typer.Option(False, "--hide", "-H", help="Hide input (for passwords)"),
     debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended).")
-    
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages, to stderr (recommended)."),
+    emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout")
 ):
 
     priority_interface_list = priority_interface if priority_interface is not None else None
@@ -109,9 +140,9 @@ def ask(
         debug=debug, 
         verbose=verbose,
     )
-    if not hide and val:
-        print(val)
 
+    status = "Input captured." if val else "No input received."
+    finalize_protocol_output(val, emit, verbose, status)
 
 # Create the 'obtain' sub-app
 obtain_app = typer.Typer(help="If a value cannot be retrieved, it will be prompted for and set.")
@@ -134,7 +165,8 @@ def obtain_secret(
     ),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended).")
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended)."),
+    emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout")
 ):
     """Obtain a secret value (Check Vault -> Prompt -> Save)."""
 
@@ -152,12 +184,17 @@ def obtain_secret(
         debug=debug,
         verbose=verbose,
     )
+    """
     if result.is_new is True:
         print("Secret stored.")
     elif result.is_new is False:
         print("Secret known.")
     elif result.is_new is None:
         print("Exited.")
+    """
+
+    status = {True: "Secret stored.", False: "Secret known."}.get(result.is_new, "Exited.")
+    finalize_protocol_output(result.value, emit, verbose, status)
 
 @obtain_app.command(name="config", help = "Obtain a config value (Check config file -> Prompt -> Save).")
 def obtain_config(
@@ -177,7 +214,8 @@ def obtain_config(
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
     debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended).")
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended)."),
+    emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout")
 ):
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
@@ -195,9 +233,11 @@ def obtain_config(
         debug=debug,
         verbose=verbose
     )
-    if val:
-        print(val)
-
+    status = f"Config '{item}' resolved." if val else "Config not found."
+    v_info = f"Path: {path or 'default'}"
+    
+    finalize_protocol_output(val, emit, verbose, status, v_info)
+    
 @obtain_app.command(name="env", help = "Obtain an app setting (Check .env file -> Prompt -> Save).")
 def obtain_env(
     key: str = typer.Argument(..., help="The value key (e.g., API_URL)."),
@@ -215,7 +255,8 @@ def obtain_env(
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
     debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended).")
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended)."),
+    emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout")
 ):
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
@@ -232,8 +273,11 @@ def obtain_env(
         debug=debug,
         verbose=verbose
     )
-    if val:
-        print(val)
+
+    status = f"Env var '{key}' resolved." if val else f"'{key}' not set."
+    v_info = f"Searching .env at: {path or os.getcwd()}"
+    
+    finalize_protocol_output(val, emit, verbose, status, v_info)
 
 
 if __name__ == "__main__":
