@@ -125,7 +125,7 @@ class DworshakPrompt:
                     return val
 
                 elif interface_mode == PromptMode.GUI:
-                    print(f"ph.tkinter_is_available() = {ph.tkinter_is_available()}")
+                    #logger.warning(f"ph.tkinter_is_available() = {ph.tkinter_is_available()}")
                     if not ph.tkinter_is_available():
                         logger.warning(f"{interface_mode} skipped: Tkinter unavailable.")
                         logger.debug(get_tkinter_hint())  
