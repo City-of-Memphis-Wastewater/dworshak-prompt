@@ -24,7 +24,7 @@ def setup_logging(verbose: bool = False, debug: bool = False, initial: bool=Fals
     logger.setLevel(level)
 
     # Console handler
-    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler = logging.StreamHandler(sys.stderr)
     console_handler.setLevel(level)
 
     # Simple, clean format (no timestamps unless debug)
@@ -48,4 +48,4 @@ def setup_logging(verbose: bool = False, debug: bool = False, initial: bool=Fals
 
 def log_traceback(logger):
     if logger.level <= logging.DEBUG:
-        traceback.print_exc(file=sys.stdout)
+        traceback.print_exc(file=sys.stderr)
