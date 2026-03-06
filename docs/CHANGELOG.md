@@ -9,6 +9,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ## [0.2.25] – 2026-03-02
 ### Changed:
 - '--suggestion' flag single char flag changed from '-S' to '-s' for consistency with the wider ecosystem.
+- Stabilize stderr vs stdout.
+- Increase deps to:
+    - dworshak-config==0.2.5
+    - dworshak-env==0.1.6
+    - dworshak-secret==1.2.14
+    - typer-helptree==0.2.6
 
 ---
 
