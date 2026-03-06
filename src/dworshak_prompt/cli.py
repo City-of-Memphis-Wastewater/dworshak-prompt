@@ -166,7 +166,7 @@ def obtain_secret(
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended)."),
-    emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout")
+    emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout.")
 ):
     """Obtain a secret value (Check Vault -> Prompt -> Save)."""
 
