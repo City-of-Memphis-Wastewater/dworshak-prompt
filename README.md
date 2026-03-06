@@ -97,7 +97,7 @@ dworshak-prompt helptree
 ```
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/City-of-Memphis-Wastewater/dworshak-prompt/main/assets/dworshak-prompt_v0.2.24_helptree.svg" width="100%" alt="Screenshot of the Dworshak CLI helptree">
+  <img src="https://raw.githubusercontent.com/City-of-Memphis-Wastewater/dworshak-prompt/main/assets/dworshak-prompt_v0.2.24_helptree.svg" width="100%" alt="Screenshot of the dworshak-prompt CLI helptree">
 </p>
 
 `helptree` is utility funtion for Typer CLIs, imported from the `typer-helptree` library.
@@ -137,7 +137,7 @@ Without this, the CLI and console_prompt functionality are still stable, due to 
 * **Plaintext Pathed Configs:** [dworshak-config](https://github.com/City-of-Memphis-Wastewater/dworshak-config)
 * **Classic .env Injection:** [dworshak-env](https://github.com/City-of-Memphis-Wastewater/dworshak-env)
 
-```python
+```bash
 pipx install dworshak
 pip install dworshak-secret
 pip install dworshak-config
