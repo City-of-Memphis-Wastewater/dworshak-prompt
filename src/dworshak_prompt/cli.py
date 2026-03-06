@@ -124,7 +124,7 @@ def ask(
     hide: bool = typer.Option(False, "--hide", "-H", help="Hide input (for passwords)"),
     debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages, to stderr (recommended)."),
-    emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout")
+    emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout.")
 ):
 
     priority_interface_list = priority_interface if priority_interface is not None else None
