@@ -15,7 +15,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
     - dworshak-env==0.1.6
     - dworshak-secret==1.2.14
     - typer-helptree==0.2.6
-
+    
 ---
 
 ## [0.2.24] – 2026-02-28
