@@ -1,4 +1,4 @@
-/# src/dworshak_prompt/cli.py
+# src/dworshak_prompt/cli.py
 
 """
 "Lazy Loading with Persistence" or a "Configuration Bootstrapper."
