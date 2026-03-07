@@ -1,4 +1,4 @@
-# src/dworshak_prompt/cli.py
+/# src/dworshak_prompt/cli.py
 
 """
 "Lazy Loading with Persistence" or a "Configuration Bootstrapper."
@@ -90,23 +90,11 @@ try:
 except:
     pass
 
-def resolve_message(ctx: typer.Context, value: str):
-    # ctx.params will already contain 'msg_flag' because Options are parsed first
-    msg_flag = ctx.params.get("msg_flag")
-    # Priority: 1. Flag, 2. Positional (if not the default), 3. Default
-    if msg_flag:
-        return msg_flag
-    return value
-
 @app.command(name = "ask", help = "Simply prompt for an input. Do not check storage, nor store the input value.")
 def ask(
-    message: str = typer.Argument(
-        DEFAULT_PROMPT_MSG, 
-        callback=resolve_message,
-        help="The prompt message."),
-    msg_flag: Optional[str] = typer.Option(
-        None, "--message", "-M", 
-        help="Flag alias for message."
+    message: Optional[str] = typer.Option(
+        None, "--message", "-m", 
+        help="Optional prompt message."
     ),
     priority_interface: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
@@ -127,6 +115,8 @@ def ask(
     emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout.")
 ):
 
+    if message is None:
+        message = DEFAULT_PROMPT_MSG
     priority_interface_list = priority_interface if priority_interface is not None else None
     avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
 
@@ -153,7 +143,7 @@ def obtain_secret(
     service: str = typer.Argument(..., help="The service name (e.g., maxson-eds)."),
     item: str = typer.Argument(..., help="The item key (e.g., port)."),
     path: Path = typer.Option(None, "--path","-p", help="Custom encrypted database file path."),
-    message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
+    message: Optional[str] = typer.Option(None, "--message", "-m", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
     priority_interface: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
@@ -192,7 +182,7 @@ def obtain_config(
     service: str = typer.Argument(..., help="The service name (e.g., maxson-eds)."),
     item: str = typer.Argument(..., help="The item key (e.g., port)."),
     path: Path = typer.Option(None, "--path","-p", help="Custom config file path."),
-    message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
+    message: Optional[str] = typer.Option(None, "--message", "-m", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
     priority_interface: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
@@ -236,7 +226,7 @@ def obtain_config(
 def obtain_env(
     key: str = typer.Argument(..., help="The value key (e.g., API_URL)."),
     path: Path = typer.Option(None, "--path","-p", help="Custom .env file path."),
-    message: Optional[str] = typer.Option(None, "--message", "-M", help="Custom prompt message."),
+    message: Optional[str] = typer.Option(None, "--message", "-m", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
     priority_interface: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
