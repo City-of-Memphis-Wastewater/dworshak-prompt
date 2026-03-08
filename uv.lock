@@ -270,7 +270,7 @@ requires-dist = [
     { name = "dworshak-config", specifier = ">=0.2.5" },
     { name = "dworshak-env", specifier = ">=0.1.6" },
     { name = "dworshak-prompt", extras = ["crypto", "typer"], marker = "extra == 'full'" },
-    { name = "dworshak-secret", specifier = "==1.2.14" },
+    { name = "dworshak-secret", specifier = "==1.2.15" },
     { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'crypto'" },
     { name = "memphisdrip", specifier = ">=0.1.4" },
     { name = "memphisdrip", extras = ["typer"], marker = "extra == 'typer'", specifier = ">=0.1.4" },
@@ -286,14 +286,14 @@ test = [{ name = "pytest", specifier = ">=8.4.2" }]
 
 [[package]]
 name = "dworshak-secret"
-version = "1.2.14"
+version = "1.2.15"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyhabitat" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f3/05/20b48d01ce77ab61fed4206d5b58afe01bb8d4ca6141424f121a1a824f66/dworshak_secret-1.2.14.tar.gz", hash = "sha256:49c0b774a7df227f28058741a8b4e93be3def39bbde4dc39fc75dee5979f5eac", size = 22571, upload-time = "2026-03-06T19:19:33.805Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fd/2c/e7a5240759f95e7a6c5df60d80ad6a4fc77c4e637d2abd96ccfb0268be84/dworshak_secret-1.2.15.tar.gz", hash = "sha256:4e1723ad0f84bbd3fc0c958d7a87b632384a31c928c2901dfd0c158c1c7b44ef", size = 22403, upload-time = "2026-03-08T02:14:27.182Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2d/cd/827920fcbaa1917eb13237f46901c1382f6fcc330906eaaf2baadc97806b/dworshak_secret-1.2.14-py3-none-any.whl", hash = "sha256:ad86c77439f76d381e8887737c516d203c16f73e7951a1f5ecbbe6e7d1711a3c", size = 24243, upload-time = "2026-03-06T19:19:32.443Z" },
+    { url = "https://files.pythonhosted.org/packages/58/59/5be8db1422efd320803c7d88c9e6134b28ee0f3a1b1939a623c15d3f068a/dworshak_secret-1.2.15-py3-none-any.whl", hash = "sha256:72f0f67aa7e5d7812e06b44ca18614e92a98eaded0951dc22b40b0d8c0e412e7", size = 24142, upload-time = "2026-03-08T02:14:25.623Z" },
 ]
 
 [package.optional-dependencies]
