@@ -96,7 +96,7 @@ Piping and environment variable capture works, but will naturally fallback to GU
 ```zsh
 # Enable console input during wrapped or piped shell capture.
 export DWORSHAK_FORCE_INTERACTIVE_TTY=1
-VAR=$(dworshak-prompt obtain secret "special_api" "password")
+VAR=$(dworshak-prompt obtain secret "special_api" "password" --emit)
 ```
 
 See the `dworshak-prompt` Typer CLI structure.
