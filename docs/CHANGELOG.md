@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.26] – 2026-03-07
+### Changed:
+- Increase dworshak-secret to 1.2.15, to guard failure if vault does not exist.
+
+---
+
 ## [0.2.25] – 2026-03-02
 ### Changed:
 - '--suggestion' flag single char flag changed from '-S' to '-s' for consistency with the wider ecosystem.
