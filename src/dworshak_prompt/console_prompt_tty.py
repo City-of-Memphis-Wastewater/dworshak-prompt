@@ -14,7 +14,8 @@ def console_get_input_tty(message: str, suggestion: str | None = None, hide_inpu
         with open("/dev/tty", "r") as tty_in, open("/dev/tty", "w") as tty_out:
             if hide_input:
                 import termios, tty as ttymod
-                print(prompt, file=tty_out, flush=True)
+                #print(prompt, file=tty_out, flush=True)
+                print(prompt, file=tty_out, flush=True, end="")
                 fd = tty_in.fileno()
                 old = termios.tcgetattr(fd)
                 try:
