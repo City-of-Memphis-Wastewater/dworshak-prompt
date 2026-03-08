@@ -108,19 +108,19 @@ class DworshakPrompt:
         priority_interface = resolve_str_to_list(priority_interface)
          
         if ph.on_wsl():
-            raw_val = os.getenv("TRY_TKINTER_ON_WSL")
-            logger.debug(f"raw TRY_TKINTER_ON_WSL = {raw_val!r}")
+            raw_val = os.getenv("DWORSHAK_TRY_TKINTER_ON_WSL")
+            logger.debug(f"raw DWORSHAK_TRY_TKINTER_ON_WSL = {raw_val!r}")
             
             # Convert common truthy strings to boolean
             if raw_val is not None:
-                try_tkinter_on_wsl = raw_val.lower() in ('1', 'true', 'yes', 'on', 'enable')
+                DWORSHAK_TRY_TKINTER_ON_WSL = raw_val.lower() in ('1', 'true', 'yes', 'on', 'enable')
             else:
-                try_tkinter_on_wsl = False
+                DWORSHAK_TRY_TKINTER_ON_WSL = False
             
-            logger.debug(f"try_tkinter_on_wsl interpreted as {try_tkinter_on_wsl}")
+            logger.debug(f"DWORSHAK_TRY_TKINTER_ON_WSL interpreted as {DWORSHAK_TRY_TKINTER_ON_WSL}")
             
-            if not try_tkinter_on_wsl:
-                logger.warning(f"PromptMode.GUI avoided for WSL; to try it, set `export TRY_TKINTER_ON_WSL=1` ")
+            if not DWORSHAK_TRY_TKINTER_ON_WSL:
+                logger.warning(f"PromptMode.GUI avoided for WSL; to try it, set `export DWORSHAK_TRY_TKINTER_ON_WSL=1` ")
                 avoid_interface.add(PromptMode.GUI)
                 
 

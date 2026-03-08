@@ -10,6 +10,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ### Changed:
 - Filename change, console_prompt.py -> console_prompt_typer.py
 - TTY capture fallback when DWORSHAK_FORCE_INTERACTIVE_TTY=1.
+- TRY_TKINTER_ON_WSL -> DWORSHAK_TRY_TKINTER_ON_WSL
 
 ---
 
