@@ -35,6 +35,13 @@ def get_console_provider(debug:bool=False):
     setup_logging(debug=debug)
     logger.debug("get_console_provider()")
     
+    # If EITHER input or output is redirected, but we have a sideband, 
+    # use the TTY provider to ensure the human is the one we talk to.
+    if (not sys.stdin.isatty() or not sys.stdout.isatty()) and os.path.exists("/dev/tty"):
+        from .console_prompt_tty import console_get_input_tty
+        logger.debug("Redirected I/O detected; routing to TTY sideband.")
+        return console_get_input_tty
+    
     if sys.stdin.isatty():
         try:
             from .console_prompt_typer import console_get_input_typer
@@ -43,13 +50,7 @@ def get_console_provider(debug:bool=False):
         except ImportError:
             pass
 
-    # 2. If stdin is NOT a TTY (like VAR=$(...)), try the Sideband TTY
-    if os.path.exists("/dev/tty"): # and os.environ.get("DWORSHAK_FORCE_INTERACTIVE_TTY") == "1"
-        from .console_prompt_tty import console_get_input_tty
-        logger.debug("return console_get_input_tty")
-        return console_get_input_tty
-
-    # 3. Absolute fallback (Windows or CI)
+    # Absolute fallback (Windows or CI)
     from .console_prompt_stdlib import console_get_input_stdlib
     logger.debug("return console_get_input_stdlib")
     return console_get_input_stdlib

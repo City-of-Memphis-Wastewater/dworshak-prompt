@@ -91,6 +91,14 @@ dworshak-prompt ask --message "Please state name" --interace web
 `dworshak-prompt` is designed to be useful even without Python code. 
 It can be used directly from shell scripts, CI pipelines, and ops tooling to safely obtain, persist, and reuse configuration values.
 
+Piping and environment variable capture works, but will naturally fallback to GUI or Web input because in these cases `stdout` is not a TTY. However, you may continue to use console input and leverage `dev/tty` by using envionrmental variable `DWORSHAK_FORCE_INTERACTIVE_TTY`.
+
+```zsh
+# Enable console input during wrapped or piped shell capture.
+export DWORSHAK_FORCE_INTERACTIVE_TTY=1
+VAR=$(dworshak-prompt obtain secret "special_api" "password")
+```
+
 See the `dworshak-prompt` Typer CLI structure.
 ```
 dworshak-prompt helptree
