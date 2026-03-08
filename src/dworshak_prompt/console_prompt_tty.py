@@ -3,7 +3,7 @@ import os
 import sys
 from .keyboard_interrupt import PromptCancelled
 
-def console_get_input_tty_prompt(message: str, suggestion: str | None = None, hide_input: bool = False) -> str:
+def console_get_input_tty(message: str, suggestion: str | None = None, hide_input: bool = False) -> str:
 
     prompt = message
     if suggestion:
@@ -51,7 +51,8 @@ def console_get_input_tty_prompt(message: str, suggestion: str | None = None, hi
                 finally:
                     termios.tcsetattr(fd, termios.TCSADRAIN, old)
             else:
-                print(prompt, file=tty_out, flush=True)
+                print(prompt, file=tty_out, flush=True, end="")
+                #print(prompt, file=tty_out, flush=True)
                 val = tty_in.readline()
                 if not val:
                     # print a newline so the next shell prompt isn't on the same line

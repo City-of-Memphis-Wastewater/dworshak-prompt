@@ -18,7 +18,7 @@ from .keyboard_interrupt import PromptCancelled
 from .server import stop_prompt_server
 from .prompt_manager_web import PromptManagerWeb
 from .helpers import PromptMode, resolve_str_to_list, resolve_str_to_set
-from .environment import has_real_tty, get_console_provider, is_likely_ci_or_non_interactive
+from .environment import has_real_tty, get_console_provider, is_likely_ci_or_non_interactive, interactive_terminal_is_available
 
 class DworshakPrompt: 
     def __init__(self,
@@ -57,19 +57,51 @@ class DworshakPrompt:
         if interrupt_event is None:
             interrupt_event = threading.Event()
 
-        # 1. CI/Headless Detection
-        # If we aren't in a TTY and aren't on a system that can spawn a GUI/Web window,
-        # return the default immediately to mitigate a potential Dworshak failure mode in CI.
-        if is_likely_ci_or_non_interactive() and not has_real_tty():
-            logger.debug("CI/Non-interactive environment. Returning default.")
-            return default
+        '''
 
-        #if not has_real_tty() and \
-        if not ph.interactive_terminal_is_available() and \
-        not ph.tkinter_is_available() and \
+        # CI/Headless Detection
+        # If we aren't forceing TTY and aren't on a system that can spawn a GUI/Web window,
+        # return the default immediately to mitigate a potential Dworshak failure mode in CI.
+        if is_likely_ci_or_non_interactive() and os.environ.get("DWORSHAK_FORCE_INTERACTIVE_TTY") != "1":
+            logger.debug("CI environment. Returning default to avoid blocking.")
+            return default
+        
+        # TTY detection
+        # If we aren't in a TTY.
+        # return the default immediately to mitigate a potential Dworshak failure mode in CI.
+        # use DWORSHAK_FORCE_INTERACTIVE_TTY=1 when wrapping prompt calls
+        # like: DWORSHAK_FORCE_INTERACTIVE_TTY=1 VAR=$(dworshak-prompt ask)
+        if not has_real_tty():
+            logger.debug("No interactive terminal; checking GUI/Web availability.")
+            
+
+        #if not interactive_terminal_is_available() or \
+        if not has_real_tty() and \
+        not ph.tkinter_is_available() or \
         not ph.web_browser_is_available(): # Hypothetical pyhabitat check
             logger.debug("Non-interactive environment detected. Default value assigned.")
             return default
+        '''
+        
+        # Force interactive check
+        logger.debug(f"{os.environ.get("DWORSHAK_FORCE_INTERACTIVE_TTY")=}")
+        forced_tty = os.environ.get("DWORSHAK_FORCE_INTERACTIVE_TTY") == "1"
+        logger.debug(f"{forced_tty=}")
+        logger.debug(f"{os.path.exists("/dev/tty")=}")
+
+        # Early Exit check
+        if not forced_tty:
+            if is_likely_ci_or_non_interactive():
+                logger.debug("CI environment. Returning default.")
+                return default
+
+            # If NO path to user exists at all
+            if not (interactive_terminal_is_available() or 
+                    ph.tkinter_is_available() or 
+                    ph.web_browser_is_available() or 
+                    os.path.exists("/dev/tty")):
+                logger.debug("Non-interactive environment detected.")
+                return default
 
         avoid_interface = avoid_interface or set()
         avoid_interface = resolve_str_to_set(avoid_interface)
@@ -114,11 +146,11 @@ class DworshakPrompt:
             try:
                 if interface_mode == PromptMode.CONSOLE:
                     # if not has_real_tty():
-                    if not ph.interactive_terminal_is_available():
+                    if not interactive_terminal_is_available() and not forced_tty:
                         logger.debug(f"{interface_mode} skipped: No interactive terminal.")
                         continue
 
-                    console_get_input = get_console_provider()
+                    console_get_input = get_console_provider(debug=debug)
                     val = console_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
                     log_val = "'********'" if hide_input else repr(val)
                     logger.debug(f"SUCCESS: {interface_mode} returned: {log_val}")

@@ -119,7 +119,7 @@ pip install "dworshak-prompt[typer]"
 ``` 
 
 Including the `typer` optional dependency group ensures that Typer and Rich are included as a dependencies. 
-Without this, the CLI and console_prompt functionality are still stable, due to Python standard library fallbacks. 
+Without this, the CLI and console prompting functionality are still stable, due to Python standard library fallbacks. 
 
 ---
 
