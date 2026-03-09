@@ -7,6 +7,7 @@ from typing import Optional, Any
 from dworshak_config import DworshakConfig
 from dworshak_env import DworshakEnv
 from .multiplexer import DworshakPrompt
+from .helpers import PromptMode
 
 """
 The obtain pattern.
@@ -85,8 +86,8 @@ class Obtain:
         message: str | None = None,
         suggestion: str | None = None,
         default: Any | None = None,
-        priority_interface: str | None = None,
-        avoid_interface: str | None = None,
+        priority_interface: list[PromptMode] | None = None,
+        avoid_interface: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
@@ -128,8 +129,8 @@ class Obtain:
         message: str | None = None,
         suggestion: str | None = None,
         default: Any | None = None,
-        priority_interface: str | None = None,
-        avoid_interface: str | None = None,
+        priority_interface: list[PromptMode] | None = None,
+        avoid_interface: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
@@ -180,8 +181,8 @@ class Obtain:
         message: str | None = None,
         suggestion: str | None = None,
         default: Any | None = None,
-        priority_interface: str | None = None,
-        avoid_interface: str | None = None,
+        priority_interface: list[PromptMode] | None = None,
+        avoid_interface: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
