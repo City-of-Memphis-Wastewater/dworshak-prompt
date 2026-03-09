@@ -10,14 +10,15 @@ from dworshak_env import DworshakEnv
 from .multiplexer import DworshakPrompt
 
 """
-
+The obtain pattern.
 """
 
+'''
 class StoreMode(Enum):
     CONFIG = "config"
     SECRET = "secret"
     ENV = "env"
-
+'''
 @dataclass
 class ObtainResult:
     value: Optional[str] = None
@@ -214,7 +215,7 @@ class Obtain:
             env_mgr.set(key, new_value, overwrite=overwrite)
 
         return EnvData(value=new_value, is_new=True)
-
+'''
 def dworshak_obtain(
     service_or_key: str,
     item: str | None = None,
@@ -238,3 +239,4 @@ def dworshak_obtain(
         return handler.env(key=service_or_key, message=message, default=default, **kwargs)
     
     raise ValueError(f"Unsupported StoreMode: {store}")
+'''
