@@ -6,6 +6,14 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.28] – 2026-03-09
+### Changed:
+- obtain=Obtain() available for import in __init__.py
+- Lose StoreMode class dworshak_prompt() wrapper. 
+- Add self.prompt to Obtain class.
+
+---
+
 ## [0.2.27] – 2026-03-08
 ### Changed:
 - Filename change, console_prompt.py -> console_prompt_typer.py
