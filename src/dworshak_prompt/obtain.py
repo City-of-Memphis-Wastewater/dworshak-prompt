@@ -1,9 +1,8 @@
 # src/dworshak_prompt/obtain.py
 from pathlib import Path
 from dataclasses import dataclass
-from enum import Enum
+#from enum import Enum
 from typing import Optional, Any
-import sys
 
 from dworshak_config import DworshakConfig
 from dworshak_env import DworshakEnv
@@ -63,7 +62,12 @@ class Obtain:
         self.config_path = config_path
         self.secret_path = secret_path
         self.env_path = env_path
-
+ 
+        self.prompt = DworshakPrompt(
+            config_path=config_path,
+            secret_path=secret_path
+        ) 
+    '''
     def ask(self, *args, **kwargs):
         """
         Proxy to the multiplexer for direct questions.
@@ -73,7 +77,7 @@ class Obtain:
             config_path=self.config_path, 
             secret_path=self.secret_path
         ).ask(*args, **kwargs)
-    
+    '''
     def config(
         self,
         service: str, 
@@ -99,7 +103,7 @@ class Obtain:
             return ConfigData(value=value, is_new=False)
 
         # If missing or overwriting, we use the multiplexer
-        new_value = DworshakPrompt().ask(
+        new_value = self.prompt.ask(
             message=message or f"Please input CONFIG value\n(service = {service}, item = {item})",
             suggestion=suggestion or value,
             priority_interface = priority_interface,
@@ -154,7 +158,7 @@ class Obtain:
         if value is not None and not overwrite:
             return SecretData(value = value, is_new = False)
         
-        new_value = DworshakPrompt().ask(
+        new_value = self.prompt.ask(
             message=message or f"Please input SECRET value\n(service = {service}, item = {item})",
             hide_input=True,
             priority_interface = priority_interface,
@@ -198,7 +202,7 @@ class Obtain:
             return EnvData(value=value, is_new=False)
 
         # If missing or overwriting, we use the multiplexer
-        new_value = DworshakPrompt().ask(
+        new_value = self.prompt.ask(
             message=message or f"Please input ENV value\n(key = {key})",
             suggestion=value or default,
             priority_interface = priority_interface,
@@ -215,6 +219,9 @@ class Obtain:
             env_mgr.set(key, new_value, overwrite=overwrite)
 
         return EnvData(value=new_value, is_new=True)
+
+obtain = Obtain()
+
 '''
 def dworshak_obtain(
     service_or_key: str,

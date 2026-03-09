@@ -3,6 +3,7 @@ __all__ = [
     "dworshak_ask",
     "PromptMode",
     "Obtain",
+    "obtain",
     #"dworshak_obtain",
     #"StoreMode"
     ]
@@ -23,6 +24,11 @@ def __getattr__(name):
     if name == "Obtain":
         from .obtain import Obtain
         return Obtain
+
+    if name == "obtain":
+        from .obtain import obtain
+        return obtain
+
     """    
     if name == "dworshak_obtain":
         from .obtain import dworshak_obtain
