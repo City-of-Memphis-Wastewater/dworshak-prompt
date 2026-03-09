@@ -22,9 +22,11 @@ Leverage dworshak-config, dworshak-config, and dworshak-env to automatically han
 ```python
 from dworshak_prompt import Obtain
 
-Obtain().config(service, item, message)
-Obtain().secret(service, item, message)
-Obtain().env(key, message)
+obtain = Obtain()
+
+obtain.config(service, item, message)
+obtain.secret(service, item, message)
+obtain.env(key, message)
 
 ```
 
