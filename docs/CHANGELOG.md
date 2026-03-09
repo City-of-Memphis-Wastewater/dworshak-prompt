@@ -12,6 +12,10 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 - Lose StoreMode class dworshak_prompt() wrapper. 
 - Add self.prompt to Obtain class.
 
+### Internal:
+- Consider dropping DWORSHAK_FORCE_INTERACTIVE_TTY to hit TTy for console when wrapped, find a way to make it standard. 
+
+
 ---
 
 ## [0.2.27] – 2026-03-08
