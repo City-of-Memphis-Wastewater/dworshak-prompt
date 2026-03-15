@@ -9,6 +9,11 @@ class PromptMode(Enum):
     GUI = "gui"
     WEB = "web"
 
+class InterruptBehavior(Enum):
+    EXIT = "exit"
+    RETURN_DEFAULT = "use_default"
+    RETURN_NONE = "return_none"
+
 def resolve_str_to_set(instance: str | Set[PromptMode] | None) -> Set[PromptMode]:
     if not instance:
         return set()

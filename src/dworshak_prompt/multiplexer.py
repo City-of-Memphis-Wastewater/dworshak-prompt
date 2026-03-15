@@ -17,7 +17,12 @@ from .web_prompt import browser_get_input
 from .keyboard_interrupt import PromptCancelled
 from .server import stop_prompt_server
 from .prompt_manager_web import PromptManagerWeb
-from .helpers import PromptMode, resolve_str_to_list, resolve_str_to_set
+from .helpers import (
+        PromptMode, 
+        InterruptBehavior,
+        resolve_str_to_list, 
+        resolve_str_to_set
+        )
 from .environment import has_real_tty, get_console_provider, is_likely_ci_or_non_interactive, interactive_terminal_is_available
 
 class DworshakPrompt: 
@@ -44,7 +49,8 @@ class DworshakPrompt:
         debug: bool = False, 
         verbose: bool = False, 
         timeout: int | float | None = None,
-        exit_on_interrupt: bool = False,
+        #exit_on_interrupt: bool = False,
+        interrupt_behavior: InterruptBehavior | None = InterruptBehavior.RETURN_NONE
     ) -> str | None:
         from .logging_setup import setup_logging
         logger = setup_logging(verbose=verbose, debug=debug, initial=True)
@@ -218,6 +224,23 @@ class DworshakPrompt:
                     logger.debug(f">>> MATCHED STOP SIGNAL: {exc_name}. EXITING FUNCTION.")
                     if interrupt_event:
                         interrupt_event.set()
+
+                    #if interrupt_behavior == InterruptBehavior.EXIT
+
+                    if interrupt_behavior == InterruptBehavior.EXIT:
+                        print("\n[!] Operation cancelled by user.", file=sys.stderr)
+                        sys.exit(130)
+
+                    elif interrupt_behavior == InterruptBehavior.USE_DEFAULT:
+                        return default
+
+                    elif interrupt_behavior == InterruptBehavior.RETURN_NONE:
+                        return None
+
+                    else:
+                        return None
+
+                    '''
                     if exit_on_interrupt:
                         # We use sys.stderr to ensure the user sees why the program died
                         #logger.debug(f"User Interrupted. Exiting. exit_on_interrupt={exit_on_interrupt}")
@@ -225,7 +248,7 @@ class DworshakPrompt:
                         sys.exit(130) # Standard SIGINT exit code
                     else:
                         return None
-
+                    '''
                 # For technical failures, we log the traceback at DEBUG level
                 logger.debug(f">>> TECHNICAL FAILURE detected. Investigating traceback...")
                 if logger.isEnabledFor(logging.DEBUG):
