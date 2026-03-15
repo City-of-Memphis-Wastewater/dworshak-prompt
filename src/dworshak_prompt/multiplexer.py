@@ -220,11 +220,10 @@ class DworshakPrompt:
                         interrupt_event.set()
                     if exit_on_interrupt:
                         # We use sys.stderr to ensure the user sees why the program died
-                        print("\n[!] User Interrupted. Exiting.", file=sys.stderr)
+                        logger.debug(f"User Interrupted. Exiting. exit_on_interrupt={exit_on_interrupt}", file=sys.stderr)
                         sys.exit(130) # Standard SIGINT exit code
                     else:
                         return None
-                    return None
 
                 # For technical failures, we log the traceback at DEBUG level
                 logger.debug(f">>> TECHNICAL FAILURE detected. Investigating traceback...")
