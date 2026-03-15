@@ -6,6 +6,11 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.29] – 2026-03-14
+- `exit_on_interrupt` arg addded to multiplexer.DworshakPrompt.ask() and to the functions which leverage ask():  Obtain.env(), Obtain.config(), Obtain.secret().
+  
+---
+
 ## [0.2.28] – 2026-03-09
 ### Changed:
 - obtain=Obtain() available for import in __init__.py
