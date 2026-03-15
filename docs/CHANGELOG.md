@@ -6,7 +6,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
-## [0.2.30] – 2026-03-14 
+## [0.2.30] – 2026-03-14
 ### Fixed:
 - `from rich import Console` -> `from rich.console import Console`
 
