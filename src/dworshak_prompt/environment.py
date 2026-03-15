@@ -42,8 +42,9 @@ def get_console_provider(debug:bool=False):
         logger.debug("Redirected I/O detected; routing to TTY sideband.")
         return console_get_input_tty
     
-    if sys.stdin.isatty():
+    else:
         try:
+            import typer
             from .console_prompt_typer import console_get_input_typer
             logger.debug("return console_get_input_typer")
             return console_get_input_typer
