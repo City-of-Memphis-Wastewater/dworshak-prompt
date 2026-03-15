@@ -44,6 +44,7 @@ class DworshakPrompt:
         debug: bool = False, 
         verbose: bool = False, 
         timeout: int | float | None = None,
+        exit_on_interrupt: bool = False,
     ) -> str | None:
         from .logging_setup import setup_logging
         logger = setup_logging(verbose=verbose, debug=debug, initial=True)
@@ -217,6 +218,12 @@ class DworshakPrompt:
                     logger.debug(f">>> MATCHED STOP SIGNAL: {exc_name}. EXITING FUNCTION.")
                     if interrupt_event:
                         interrupt_event.set()
+                    if exit_on_interrupt:
+                        # We use sys.stderr to ensure the user sees why the program died
+                        print("\n[!] User Interrupted. Exiting.", file=sys.stderr)
+                        sys.exit(130) # Standard SIGINT exit code
+                    else:
+                        return None
                     return None
 
                 # For technical failures, we log the traceback at DEBUG level
@@ -236,6 +243,7 @@ def dworshak_ask(
     default: Any | None = None,
     priority_interface: list[PromptMode] | None = None,
     avoid_interface: set[PromptMode] | None = None,
+    exit_on_interrupt: bool = False,
     **kwargs: Any
 ) -> str | None:
     """
@@ -248,6 +256,7 @@ def dworshak_ask(
         default=default,
         priority_interface=priority_interface,
         avoid_interface=avoid_interface,
+        exit_on_interrupt = exit_on_interrupt,
         **kwargs 
     )
 

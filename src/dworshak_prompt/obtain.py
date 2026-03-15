@@ -13,12 +13,6 @@ from .helpers import PromptMode
 The obtain pattern.
 """
 
-'''
-class StoreMode(Enum):
-    CONFIG = "config"
-    SECRET = "secret"
-    ENV = "env"
-'''
 @dataclass
 class ObtainResult:
     value: Optional[str] = None
@@ -68,17 +62,6 @@ class Obtain:
             config_path=config_path,
             secret_path=secret_path
         ) 
-    '''
-    def ask(self, *args, **kwargs):
-        """
-        Proxy to the multiplexer for direct questions.
-        I don't this we need this, it is bad hygiene.
-        """
-        return DworshakPrompt(
-            config_path=self.config_path, 
-            secret_path=self.secret_path
-        ).ask(*args, **kwargs)
-    '''
     def config(
         self,
         service: str, 
@@ -91,6 +74,7 @@ class Obtain:
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
+        exit_on_interrupt: bool = False,
         **kwargs # Pass-through for priority_interface, avoid_interface, debug, etc.
     ) -> ConfigData:
         if path is None:
@@ -110,6 +94,7 @@ class Obtain:
             priority_interface = priority_interface,
             avoid_interface = avoid_interface, 
             hide_input=False,
+            exit_on_interrupt = exit_on_interrupt,
             **kwargs # Pass-through for priority_interface, avoid_interface, debug, etc.
         )
 
@@ -134,6 +119,7 @@ class Obtain:
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
+        exit_on_interrupt: bool = False,
         **kwargs 
         )-> SecretData:
 
@@ -164,6 +150,7 @@ class Obtain:
             hide_input=True,
             priority_interface = priority_interface,
             avoid_interface = avoid_interface, 
+            exit_on_interrupt = exit_on_interrupt,
             **kwargs 
         )
         
@@ -186,6 +173,7 @@ class Obtain:
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
+        exit_on_interrupt: bool = False,
         **kwargs
     ) -> EnvData:
         """
@@ -209,6 +197,7 @@ class Obtain:
             priority_interface = priority_interface,
             avoid_interface = avoid_interface, 
             hide_input=False,
+            exit_on_interrupt = exit_on_interrupt,
             **kwargs
         )
 
@@ -222,29 +211,3 @@ class Obtain:
         return EnvData(value=new_value, is_new=True)
 
 obtain = Obtain()
-
-'''
-def dworshak_obtain(
-    service_or_key: str,
-    item: str | None = None,
-    store: StoreMode = StoreMode.CONFIG,
-    message: str | None = None,
-    suggestion: str | None = None,
-    default: Any | None = None,
-    **kwargs
-) -> Any:
-    """
-    Functional entry point for the Obtain engine.
-    Allows for one-liner access to secrets, configs, or env vars.
-    """
-    handler = Obtain()
-    if store == StoreMode.CONFIG:
-        return handler.config(service=service_or_key, item=item, message=message, default=default, **kwargs)
-    elif store == StoreMode.SECRET:
-        return handler.secret(service=service_or_key, item=item, message=message, default=default, **kwargs)
-    elif store == StoreMode.ENV:
-        # Note: for ENV, service_or_key is the actual key
-        return handler.env(key=service_or_key, message=message, default=default, **kwargs)
-    
-    raise ValueError(f"Unsupported StoreMode: {store}")
-'''
