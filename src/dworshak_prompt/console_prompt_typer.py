@@ -4,7 +4,7 @@ Typer-based console prompt. Non ideal for tty.
 """
 from __future__ import annotations
 import typer # keep at the top to enable failure, to hit the std lib fallback
-from rich import Console
+from rich.console import Console
 # Create a console that specifically targets stderr
 stderr_console = Console(stderr=True)
 

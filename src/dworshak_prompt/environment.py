@@ -44,7 +44,6 @@ def get_console_provider(debug:bool=False):
     
     else:
         try:
-            import typer
             from .console_prompt_typer import console_get_input_typer
             logger.debug("return console_get_input_typer")
             return console_get_input_typer
