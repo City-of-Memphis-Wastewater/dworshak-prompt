@@ -7,8 +7,10 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ---
 
 ## [0.2.29] – 2026-03-14
+### Added:
 - `exit_on_interrupt` arg addded to multiplexer.DworshakPrompt.ask() and to the functions which leverage ask():  Obtain.env(), Obtain.config(), Obtain.secret().
-  
+- print() message for exit_on_interrupt send to file=sys.stderr
+
 ---
 
 ## [0.2.28] – 2026-03-09
