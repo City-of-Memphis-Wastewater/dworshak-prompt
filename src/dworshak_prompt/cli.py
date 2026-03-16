@@ -96,11 +96,11 @@ def ask(
         None, "--message", "-m", 
         help="Optional prompt message."
     ),
-    priority_interface: Optional[List[PromptMode]] = typer.Option(
+    interface_priority: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
         help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
     ),
-    avoid_interface: Optional[List[PromptMode]] = typer.Option(
+    interface_avoid: Optional[List[PromptMode]] = typer.Option(
         None, "--avoid", "-a",
         help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
     ),
@@ -117,14 +117,14 @@ def ask(
 
     if message is None:
         message = DEFAULT_PROMPT_MSG
-    priority_interface_list = priority_interface if priority_interface is not None else None
-    avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
+    interface_priority_list = interface_priority if interface_priority is not None else None
+    interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
 
     """Get user input and print it to stdout."""
     val = DworshakPrompt().ask(
         message=message,
-        priority_interface=priority_interface_list,
-        avoid_interface=avoid_interface_set,
+        interface_priority=interface_priority_list,
+        interface_avoid=interface_avoid_set,
         suggestion = suggestion,
         hide_input = hide,
         debug=debug, 
@@ -145,11 +145,11 @@ def obtain_secret(
     path: Path = typer.Option(None, "--path","-p", help="Custom encrypted database file path."),
     message: Optional[str] = typer.Option(None, "--message", "-m", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
-    priority_interface: Optional[List[PromptMode]] = typer.Option(
+    interface_priority: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
         help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
     ),
-    avoid_interface: Optional[List[PromptMode]] = typer.Option(
+    interface_avoid: Optional[List[PromptMode]] = typer.Option(
         None, "--avoid", "-a",
         help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
     ),
@@ -160,16 +160,16 @@ def obtain_secret(
 ):
     """Obtain a secret value (Check Vault -> Prompt -> Save)."""
 
-    priority_interface_list = priority_interface if priority_interface is not None else None
-    avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
+    interface_priority_list = interface_priority if interface_priority is not None else None
+    interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
     
     result = Obtain(secret_path=path).secret(
         service=service,
         item=item,
         message=message,
         suggestion=suggestion,
-        priority_interface=priority_interface_list, 
-        avoid_interface=avoid_interface_set, 
+        interface_priority=interface_priority_list, 
+        interface_avoid=interface_avoid_set, 
         overwrite=overwrite,
         debug=debug,
         verbose=verbose,
@@ -184,11 +184,11 @@ def obtain_config(
     path: Path = typer.Option(None, "--path","-p", help="Custom config file path."),
     message: Optional[str] = typer.Option(None, "--message", "-m", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
-    priority_interface: Optional[List[PromptMode]] = typer.Option(
+    interface_priority: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
         help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
     ),
-    avoid_interface: Optional[List[PromptMode]] = typer.Option(
+    interface_avoid: Optional[List[PromptMode]] = typer.Option(
         None, "--avoid", "-a",
         help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
     ),
@@ -198,8 +198,8 @@ def obtain_config(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended)."),
     emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout")
 ):
-    priority_interface_list = priority_interface if priority_interface is not None else None
-    avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
+    interface_priority_list = interface_priority if interface_priority is not None else None
+    interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
 
     """Get a configuration value (Storage -> Prompt -> Save)."""
     result = Obtain(config_path=path).config(
@@ -208,8 +208,8 @@ def obtain_config(
         message=message,
         suggestion=suggestion,
         overwrite=overwrite,
-        priority_interface=priority_interface_list,
-        avoid_interface=avoid_interface_set,
+        interface_priority=interface_priority_list,
+        interface_avoid=interface_avoid_set,
         forget=forget,
         debug=debug,
         verbose=verbose
@@ -228,11 +228,11 @@ def obtain_env(
     path: Path = typer.Option(None, "--path","-p", help="Custom .env file path."),
     message: Optional[str] = typer.Option(None, "--message", "-m", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
-    priority_interface: Optional[List[PromptMode]] = typer.Option(
+    interface_priority: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
         help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
     ),
-    avoid_interface: Optional[List[PromptMode]] = typer.Option(
+    interface_avoid: Optional[List[PromptMode]] = typer.Option(
         None, "--avoid", "-a",
         help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
     ),
@@ -242,8 +242,8 @@ def obtain_env(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended)."),
     emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout")
 ):
-    priority_interface_list = priority_interface if priority_interface is not None else None
-    avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
+    interface_priority_list = interface_priority if interface_priority is not None else None
+    interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
 
     """Retrieve a setting; falls back to interactive setup if the key is undefined."""
     result = Obtain(env_path=path).env(
@@ -251,8 +251,8 @@ def obtain_env(
         message=message,
         suggestion=suggestion,
         overwrite=overwrite,
-        priority_interface=priority_interface_list,
-        avoid_interface=avoid_interface_set,
+        interface_priority=interface_priority_list,
+        interface_avoid=interface_avoid_set,
         forget=forget,
         debug=debug,
         verbose=verbose

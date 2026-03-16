@@ -23,14 +23,14 @@ def run_prompt(
     hide_input: bool = False,
     debug: bool = False,
     verbose: bool = False,
-    priority_interface: list[PromptMode] | None = None,
-    avoid_interface: list[PromptMode] | None = None,
+    interface_priority: list[PromptMode] | None = None,
+    interface_avoid: list[PromptMode] | None = None,
 ) -> int:
 
     setup_logging(verbose=verbose, debug=debug)
 
-    priority_interface_list = priority_interface if priority_interface is not None else None
-    avoid_interface_set = set(avoid_interface) if avoid_interface is not None else None
+    interface_priority_list = interface_priority if interface_priority is not None else None
+    interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
     
 
     try:
@@ -38,8 +38,8 @@ def run_prompt(
             message=message,
             suggestion=suggestion,
             hide_input=hide_input,
-            priority_interface=priority_interface_list,
-            avoid_interface = avoid_interface_set,
+            interface_priority=interface_priority_list,
+            interface_avoid = interface_avoid_set,
             debug=debug,
             verbose=verbose,
         )
@@ -178,22 +178,22 @@ def main():
         interface_mode_map = {m.value: m for m in PromptMode}
 
         # Convert repeated --interface to ordered list of PromptMode
-        priority_interface_list = None
+        interface_priority_list = None
         if args.interface:
             # If single value (str), wrap in list; if repeated (list), use as-is
             interfaces = [args.interface] if isinstance(args.interface, str) else args.interface
             try:
-                priority_interface_list = [interface_mode_map[mode.lower()] for mode in interfaces]
+                interface_priority_list = [interface_mode_map[mode.lower()] for mode in interfaces]
             except KeyError as e:
                 print(f"Error: Invalid interface mode '{e.args[0]}'")
                 sys.exit(1)
 
         # Same for --avoid (order doesn't matter, so set)
-        avoid_interface_set = None
+        interface_avoid_set = None
         if args.avoid:
             avoids = [args.avoid] if isinstance(args.avoid, str) else args.avoid
             try:
-                avoid_interface_set = {interface_mode_map[mode.lower()] for mode in avoids}
+                interface_avoid_set = {interface_mode_map[mode.lower()] for mode in avoids}
             except KeyError as e:
                 print(f"Error: Invalid avoid mode '{e.args[0]}'")
                 sys.exit(1)
@@ -207,8 +207,8 @@ def main():
             hide_input=args.hide,
             debug=args.debug,
             verbose=args.verbose,
-            priority_interface=priority_interface_list,
-            avoid_interface=avoid_interface_set,
+            interface_priority=interface_priority_list,
+            interface_avoid=interface_avoid_set,
         )
         sys.exit(exit_code)
 
