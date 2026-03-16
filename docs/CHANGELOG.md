@@ -6,6 +6,16 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.31] – 2026-03-16
+### Changed:
+- default_avoid_interface - > interface_avoid
+- default_prompt_interface - > interface_prompt
+- avoid_interface - > interface_avoid
+- prompt_interface - > interface_prompt
+- exit_on_interrupt beahvior migrated to instead use interrupt_behavior, with the InterruptBehavior class.
+
+---
+
 ## [0.2.30] – 2026-03-14
 ### Fixed:
 - `from rich import Console` -> `from rich.console import Console`
