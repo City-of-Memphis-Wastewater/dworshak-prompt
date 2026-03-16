@@ -68,10 +68,16 @@ val = DworshakPrompt().ask(
 Leveraging `dworshak-prompt` for calling and adding configured values.
 
 ```python
-from dworshak_prompt import Obtain
+from dworshak_prompt import Obtain, PromptMode, InterruptBehavior, 
 
-# Custom path for a specific project
-obtain_mgr = Obtain(config_path="~/.pipeline-eds/config.json")
+# Identify custom path for a specific project, and set defaults during instantiation of the Obtain class.
+obtain_mgr = Obtain(
+    config_path="~/.pipeline-eds/config.json"
+    interface_priority = [PromptMode.GUI, PromptMode.WEB]
+    interface_avoid = {PromptMode.CONSOLE}
+    interrupt_behavior = InterruptBehavior.EXIT,
+    debug = True
+    )
 api_key = obtain_mgr.config("api_key", message="Enter EDS API Key")
 ```
 
@@ -107,7 +113,7 @@ dworshak-prompt helptree
 ```
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/City-of-Memphis-Wastewater/dworshak-prompt/main/assets/dworshak-prompt_v0.2.26_helptree.svg" width="100%" alt="Screenshot of the dworshak-prompt CLI helptree">
+  <img src="https://raw.githubusercontent.com/City-of-Memphis-Wastewater/dworshak-prompt/main/assets/dworshak-prompt_v0.2.31_helptree.svg" width="100%" alt="Screenshot of the dworshak-prompt CLI helptree">
 </p>
 
 `helptree` is utility funtion for Typer CLIs, imported from the `typer-helptree` library.

@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.32] – 2026-03-16
+### Fixed:
+- Ensure helptree is updated.
+
+---
+
 ## [0.2.31] – 2026-03-16
 ### Changed:
 - default_avoid_interface - > interface_avoid
