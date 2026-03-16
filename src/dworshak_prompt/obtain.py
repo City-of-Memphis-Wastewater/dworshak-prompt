@@ -7,7 +7,7 @@ from typing import Optional, Any
 from dworshak_config import DworshakConfig
 from dworshak_env import DworshakEnv
 from .multiplexer import DworshakPrompt
-from .helpers import PromptMode
+from .helpers import PromptMode, InterruptBehavior
 
 """
 The obtain pattern.
@@ -53,41 +53,24 @@ class Obtain:
         config_path: str | Path | None = None,
         secret_path: str | Path | None = None,
         env_path: str | Path | None = None,
+        default_priority_interface: list[PromptMode] | None = None,
+        default_avoid_interface: set[PromptMode] | None =None,
+        interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
     ):
         self.config_path = config_path
         self.secret_path = secret_path
         self.env_path = env_path
- 
-        self.prompt = DworshakPrompt(
-            config_path=config_path,
-            secret_path=secret_path
-            env_path=env_path
-            
-        ) 
-        interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
-        priority_interface: list[PromptMode] | None = None,
-        avoid_interface: set[PromptMode] | None = None,
-    ):
-
-    def __init__(
-        self,
-        config_path: str | Path | None = None,
-        secret_path: str | Path | None = None,
-        env_path: str | Path | None = None,
-        default_priority_interface=None,
-        default_avoid_interface=None,
-        interrupt_behavior=InterruptBehavior.RETURN_NONE,
-    ):
-        self.config_path = config_path
-        self.secret_path = secret_path
-        self.env_path = env_path,
         self.default_priority_interface = default_priority_interface
         self.default_avoid_interface = default_avoid_interface
         self.interrupt_behavior = interrupt_behavior
+
         self.prompt = DworshakPrompt(
             config_path=config_path,
             secret_path=secret_path
-            env_path = env_path,
+            env_path=env_path,
+            default_priority_interface=default_priority_interface,
+            default_avoid_interface=default_avoid_interface,
+            interrupt_behavior=interrupt_behavior
         )
 
     def config(
@@ -102,7 +85,7 @@ class Obtain:
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
-        exit_on_interrupt: bool = False,
+        interrupt_behavior: InterruptBehavior | None = None
         **kwargs # Pass-through for priority_interface, avoid_interface, debug, etc.
     ) -> ConfigData:
         if path is None:
@@ -122,7 +105,7 @@ class Obtain:
             priority_interface = priority_interface,
             avoid_interface = avoid_interface, 
             hide_input=False,
-            exit_on_interrupt = exit_on_interrupt,
+            interrupt_behavior=interrupt_behavior,
             **kwargs # Pass-through for priority_interface, avoid_interface, debug, etc.
         )
 
@@ -147,7 +130,7 @@ class Obtain:
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
-        exit_on_interrupt: bool = False,
+        interrupt_behavior: InterruptBehavior | None = None
         **kwargs 
         )-> SecretData:
 
@@ -178,7 +161,7 @@ class Obtain:
             hide_input=True,
             priority_interface = priority_interface,
             avoid_interface = avoid_interface, 
-            exit_on_interrupt = exit_on_interrupt,
+            interrupt_behavior=interrupt_behavior,
             **kwargs 
         )
         
@@ -201,7 +184,7 @@ class Obtain:
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
-        exit_on_interrupt: bool = False,
+        interrupt_behavior: InterruptBehavior | None = None
         **kwargs
     ) -> EnvData:
         """
@@ -225,7 +208,7 @@ class Obtain:
             priority_interface = priority_interface,
             avoid_interface = avoid_interface, 
             hide_input=False,
-            exit_on_interrupt = exit_on_interrupt,
+            interrupt_behavior=interrupt_behavior,
             **kwargs
         )
 
