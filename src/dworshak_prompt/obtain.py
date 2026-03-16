@@ -66,7 +66,7 @@ class Obtain:
 
         self.prompt = DworshakPrompt(
             config_path=config_path,
-            secret_path=secret_path
+            secret_path=secret_path,
             env_path=env_path,
             interface_priority=interface_priority,
             interface_avoid=interface_avoid,
