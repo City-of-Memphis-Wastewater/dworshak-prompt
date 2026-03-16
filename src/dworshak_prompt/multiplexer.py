@@ -30,15 +30,15 @@ class DworshakPrompt:
         config_path: str | Path | None = None,
         secret_path: str | Path | None = None,
         env_path: str | Path | None = None,
-        default_priority_interface: list[PromptMode] | None = None,
-        default_avoid_interface: set[PromptMode] | None =None,
+        interface_priority: list[PromptMode] | None = None,
+        interface_avoid: set[PromptMode] | None =None,
         interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
     ):
         self.config_path = config_path
         self.secret_path = secret_path
         self.env_path = env_path
-        self.default_priority_interface = default_priority_interface
-        self.default_avoid_interface = default_avoid_interface
+        self.interface_priority = interface_priority
+        self.interface_avoid = interface_avoid
         self.interrupt_behavior = interrupt_behavior
         
     def ask(
@@ -47,8 +47,8 @@ class DworshakPrompt:
         suggestion: str | None = None,
         default: Any | None = None,
         hide_input: bool = False, 
-        priority_interface: list[PromptMode] | None = None,
-        avoid_interface: set[PromptMode] | None = None,
+        interface_priority: list[PromptMode] | None = None,
+        interface_avoid: set[PromptMode] | None = None,
         interrupt_event: threading.Event | None = None,
         debug: bool = False, 
         verbose: bool = False, 
@@ -58,10 +58,10 @@ class DworshakPrompt:
         from .logging_setup import setup_logging
         logger = setup_logging(verbose=verbose, debug=debug, initial=True)
 
-        if priority_interface is None:
-            priority_interface = self.default_priority_interface
-        if avoid_interface is None:
-            avoid_interface = self.default_avoid_interface
+        if interface_priority is None:
+            interface_priority = self.interface_priority
+        if interface_avoid is None:
+            interface_avoid = self.interface_avoid
 
         # Use existing interrupt_event or create a local one for this call
         if interrupt_event is None:
@@ -116,9 +116,9 @@ class DworshakPrompt:
                 logger.debug("Non-interactive environment detected.")
                 return default
 
-        avoid_interface = avoid_interface or set()
-        avoid_interface = resolve_str_to_set(avoid_interface)
-        priority_interface = resolve_str_to_list(priority_interface)
+        interface_avoid = interface_avoid or set()
+        interface_avoid = resolve_str_to_set(interface_avoid)
+        interface_priority = resolve_str_to_list(interface_priority)
          
         if ph.on_wsl():
             raw_val = os.getenv("DWORSHAK_TRY_TKINTER_ON_WSL")
@@ -134,23 +134,23 @@ class DworshakPrompt:
             
             if not DWORSHAK_TRY_TKINTER_ON_WSL:
                 logger.warning(f"PromptMode.GUI avoided for WSL; to try it, set `export DWORSHAK_TRY_TKINTER_ON_WSL=1` ")
-                avoid_interface.add(PromptMode.GUI)
+                interface_avoid.add(PromptMode.GUI)
                 
 
         default_order = [PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB]
-        if priority_interface:
+        if interface_priority:
             # User choice first, followed by everything else as a safety net
-            effective_priority_interface = priority_interface + [m for m in default_order if m not in priority_interface]
+            effective_interface_priority = interface_priority + [m for m in default_order if m not in interface_priority]
         else:
-            effective_priority_interface = default_order
+            effective_interface_priority = default_order
 
         if timeout:
             # A background timer to fire the interrupt signal
             timer = threading.Timer(timeout, lambda: interrupt_event.set())
             timer.start()
 
-        for interface_mode in effective_priority_interface:
-            if interface_mode in avoid_interface:
+        for interface_mode in effective_interface_priority:
+            if interface_mode in interface_avoid:
                 logger.debug(f"Skipping {interface_mode} (avoided)")
                 continue
 
@@ -258,8 +258,8 @@ def dworshak_ask(
     message: str = "Enter value",
     suggestion: str | None = None,
     default: Any | None = None,
-    priority_interface: list[PromptMode] | None = None,
-    avoid_interface: set[PromptMode] | None = None,
+    interface_priority: list[PromptMode] | None = None,
+    interface_avoid: set[PromptMode] | None = None,
     interrupt_behavior: InterruptBehavior | None = None,
     **kwargs: Any
 ) -> str | None:
@@ -271,8 +271,8 @@ def dworshak_ask(
         message=message,
         suggestion=suggestion,
         default=default,
-        priority_interface=priority_interface,
-        avoid_interface=avoid_interface,
+        interface_priority=interface_priority,
+        interface_avoid=interface_avoid,
         interrupt_behavior = interrupt_behavior,
         **kwargs 
     )

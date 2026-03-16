@@ -53,23 +53,23 @@ class Obtain:
         config_path: str | Path | None = None,
         secret_path: str | Path | None = None,
         env_path: str | Path | None = None,
-        default_priority_interface: list[PromptMode] | None = None,
-        default_avoid_interface: set[PromptMode] | None =None,
+        interface_priority: list[PromptMode] | None = None,
+        interface_avoid: set[PromptMode] | None =None,
         interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
     ):
         self.config_path = config_path
         self.secret_path = secret_path
         self.env_path = env_path
-        self.default_priority_interface = default_priority_interface
-        self.default_avoid_interface = default_avoid_interface
+        self.interface_priority = interface_priority
+        self.interface_avoid = interface_avoid
         self.interrupt_behavior = interrupt_behavior
 
         self.prompt = DworshakPrompt(
             config_path=config_path,
             secret_path=secret_path
             env_path=env_path,
-            default_priority_interface=default_priority_interface,
-            default_avoid_interface=default_avoid_interface,
+            interface_priority=interface_priority,
+            interface_avoid=interface_avoid,
             interrupt_behavior=interrupt_behavior
         )
 
@@ -80,13 +80,12 @@ class Obtain:
         message: str | None = None,
         suggestion: str | None = None,
         default: Any | None = None,
-        priority_interface: list[PromptMode] | None = None,
-        avoid_interface: set[PromptMode] | None = None,
+        interface_priority: list[PromptMode] | None = None,
+        interface_avoid: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
-        interrupt_behavior: InterruptBehavior | None = None
-        **kwargs # Pass-through for priority_interface, avoid_interface, debug, etc.
+        **kwargs # Pass-through for interface_priority, interface_avoid, debug, etc.
     ) -> ConfigData:
         if path is None:
             path = self.config_path
@@ -102,11 +101,10 @@ class Obtain:
         new_value = self.prompt.ask(
             message=message or f"Please input CONFIG value\n(service = {service}, item = {item})",
             suggestion=suggestion or value,
-            priority_interface = priority_interface,
-            avoid_interface = avoid_interface, 
+            interface_priority = interface_priority,
+            interface_avoid = interface_avoid, 
             hide_input=False,
-            interrupt_behavior=interrupt_behavior,
-            **kwargs # Pass-through for priority_interface, avoid_interface, debug, etc.
+            **kwargs # Pass-through for interface_priority, interface_avoid, debug, etc.
         )
 
         # Persistence logic
@@ -125,12 +123,11 @@ class Obtain:
         message: str | None = None,
         suggestion: str | None = None,
         default: Any | None = None,
-        priority_interface: list[PromptMode] | None = None,
-        avoid_interface: set[PromptMode] | None = None,
+        interface_priority: list[PromptMode] | None = None,
+        interface_avoid: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
-        interrupt_behavior: InterruptBehavior | None = None
         **kwargs 
         )-> SecretData:
 
@@ -159,9 +156,8 @@ class Obtain:
         new_value = self.prompt.ask(
             message=message or f"Please input SECRET value\n(service = {service}, item = {item})",
             hide_input=True,
-            priority_interface = priority_interface,
-            avoid_interface = avoid_interface, 
-            interrupt_behavior=interrupt_behavior,
+            interface_priority = interface_priority,
+            interface_avoid = interface_avoid, 
             **kwargs 
         )
         
@@ -179,12 +175,11 @@ class Obtain:
         message: str | None = None,
         suggestion: str | None = None,
         default: Any | None = None,
-        priority_interface: list[PromptMode] | None = None,
-        avoid_interface: set[PromptMode] | None = None,
+        interface_priority: list[PromptMode] | None = None,
+        interface_avoid: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
-        interrupt_behavior: InterruptBehavior | None = None
         **kwargs
     ) -> EnvData:
         """
@@ -205,10 +200,9 @@ class Obtain:
         new_value = self.prompt.ask(
             message=message or f"Please input ENV value\n(key = {key})",
             suggestion=value or default,
-            priority_interface = priority_interface,
-            avoid_interface = avoid_interface, 
+            interface_priority = interface_priority,
+            interface_avoid = interface_avoid, 
             hide_input=False,
-            interrupt_behavior=interrupt_behavior,
             **kwargs
         )
 
