@@ -44,8 +44,8 @@ val = DworshakPrompt().ask("Enter value")
 val = DworshakPrompt().ask(
     message = "Secure Key",
     hide_input=True,
-    priority = [PromptMode.CONSOLE, PromptMode.GUI]
-    avoid = {PromptMode.WEB}
+    interface_priority = [PromptMode.CONSOLE, PromptMode.GUI]
+    interface_avoid = {PromptMode.WEB}
 
 )
 
