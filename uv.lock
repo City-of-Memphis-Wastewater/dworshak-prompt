@@ -245,13 +245,11 @@ crypto = [
 full = [
     { name = "cryptography" },
     { name = "dworshak-secret", extra = ["crypto"] },
-    { name = "memphisdrip", extra = ["typer"] },
     { name = "rich" },
     { name = "typer" },
     { name = "typer-helptree" },
 ]
 typer = [
-    { name = "memphisdrip", extra = ["typer"] },
     { name = "rich" },
     { name = "typer" },
     { name = "typer-helptree" },
@@ -271,7 +269,6 @@ requires-dist = [
     { name = "dworshak-prompt", extras = ["crypto", "typer"], marker = "extra == 'full'" },
     { name = "dworshak-secret", specifier = "==1.2.15" },
     { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'crypto'" },
-    { name = "memphisdrip", extras = ["typer"], marker = "extra == 'typer'", specifier = ">=0.1.4" },
     { name = "pyhabitat", specifier = ">=1.2.5" },
     { name = "rich", marker = "extra == 'typer'", specifier = ">=14.3.2" },
     { name = "typer", marker = "extra == 'typer'", specifier = ">=0.21.1" },
@@ -372,20 +369,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/d6/54/cfe61301667036ec958cb99bd3efefba235e65cdeb9c84d24a8293ba1d90/mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba", size = 8729, upload-time = "2022-08-14T12:40:10.846Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8", size = 9979, upload-time = "2022-08-14T12:40:09.779Z" },
-]
-
-[[package]]
-name = "memphisdrip"
-version = "0.1.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/13/b9/7e0887d9f6da8dfc57e698067bb89b59b36a90b8e85e2bcdcea8556c140e/memphisdrip-0.1.4.tar.gz", hash = "sha256:99b89e4d00ea97b66f02708b05f07d72a60422b1e2981da2dca25ce65be14488", size = 3355, upload-time = "2026-02-12T23:55:57.26Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6f/f4/5508d95af90675845b4e0c5c52d158ebbfd88b454b5590feaf13f6353acd/memphisdrip-0.1.4-py3-none-any.whl", hash = "sha256:25bde3fd3030fe33a83bf9f3f45f9a7ee9cf99f9dc56e0f7cfdad6481f81de03", size = 3777, upload-time = "2026-02-12T23:55:56.179Z" },
-]
-
-[package.optional-dependencies]
-typer = [
-    { name = "typer" },
 ]
 
 [[package]]

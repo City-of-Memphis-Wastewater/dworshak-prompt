@@ -90,7 +90,6 @@ typer = [
     "typer>=0.21.1",
     "rich>=14.3.2",
     "typer-helptree>=0.2.6",
-    "memphisdrip[typer]>=0.1.4"
 ]
 crypto = [
     "cryptography>=46.0.3",
