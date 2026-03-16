@@ -7,7 +7,8 @@ import threading
 import traceback
 import sys
 import os
-    
+from pathlib import Path
+
 from .gui_prompt import get_tkinter_hint
 if ph.tkinter_is_available():
     from .gui_prompt import gui_get_input
@@ -33,6 +34,7 @@ class DworshakPrompt:
         interface_priority: list[PromptMode] | None = None,
         interface_avoid: set[PromptMode] | None =None,
         interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
+        debug: bool = False,
     ):
         self.config_path = config_path
         self.secret_path = secret_path
@@ -40,6 +42,7 @@ class DworshakPrompt:
         self.interface_priority = interface_priority
         self.interface_avoid = interface_avoid
         self.interrupt_behavior = interrupt_behavior
+        self.debug = debug
         
     def ask(
         self,
@@ -50,7 +53,7 @@ class DworshakPrompt:
         interface_priority: list[PromptMode] | None = None,
         interface_avoid: set[PromptMode] | None = None,
         interrupt_event: threading.Event | None = None,
-        debug: bool = False, 
+        debug: bool | None = None, 
         verbose: bool = False, 
         timeout: int | float | None = None,
         interrupt_behavior: InterruptBehavior | None = None
@@ -69,6 +72,9 @@ class DworshakPrompt:
 
         if interrupt_behavior is None:
             interrupt_behavior = self.interrupt_behavior
+
+        if debug is None:
+            debug = self.debug
 
         '''
 

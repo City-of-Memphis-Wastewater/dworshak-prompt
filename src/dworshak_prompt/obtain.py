@@ -56,6 +56,7 @@ class Obtain:
         interface_priority: list[PromptMode] | None = None,
         interface_avoid: set[PromptMode] | None =None,
         interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
+        debug: bool = False
     ):
         self.config_path = config_path
         self.secret_path = secret_path
@@ -63,6 +64,7 @@ class Obtain:
         self.interface_priority = interface_priority
         self.interface_avoid = interface_avoid
         self.interrupt_behavior = interrupt_behavior
+        self.debug = debug
 
         self.prompt = DworshakPrompt(
             config_path=config_path,
@@ -70,7 +72,8 @@ class Obtain:
             env_path=env_path,
             interface_priority=interface_priority,
             interface_avoid=interface_avoid,
-            interrupt_behavior=interrupt_behavior
+            interrupt_behavior=interrupt_behavior,
+            debug = debug
         )
 
     def config(
