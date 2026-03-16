@@ -53,7 +53,6 @@ class DworshakPrompt:
         debug: bool = False, 
         verbose: bool = False, 
         timeout: int | float | None = None,
-        #exit_on_interrupt: bool = False,
         interrupt_behavior: InterruptBehavior | None = None
     ) -> str | None:
         from .logging_setup import setup_logging
@@ -244,23 +243,11 @@ class DworshakPrompt:
                     elif interrupt_behavior == InterruptBehavior.RETURN_NONE:
                         return None
 
-                    else:
-                        return None
-
-                    '''
-                    if exit_on_interrupt:
-                        # We use sys.stderr to ensure the user sees why the program died
-                        #logger.debug(f"User Interrupted. Exiting. exit_on_interrupt={exit_on_interrupt}")
-                        print("\n[!] Operation cancelled by user.", file=sys.stderr)
-                        sys.exit(130) # Standard SIGINT exit code
-                    else:
-                        return None
-                    '''
                 # For technical failures, we log the traceback at DEBUG level
                 logger.debug(f">>> TECHNICAL FAILURE detected. Investigating traceback...")
                 if logger.isEnabledFor(logging.DEBUG):
                     traceback.print_exc(file=sys.stdout)
-                
+
                 logger.debug(f"Continuing to fallback interface mode...")
                 continue
 
