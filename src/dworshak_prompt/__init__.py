@@ -4,8 +4,7 @@ __all__ = [
     "PromptMode",
     "Obtain",
     "obtain",
-    #"dworshak_obtain",
-    #"StoreMode"
+    "InterruptBehavior"
     ]
 
 def __getattr__(name):
@@ -29,15 +28,9 @@ def __getattr__(name):
         from .obtain import obtain
         return obtain
 
-    """    
-    if name == "dworshak_obtain":
-        from .obtain import dworshak_obtain
-        return dworshak_obtain
-    
-    if name == "StoreMode":
-        from .obtain import StoreMode
-        return StoreMode
-    """
+    if name == "InterruptBehavior":
+        from .helpers import InterruptBehavior
+        return InterruptBehavior
 
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
