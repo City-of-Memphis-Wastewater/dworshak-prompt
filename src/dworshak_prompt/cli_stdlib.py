@@ -5,7 +5,7 @@ from .logging_setup import setup_logging
 logger=setup_logging(verbose=False, debug=False, initial=True)  # Default off
 import argparse
 import sys
-from memphisdrip import safe_notify
+from pyhabitat import safe_notify
 
 from . import DworshakPrompt, PromptMode
 from .keyboard_interrupt import PromptCancelled

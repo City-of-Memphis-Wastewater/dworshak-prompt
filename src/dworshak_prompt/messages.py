@@ -1,5 +1,6 @@
 # src/dworshak_prompt/messages.py
 from __future__ import annotations
+import sys
 
 MSG_CRYPTO_EXTRA = [ 
     "To enable cryptography usage, like with dworshak-secret, install the required extras:",

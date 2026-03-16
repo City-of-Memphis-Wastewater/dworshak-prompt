@@ -1,3 +1,6 @@
+# src/*/__init__.py
+from __future__ import annotations
+
 __all__ = [
     "DworshakPrompt", 
     "dworshak_ask",

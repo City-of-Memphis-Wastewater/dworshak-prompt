@@ -28,17 +28,11 @@ from .environment import has_real_tty, get_console_provider, is_likely_ci_or_non
 
 class DworshakPrompt: 
     def __init__(self,
-        config_path: str | Path | None = None,
-        secret_path: str | Path | None = None,
-        env_path: str | Path | None = None,
         interface_priority: list[PromptMode] | None = None,
         interface_avoid: set[PromptMode] | None =None,
         interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
         debug: bool = False,
     ):
-        self.config_path = config_path
-        self.secret_path = secret_path
-        self.env_path = env_path
         self.interface_priority = interface_priority
         self.interface_avoid = interface_avoid
         self.interrupt_behavior = interrupt_behavior
@@ -58,6 +52,9 @@ class DworshakPrompt:
         timeout: int | float | None = None,
         interrupt_behavior: InterruptBehavior | None = None
     ) -> str | None:
+        if debug is None:
+            debug = self.debug
+
         from .logging_setup import setup_logging
         logger = setup_logging(verbose=verbose, debug=debug, initial=True)
 
@@ -73,8 +70,7 @@ class DworshakPrompt:
         if interrupt_behavior is None:
             interrupt_behavior = self.interrupt_behavior
 
-        if debug is None:
-            debug = self.debug
+        
 
         '''
 
@@ -260,28 +256,19 @@ class DworshakPrompt:
             logger.debug("All interface modes exhausted.")
             raise RuntimeError("No input method succeeded.")
 
-def dworshak_ask(
-    message: str = "Enter value",
-    suggestion: str | None = None,
-    default: Any | None = None,
-    interface_priority: list[PromptMode] | None = None,
-    interface_avoid: set[PromptMode] | None = None,
-    interrupt_behavior: InterruptBehavior | None = None,
-    **kwargs: Any
-) -> str | None:
+
+
+def dworshak_ask(message: str | None = None, suggestion: str | None = None, **kwargs):
     """
-    Convenience function to prompt the user for input using the Dworshak Multiplexer.
-    Automatically handles fallback between Console, GUI, and Web interface modes.
+    Passes arguments to DworshakPrompt().ask().
+    If message/suggestion are None, DworshakPrompt defines the defaults.
     """
     return DworshakPrompt().ask(
-        message=message,
-        suggestion=suggestion,
-        default=default,
-        interface_priority=interface_priority,
-        interface_avoid=interface_avoid,
-        interrupt_behavior = interrupt_behavior,
-        **kwargs 
+        message=message, 
+        suggestion=suggestion, 
+        **kwargs
     )
+
 
 # --- Demo entry ---
 

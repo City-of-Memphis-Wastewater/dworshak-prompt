@@ -234,7 +234,6 @@ dependencies = [
     { name = "dworshak-config" },
     { name = "dworshak-env" },
     { name = "dworshak-secret" },
-    { name = "memphisdrip" },
     { name = "pyhabitat" },
 ]
 
@@ -272,9 +271,8 @@ requires-dist = [
     { name = "dworshak-prompt", extras = ["crypto", "typer"], marker = "extra == 'full'" },
     { name = "dworshak-secret", specifier = "==1.2.15" },
     { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'crypto'" },
-    { name = "memphisdrip", specifier = ">=0.1.4" },
     { name = "memphisdrip", extras = ["typer"], marker = "extra == 'typer'", specifier = ">=0.1.4" },
-    { name = "pyhabitat", specifier = ">=1.2.2" },
+    { name = "pyhabitat", specifier = ">=1.2.5" },
     { name = "rich", marker = "extra == 'typer'", specifier = ">=14.3.2" },
     { name = "typer", marker = "extra == 'typer'", specifier = ">=0.21.1" },
     { name = "typer-helptree", marker = "extra == 'typer'", specifier = ">=0.2.6" },
@@ -443,11 +441,11 @@ wheels = [
 
 [[package]]
 name = "pyhabitat"
-version = "1.2.2"
+version = "1.2.5"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a5/c1/3f8ea1882af4adf3e5e5cc5f9ec0237d706ff39d506b6966635eca6e7805/pyhabitat-1.2.2.tar.gz", hash = "sha256:a2cd23d5b4c00764a76966d1964486176741a29976290b751e8657750d5f8805", size = 29748, upload-time = "2026-02-15T07:21:00.248Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/0b/5f/6a60cd00064d288c60d6fe0236169af0ab96180939b88d86d2ab81415667/pyhabitat-1.2.5.tar.gz", hash = "sha256:e4923031b372a77b6e2c55edeed904753d232ee453849500cf775d24f255b176", size = 30342, upload-time = "2026-03-16T21:30:22.964Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e1/4d/e189f934597b3dd69b3b37210756bb4eed83ecb809001ace077cfbfb59bd/pyhabitat-1.2.2-py3-none-any.whl", hash = "sha256:63b38f22b6b513e16f09869f4fc90b779567395734e6caa2f1ac42fe3b54f45d", size = 30689, upload-time = "2026-02-15T07:20:57.789Z" },
+    { url = "https://files.pythonhosted.org/packages/c7/63/ff01e952044ab8fb438b3a74b651fb97735904ca439965ba30d26ef837cc/pyhabitat-1.2.5-py3-none-any.whl", hash = "sha256:3f28b55009bd700d925867a7da60c7c36295b8a875ea17d3dbbced80d9415661", size = 31285, upload-time = "2026-03-16T21:30:21.767Z" },
 ]
 
 [[package]]

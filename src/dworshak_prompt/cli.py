@@ -131,7 +131,7 @@ def ask(
         verbose=verbose,
     )
 
-    status = "Input captured." if val else "No input received."
+    status = "Input received." if val else "No input received."
     finalize_protocol_output(val, emit, verbose, status)
 
 # Create the 'obtain' sub-app

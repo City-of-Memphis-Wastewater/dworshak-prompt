@@ -67,13 +67,10 @@ class Obtain:
         self.debug = debug
 
         self.prompt = DworshakPrompt(
-            config_path=config_path,
-            secret_path=secret_path,
-            env_path=env_path,
-            interface_priority=interface_priority,
-            interface_avoid=interface_avoid,
-            interrupt_behavior=interrupt_behavior,
-            debug = debug
+            interface_priority=interface_priority, # instantiated value can be overrode for each function call
+            interface_avoid=interface_avoid, # instantiated value can be overrode for each function call 
+            interrupt_behavior=interrupt_behavior, # only instantitated here
+            debug = debug # only instantitated here
         )
 
     def config(
@@ -87,11 +84,15 @@ class Obtain:
         interface_avoid: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
-        forget: bool = False,
-        **kwargs # Pass-through for interface_priority, interface_avoid, debug, etc.
+        forget: bool = False
     ) -> ConfigData:
         if path is None:
             path = self.config_path
+
+        if interface_priority is None:
+            interface_priority = self.interface_priority
+        if interface_avoid is None:
+            interface_avoid = self.interface_avoid
             
         config_mgr = DworshakConfig(path = path)
         value = config_mgr.get(service, item)
@@ -102,12 +103,12 @@ class Obtain:
 
         # If missing or overwriting, we use the multiplexer
         new_value = self.prompt.ask(
-            message=message or f"Please input CONFIG value\n(service = {service}, item = {item})",
-            suggestion=suggestion or value,
+            message = message or f"Please input CONFIG value\n(service = {service}, item = {item})",
+            suggestion = suggestion or value,
+            default = default,
             interface_priority = interface_priority,
             interface_avoid = interface_avoid, 
             hide_input=False,
-            **kwargs # Pass-through for interface_priority, interface_avoid, debug, etc.
         )
 
         # Persistence logic
@@ -130,12 +131,18 @@ class Obtain:
         interface_avoid: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
-        forget: bool = False,
-        **kwargs 
+        forget: bool = False
         )-> SecretData:
 
         if path is None:
             path = self.secret_path
+
+        if interface_priority is None:
+            interface_priority = self.interface_priority
+
+        if interface_avoid is None:
+            interface_avoid = self.interface_avoid
+
         #import cryptography
         #from dworshak_secret import DworshakSecret, get_secret, store_secret
         try:
@@ -144,7 +151,7 @@ class Obtain:
             from dworshak_secret import DworshakSecret, get_secret, store_secret
         except:
             # Trigger the "Lifeboat" redirection error
-            from memphisdrip import safe_notify
+            from pyhabitat import safe_notify
             from .messages import notify_missing_function_redirect, MSG_CRYPTO_EXTRA
             # We pass a specific context so the user knows why it failed
             full_msg = notify_missing_function_redirect("Obtain.secret()") + MSG_CRYPTO_EXTRA
@@ -159,9 +166,10 @@ class Obtain:
         new_value = self.prompt.ask(
             message=message or f"Please input SECRET value\n(service = {service}, item = {item})",
             hide_input=True,
+            suggestion = suggestion,# or value,
+            default = default,
             interface_priority = interface_priority,
-            interface_avoid = interface_avoid, 
-            **kwargs 
+            interface_avoid = interface_avoid
         )
         
         if new_value is None:
@@ -182,8 +190,7 @@ class Obtain:
         interface_avoid: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
-        forget: bool = False,
-        **kwargs
+        forget: bool = False
     ) -> EnvData:
         """
         Checks key from os.environ or .env file, using the dworshak-env library. 
@@ -191,6 +198,12 @@ class Obtain:
         """
         if path is None:
             path = self.env_path # Defaults to None, DworshakEnv handles Path(".env")
+
+        if interface_priority is None:
+            interface_priority = self.interface_priority
+
+        if interface_avoid is None:
+            interface_avoid = self.interface_avoid
 
         env_mgr = DworshakEnv(path=path)
         value = env_mgr.get(key)
@@ -202,11 +215,11 @@ class Obtain:
         # If missing or overwriting, we use the multiplexer
         new_value = self.prompt.ask(
             message=message or f"Please input ENV value\n(key = {key})",
-            suggestion=value or default,
+            suggestion = suggestion or value,
+            default = default,
             interface_priority = interface_priority,
             interface_avoid = interface_avoid, 
-            hide_input=False,
-            **kwargs
+            hide_input=False
         )
 
         # Persistence logic: Save to .env file if not forgotten

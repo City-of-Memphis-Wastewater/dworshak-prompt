@@ -136,3 +136,16 @@ def interactive_terminal_is_available():
     
     return sys.stdin.isatty() and sys.stdout.isatty()
 
+
+def safe_notify(msg: str | list[str]):
+    """
+    Direct-to-stderr notification. 
+    Ensures message visibility regardless of stdout redirection/piping.
+    """
+    if isinstance(msg, (list, tuple)):
+        msg = "\n".join(map(str, msg))
+    
+    # 1. Use print(..., file=sys.stderr) for better handling of non-string types
+    # 2. Add a leading newline for visual separation in dense CLI output
+    # 3. flush=True ensures the message appears immediately (crucial for prompts)
+    print(f"\n{msg}", file=sys.stderr, flush=True)
