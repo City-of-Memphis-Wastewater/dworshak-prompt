@@ -27,16 +27,20 @@ from .environment import has_real_tty, get_console_provider, is_likely_ci_or_non
 
 class DworshakPrompt: 
     def __init__(self,
-        config_path: str | None = None,
-        secret_path: str | None = None,
+        config_path: str | Path | None = None,
+        secret_path: str | Path | None = None,
+        env_path: str | Path | None = None,
         default_priority_interface: list[PromptMode] | None = None,
         default_avoid_interface: set[PromptMode] | None =None,
+        interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
     ):
         self.config_path = config_path
         self.secret_path = secret_path
+        self.env_path = env_path
         self.default_priority_interface = default_priority_interface
         self.default_avoid_interface = default_avoid_interface
-
+        self.interrupt_behavior = interrupt_behavior
+        
     def ask(
         self,
         message: str = "Enter value",
@@ -50,7 +54,7 @@ class DworshakPrompt:
         verbose: bool = False, 
         timeout: int | float | None = None,
         #exit_on_interrupt: bool = False,
-        interrupt_behavior: InterruptBehavior | None = InterruptBehavior.RETURN_NONE
+        interrupt_behavior: InterruptBehavior | None = None
     ) -> str | None:
         from .logging_setup import setup_logging
         logger = setup_logging(verbose=verbose, debug=debug, initial=True)
@@ -63,6 +67,9 @@ class DworshakPrompt:
         # Use existing interrupt_event or create a local one for this call
         if interrupt_event is None:
             interrupt_event = threading.Event()
+
+        if interrupt_behavior is None:
+            interrupt_behavior = self.interrupt_behavior
 
         '''
 
@@ -266,7 +273,7 @@ def dworshak_ask(
     default: Any | None = None,
     priority_interface: list[PromptMode] | None = None,
     avoid_interface: set[PromptMode] | None = None,
-    exit_on_interrupt: bool = False,
+    interrupt_behavior: InterruptBehavior | None = None,
     **kwargs: Any
 ) -> str | None:
     """
@@ -279,7 +286,7 @@ def dworshak_ask(
         default=default,
         priority_interface=priority_interface,
         avoid_interface=avoid_interface,
-        exit_on_interrupt = exit_on_interrupt,
+        interrupt_behavior = interrupt_behavior,
         **kwargs 
     )
 

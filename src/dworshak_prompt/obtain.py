@@ -61,7 +61,35 @@ class Obtain:
         self.prompt = DworshakPrompt(
             config_path=config_path,
             secret_path=secret_path
+            env_path=env_path
+            
         ) 
+        interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
+        priority_interface: list[PromptMode] | None = None,
+        avoid_interface: set[PromptMode] | None = None,
+    ):
+
+    def __init__(
+        self,
+        config_path: str | Path | None = None,
+        secret_path: str | Path | None = None,
+        env_path: str | Path | None = None,
+        default_priority_interface=None,
+        default_avoid_interface=None,
+        interrupt_behavior=InterruptBehavior.RETURN_NONE,
+    ):
+        self.config_path = config_path
+        self.secret_path = secret_path
+        self.env_path = env_path,
+        self.default_priority_interface = default_priority_interface
+        self.default_avoid_interface = default_avoid_interface
+        self.interrupt_behavior = interrupt_behavior
+        self.prompt = DworshakPrompt(
+            config_path=config_path,
+            secret_path=secret_path
+            env_path = env_path,
+        )
+
     def config(
         self,
         service: str, 
