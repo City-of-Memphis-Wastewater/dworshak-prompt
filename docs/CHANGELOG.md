@@ -12,7 +12,14 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 - default_prompt_interface - > interface_prompt
 - avoid_interface - > interface_avoid
 - prompt_interface - > interface_prompt
-- exit_on_interrupt beahvior migrated to instead use interrupt_behavior, with the InterruptBehavior class.
+- exit_on_interrupt beahvior migrated to instead use 
+- interrupt_behavior argument implemeneted, with the InterruptBehavior class.
+
+### Fixed:
+- Suggestion, default, and overwrite performance made consistent in Obtain.env(), Obtain.secret(), and Obtain.config(); however, Obtain.secret() differs because the existing value will not be offered as a suggestion.
+
+### Internal:
+- Breaking changes will occur in if consuming libraries don't update altered function args.
 
 ---
 
