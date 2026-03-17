@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.33] – 2026-03-16
+### Fixed:
+- Verbose and debuf handling move to Obtain class instantiation rather than the functions.
+
+---
+
 ## [0.2.32] – 2026-03-16
 ### Fixed:
 - Ensure helptree is updated.
