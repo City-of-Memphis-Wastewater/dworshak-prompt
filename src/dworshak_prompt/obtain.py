@@ -56,7 +56,8 @@ class Obtain:
         interface_priority: list[PromptMode] | None = None,
         interface_avoid: set[PromptMode] | None =None,
         interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
-        debug: bool = False
+        debug: bool = False,
+        verbose: bool = False
     ):
         self.config_path = config_path
         self.secret_path = secret_path
@@ -65,12 +66,14 @@ class Obtain:
         self.interface_avoid = interface_avoid
         self.interrupt_behavior = interrupt_behavior
         self.debug = debug
+        self.verbose = verbose
 
         self.prompt = DworshakPrompt(
             interface_priority=interface_priority, # instantiated value can be overrode for each function call
             interface_avoid=interface_avoid, # instantiated value can be overrode for each function call 
             interrupt_behavior=interrupt_behavior, # only instantitated here
-            debug = debug # only instantitated here
+            debug = debug, # only instantitated here
+            verbose = verbose
         )
 
     def config(

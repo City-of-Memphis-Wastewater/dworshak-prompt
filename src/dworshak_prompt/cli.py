@@ -164,7 +164,8 @@ def obtain_secret(
     interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
     obtain = Obtain(
             secret_path=path,
-            debug=debug
+            debug=debug,
+            verbose=verbose
             )
     result = obtain.secret(
         service=service,
@@ -174,7 +175,7 @@ def obtain_secret(
         interface_priority=interface_priority_list, 
         interface_avoid=interface_avoid_set, 
         overwrite=overwrite,
-        verbose=verbose,
+        forget=forget
     )
 
     finalize_protocol_output(result.value, emit, verbose, result.status_message)
@@ -204,7 +205,8 @@ def obtain_config(
     interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
     obtain = Obtain(
             config_path=path,
-            debug=debug
+            debug=debug,
+            verbose=verbose
             )
     """Get a configuration value (Storage -> Prompt -> Save)."""
     result = obtain.config(
@@ -216,7 +218,6 @@ def obtain_config(
         interface_priority=interface_priority_list,
         interface_avoid=interface_avoid_set,
         forget=forget,
-        verbose=verbose
     )
     #status = f"Config '{item}' resolved." if val else "Config not found."
     #v_info = f"Path: {path or 'default'}"
@@ -250,7 +251,8 @@ def obtain_env(
     interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
     obtain = Obtain(
             env_path=path,
-            debug=debug
+            debug=debug,
+            verbose=verbose
             )
     """Retrieve a setting; falls back to interactive setup if the key is undefined."""
     result = obtain.env(
@@ -260,8 +262,7 @@ def obtain_env(
         overwrite=overwrite,
         interface_priority=interface_priority_list,
         interface_avoid=interface_avoid_set,
-        forget=forget,
-        verbose=verbose
+        forget=forget
     )
 
     #status = f"Env var '{key}' resolved." if val else f"'{key}' not set."

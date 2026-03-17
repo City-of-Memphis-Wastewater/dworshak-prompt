@@ -32,11 +32,13 @@ class DworshakPrompt:
         interface_avoid: set[PromptMode] | None =None,
         interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
         debug: bool = False,
+        verbose: bool = False,
     ):
         self.interface_priority = interface_priority
         self.interface_avoid = interface_avoid
         self.interrupt_behavior = interrupt_behavior
         self.debug = debug
+        self.verbose = verbose
         
     def ask(
         self,
@@ -54,7 +56,9 @@ class DworshakPrompt:
     ) -> str | None:
         if debug is None:
             debug = self.debug
-        debug=self.debug
+        if verbose is None:
+            verbose = self.verbose
+        
         from .logging_setup import setup_logging
         logger = setup_logging(verbose=verbose, debug=debug, initial=True)
 
