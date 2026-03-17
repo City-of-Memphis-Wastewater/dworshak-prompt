@@ -162,8 +162,11 @@ def obtain_secret(
 
     interface_priority_list = interface_priority if interface_priority is not None else None
     interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
-    
-    result = Obtain(secret_path=path).secret(
+    obtain = Obtain(
+            secret_path=path,
+            debug=debug
+            )
+    result = obtain.secret(
         service=service,
         item=item,
         message=message,
@@ -171,7 +174,6 @@ def obtain_secret(
         interface_priority=interface_priority_list, 
         interface_avoid=interface_avoid_set, 
         overwrite=overwrite,
-        debug=debug,
         verbose=verbose,
     )
 
@@ -200,9 +202,12 @@ def obtain_config(
 ):
     interface_priority_list = interface_priority if interface_priority is not None else None
     interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
-
+    obtain = Obtain(
+            config_path=path,
+            debug=debug
+            )
     """Get a configuration value (Storage -> Prompt -> Save)."""
-    result = Obtain(config_path=path).config(
+    result = obtain.config(
         service=service,
         item=item,
         message=message,
@@ -211,7 +216,6 @@ def obtain_config(
         interface_priority=interface_priority_list,
         interface_avoid=interface_avoid_set,
         forget=forget,
-        debug=debug,
         verbose=verbose
     )
     #status = f"Config '{item}' resolved." if val else "Config not found."
@@ -244,9 +248,12 @@ def obtain_env(
 ):
     interface_priority_list = interface_priority if interface_priority is not None else None
     interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
-
+    obtain = Obtain(
+            env_path=path,
+            debug=debug
+            )
     """Retrieve a setting; falls back to interactive setup if the key is undefined."""
-    result = Obtain(env_path=path).env(
+    result = obtain.env(
         key = key,
         message=message,
         suggestion=suggestion,
@@ -254,7 +261,6 @@ def obtain_env(
         interface_priority=interface_priority_list,
         interface_avoid=interface_avoid_set,
         forget=forget,
-        debug=debug,
         verbose=verbose
     )
 

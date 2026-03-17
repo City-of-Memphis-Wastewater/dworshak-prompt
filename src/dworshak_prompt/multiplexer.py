@@ -54,7 +54,7 @@ class DworshakPrompt:
     ) -> str | None:
         if debug is None:
             debug = self.debug
-
+        debug=self.debug
         from .logging_setup import setup_logging
         logger = setup_logging(verbose=verbose, debug=debug, initial=True)
 
