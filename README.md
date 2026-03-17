@@ -71,14 +71,14 @@ Leveraging `dworshak-prompt` for calling and adding configured values.
 from dworshak_prompt import Obtain, PromptMode, InterruptBehavior, 
 
 # Identify custom path for a specific project, and set defaults during instantiation of the Obtain class.
-obtain_mgr = Obtain(
+obtain = Obtain(
     config_path="~/.pipeline-eds/config.json"
     interface_priority = [PromptMode.GUI, PromptMode.WEB]
     interface_avoid = {PromptMode.CONSOLE}
     interrupt_behavior = InterruptBehavior.EXIT,
     debug = True
     )
-api_key = obtain_mgr.config("api_key", message="Enter EDS API Key")
+api_key = obtain.config("api_key", message="Enter EDS API Key")
 ```
 
 The default config file path is "~/.dworshak/config.json".
