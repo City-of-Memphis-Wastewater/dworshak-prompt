@@ -242,10 +242,10 @@ class DworshakPrompt:
                     if interrupt_behavior == InterruptBehavior.EXIT:
                         print("\n[!] Operation cancelled by user.", file=sys.stderr)
                         sys.exit(130)
-
+                    elif interrupt_behavior == InterruptBehavior.RAISE:
+                        raise PromptCancelled()
                     elif interrupt_behavior == InterruptBehavior.RETURN_DEFAULT:
                         return default
-
                     elif interrupt_behavior == InterruptBehavior.RETURN_NONE:
                         return None
 

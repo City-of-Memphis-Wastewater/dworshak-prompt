@@ -1,7 +1,7 @@
 # src/dworshak_prompt/helpers.py
 from __future__ import annotations
 import re
-from typing import List
+from typing import List, Set
 from enum import Enum
 
 class PromptMode(Enum):
@@ -13,6 +13,7 @@ class InterruptBehavior(Enum):
     EXIT = "exit"
     RETURN_DEFAULT = "use_default"
     RETURN_NONE = "return_none"
+    RAISE = "raise"
 
 def resolve_str_to_set(instance: str | Set[PromptMode] | None) -> Set[PromptMode]:
     if not instance:

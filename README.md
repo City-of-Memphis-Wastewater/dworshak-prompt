@@ -87,6 +87,8 @@ Another Example
 ```python
 from O365 import Account
 from dworshak_prompt import Obtain, InterruptBehavior
+import os
+
 
 # Instantiate the prompt handler
 prompt = Obtain(
