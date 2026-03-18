@@ -6,7 +6,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
-## [0.2.33] – 2026-03-16
+## [0.2.34] – 2026-03-18
 ### Added:
 - InterruptBehavior.RAISE
 
