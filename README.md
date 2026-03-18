@@ -3,7 +3,7 @@
 A Python utility that ensures you can always get user input by falling back through multiple interfaces.
 `dworshak-prompt` is a CI-safe, shell-friendly prompting engine that integrates with persistent config and secret storage.
 
-### How it works
+## How it works
 
 It captures input by cycling through modes based on environment availability:
 
@@ -13,11 +13,28 @@ It captures input by cycling through modes based on environment availability:
 
 Automatically skips incompatible modes (e.g., GUI on WSL) via `pyhabitat`.
 
+### Install
 
-### Usage
+Install on most systems.
+```bash
+pip install "dworshak-prompt[typer,cryptography]"
+```
+
+Install on Termux.
+```bash
+pkg add python-cryptography
+uv venv --system-site-packages
+uv add "dworshak-prompt[typer]"
+```
+
+### Obtain vs DworshakPrompt 
+
+Use `Obtain` for managed config/secret storage; use `DworshakPrompt` directly if you want to handle values yourself.
+
+## Usage
 
 ### Obtain
-Leverage dworshak-config, dworshak-config, and dworshak-env to automatically handle values.
+Leverage dworshak-config, dworshak-secret, and dworshak-env to automatically handle values.
 
 ```python
 from dworshak_prompt import Obtain
@@ -54,18 +71,21 @@ val = DworshakPrompt().ask(
 Another example, for handling CI:
 
 ```python
-from dworshak_prompt import DworshakPrompt, PromptMode
+from dworshak_prompt import Obtain
 
 # If this runs in GitHub Actions, it returns "staging" immediately.
 # If it runs on a laptop, it pops up a GUI or Console prompt.
-val = DworshakPrompt().ask(
+obtain = Obtain()
+val = obtain.env(
+    key = "TARGET_ENV",
     message = "Target Environment",
     suggestion="production",  # What the human sees
-    default="staging"         # What the CI/Headless system uses
+    default="staging"         # What the CI/Headless system uses if the request fails.
 )
 ```
 
 Leveraging `dworshak-prompt` for calling and adding configured values.
+The default config file path is "~/.dworshak/config.json".
 
 ```python
 from dworshak_prompt import Obtain, PromptMode, InterruptBehavior, 
@@ -81,23 +101,42 @@ obtain = Obtain(
 api_key = obtain.config("emerson-ovation-api","api_key", message="Enter EDS API Key")
 ```
 
-The default config file path is "~/.dworshak/config.json".
 
-Another Example
+Another example of the Obtain pattern.
+
 ```python
 from O365 import Account
-from dworshak_prompt import Obtain, InterruptBehavior
+from dworshak_prompt import Obtain, InterruptBehavior, PromptMode
 import os
+import logging
+logger=logging.getLogger(__name__)
 
+avoid_set = set()
+DWO_AVOID_CONSOLE = os.environ.get('DWO_AVOID_CONSOLE')
+if  DWO_AVOID_CONSOLE == "1":
+    avoid_set.add(PromptMode.CONSOLE)
+else:
+    logger.warning("Use 'export DWO_AVOID_CONSOLE=1 to avoid the console, to make enable unhiding hidden input.'")
+logger.debug(f"{avoid_set=}")
+logger.debug(f"{DWO_AVOID_CONSOLE=}")
 
 # Instantiate the prompt handler
 prompt = Obtain(
-    interrupt_behavior = InterruptBehavior.EXIT
+    interrupt_behavior = InterruptBehavior.EXIT,
+    interface_avoid = avoid_set
 )
 
 # Ask for client credentials securely
-CLIENT_ID = prompt.secret(service="o365",item="CLIENT_ID",message="Enter your O365 Client ID: ").value
-CLIENT_SECRET = prompt.secret(service="o365",item="CLIENT_SECRET",message="Enter your O365 Client Secret: ").value
+CLIENT_ID = prompt.secret(
+    service="o365",
+    item="CLIENT_ID",
+    message="Enter your O365 Client ID: "
+    ).value
+CLIENT_SECRET = prompt.secret(
+    service="o365",
+    item="CLIENT_SECRET",
+    message="Enter your O365 Client Secret: "
+    ).value
 
 # Prepare credentials tuple
 credentials = (CLIENT_ID, CLIENT_SECRET)
@@ -129,7 +168,7 @@ The [dworshak](https://github.com/City-of-Memphis-Wastewater/dworshak) layer is 
 pipx install "dworshak-prompt[typer]"
 dworshak-prompt --version
 dworshak-prompt --help
-dworshak-prompt ask --message "Please state name" --interace web
+dworshak-prompt ask --message "Please state name" --interface web
 ```
 
 `dworshak-prompt` is designed to be useful even without Python code. 
