@@ -105,8 +105,10 @@ full = [
 package = true
 resolution = "highest"
 
-#[tool.uv.sources] # for hardcoding local wheels, to test without leveraging PyPI.
-#Example: dworshak-config = { path = "../dworshak-config/dist/dworshak_config-0.2.3-py3-none-any.whl" }
+[tool.uv.sources] # for hardcoding local wheels, to test without leveraging PyPI.
+dworshak-prompt = { workspace = true }
+#pyhabitat = { path = "../pyhabitat/dist/pyhabitat-0.2.4-py3-none-any.whl" }
+#dworshak-config = { path = "../dworshak-config/dist/dworshak_config-0.2.3-py3-none-any.whl" }
 
 [build-system]
 requires = ["setuptools>=64", "wheel"]
