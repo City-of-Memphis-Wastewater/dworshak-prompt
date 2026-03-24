@@ -153,6 +153,7 @@ def obtain_secret(
         None, "--avoid", "-a",
         help="Input modes to avoid (repeatable, e.g., --avoid web --avoid gui)."
     ),
+    forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended)."),
