@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.36] – 2026-03-24
+### Changed:
+- Remove cancel confirm from web interface. The alternative, adjusting the confirm interface buttons, is too complex for maintenance.
+
+---
+
 ## [0.2.35] – 2026-03-23
 ### Fixed:
 - Add forget flag to cli.obtain_secret() signature
