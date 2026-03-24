@@ -266,7 +266,7 @@ requires-dist = [
     { name = "cryptography", marker = "extra == 'crypto'", specifier = ">=46.0.3" },
     { name = "dworshak-config", specifier = ">=0.2.5" },
     { name = "dworshak-env", specifier = ">=0.1.6" },
-    { name = "dworshak-prompt", extras = ["crypto", "typer"], marker = "extra == 'full'" },
+    { name = "dworshak-prompt", extras = ["crypto", "typer"], marker = "extra == 'full'", editable = "." },
     { name = "dworshak-secret", specifier = "==1.2.15" },
     { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'crypto'" },
     { name = "pyhabitat", specifier = ">=1.2.5" },
