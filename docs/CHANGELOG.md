@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.35] – 2026-03-23
+### Fixed:
+- Add forget flag to cli.obtain_secret() signature
+
+---
+
 ## [0.2.34] – 2026-03-18
 ### Added:
 - InterruptBehavior.RAISE
