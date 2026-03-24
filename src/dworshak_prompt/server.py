@@ -182,17 +182,15 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             {toggle_script}
             <script>
                 function cancelPrompt() {{
-                    if (confirm('Cancel input?')) {{
-                        fetch('/api/cancel', {{
-                            method: 'POST',
-                            headers: {{ 'Content-Type': 'application/x-www-form-urlencoded' }},
-                            body: 'request_id={req_id}'
-                        }}).then(() => {{
-                            document.body.innerHTML = '<h2 style="text-align:center;">Cancelled</h2><br><p>You may now close this tab.</p>';
-                        }}).catch(err => {{
-                            console.error('Cancel failed:', err);
-                        }});
-                    }}
+                    fetch('/api/cancel', {{
+                        method: 'POST',
+                        headers: {{ 'Content-Type': 'application/x-www-form-urlencoded' }},
+                        body: 'request_id={req_id}'
+                    }}).then(() => {{
+                        document.body.innerHTML = '<h2 style="text-align:center;">Cancelled</h2><br><p>You may now close this tab.</p>';
+                    }}).catch(err => {{
+                        console.error('Cancel failed:', err);
+                    }});
                 }}
             </script>
         </body></html>"""
