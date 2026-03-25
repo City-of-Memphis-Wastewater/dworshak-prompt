@@ -6,6 +6,11 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.37] – 2026-03-25
+- Fixed typo in dowrshak-env 0.1.7, PACKAGE_NAMW
+
+---
+
 ## [0.2.36] – 2026-03-24
 ### Changed:
 - Remove cancel confirm from web interface. The alternative, adjusting the confirm interface buttons, is too complex for maintenance.

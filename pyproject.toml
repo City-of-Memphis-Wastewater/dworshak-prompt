@@ -7,7 +7,7 @@ requires-python = ">=3.9"
 readme = "README.md"
 dependencies = [
     "dworshak-config>=0.2.5",
-    "dworshak-env>=0.1.6",
+    "dworshak-env>=0.1.7",
     "dworshak-secret==1.2.15",
     "pyhabitat>=1.2.5",
 ]
