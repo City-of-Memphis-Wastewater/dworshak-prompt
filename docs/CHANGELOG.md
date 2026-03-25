@@ -7,7 +7,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ---
 
 ## [0.2.37] – 2026-03-25
-- Fixed typo in dowrshak-env 0.1.7, PACKAGE_NAMW
+- Fixed typo in dworshak-env 0.1.7, PACKAGE_NAMW
 
 ---
 
