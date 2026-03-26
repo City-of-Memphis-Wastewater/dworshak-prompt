@@ -6,7 +6,15 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.38] – 2026-03-26
+### Fixed:
+- Increase dworshak-secret to 1.2.16, which resolves import error in backup_vault() function, now in actions.py file.
+- Increase pyhabitat to 1.2.6 (which handles the on_termux() function properly for Python 3.13).
+
+---
+
 ## [0.2.37] – 2026-03-25
+### Fixed:
 - Fixed typo in dworshak-env 0.1.7, PACKAGE_NAMW
 
 ---
