@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.39] – 2026-04-06
+### Changed:
+- Update dworshak-config to 0.2.6, which now has json healing options.
+
+---
+
 ## [0.2.38] – 2026-03-26
 ### Fixed:
 - Increase dworshak-secret to 1.2.16, which resolves import error in backup_vault() function, now in actions.py file.
