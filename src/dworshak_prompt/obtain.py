@@ -134,7 +134,8 @@ class Obtain:
         interface_avoid: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
-        forget: bool = False
+        forget: bool = False,
+        hide: bool = True # expect hide to be True always but allow user to set to false
         )-> SecretData:
 
         if path is None:
@@ -168,7 +169,7 @@ class Obtain:
         
         new_value = self.prompt.ask(
             message=message or f"Please input SECRET value\n(service = {service}, item = {item})",
-            hide_input=True,
+            hide_input=hide,
             suggestion = suggestion,# or value,
             default = default,
             interface_priority = interface_priority,
