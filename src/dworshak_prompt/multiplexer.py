@@ -137,11 +137,9 @@ class DworshakPrompt:
                 DWORSHAK_TRY_TKINTER_ON_WSL = False
             
             logger.debug(f"DWORSHAK_TRY_TKINTER_ON_WSL interpreted as {DWORSHAK_TRY_TKINTER_ON_WSL}")
-            
             if not DWORSHAK_TRY_TKINTER_ON_WSL:
                 logger.warning(f"PromptMode.GUI avoided for WSL; to try it, set `export DWORSHAK_TRY_TKINTER_ON_WSL=1` ")
                 interface_avoid.add(PromptMode.GUI)
-                
 
         default_order = [PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB]
         if interface_priority:
