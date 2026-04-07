@@ -1,5 +1,19 @@
 # src/dworshak_prompt/gui_prompt.py
 from __future__ import annotations
+# tkinter workaround for wsl2, first, before other imports
+import sys
+if sys.platform.startswith('linux'):
+    try:
+        import ctypes
+        # Use find_library to ensure we get the right path
+        from ctypes.util import find_library
+        lib_path = find_library('X11')
+        if lib_path:
+            x11 = ctypes.cdll.LoadLibrary(lib_path)
+            x11.XInitThreads()
+            print("[Diagnostic] XInitThreads() invoked.",file=sys.stderr)
+    except Exception as e:
+        print(f"[Diagnostic] Failed to init X threads: {e}",file=sys.stderr)
 try:
     import tkinter as tk
 except ImportError:
