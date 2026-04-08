@@ -147,12 +147,13 @@ class Obtain:
         if interface_avoid is None:
             interface_avoid = self.interface_avoid
 
-        #import cryptography
-        #from dworshak_secret import DworshakSecret, get_secret, store_secret
         try:
             # Lazy Import dworshak_secret here to mitigate top-level crashes
             import cryptography
-            from dworshak_secret import DworshakSecret, get_secret, store_secret
+            from dworshak_secret import DworshakSecret
+            secret_mgr = DworshakSecret(db_path = path)
+            
+
         except:
             # Trigger the "Lifeboat" redirection error
             from pyhabitat import safe_notify
@@ -163,7 +164,7 @@ class Obtain:
             raise SystemExit(1)
         
         # Similar logic for secrets, but using dworshak-secret
-        value = get_secret(service, item)
+        value = secret_mgr.get(service = service, item=item)
         if value is not None and not overwrite:
             return SecretData(value = value, is_new = False)
         
@@ -181,7 +182,7 @@ class Obtain:
             return SecretData(value=None, is_new=None)
         
         if not forget:
-            store_secret(service, item, new_value, overwrite=overwrite)
+            secret_mgr.set(service = service, item=item, value = new_value, overwrite=overwrite)
         return SecretData(value = new_value, is_new = True)
     
     def env(

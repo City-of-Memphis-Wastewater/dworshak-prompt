@@ -3,6 +3,9 @@ import sys
 import getpass
 from .keyboard_interrupt import PromptCancelled
 
+import logging
+logger = logging.getLogger(__name__)
+
 def console_get_input_stdlib(
     message: str, 
     suggestion: str | None = None, 
@@ -24,9 +27,12 @@ def console_get_input_stdlib(
 
     try:
         if hide_input:
+            if suggestion:
+                logger.debug("Credential suggestion not shown in console for security. Please use PromptMode.WEB or PromptMode.GUI to enjoy suggestion autofill for credentials.", file = sys.stederr)
             # getpass handles terminal echoing automatically
             hidden_prompt = f"{message} (input hidden): "
             response = getpass.getpass(hidden_prompt)
+                
         else:
             # Standard logic for visible input
             if suggestion:
