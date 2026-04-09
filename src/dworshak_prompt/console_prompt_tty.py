@@ -6,8 +6,12 @@ from .keyboard_interrupt import PromptCancelled
 def console_get_input_tty(message: str, suggestion: str | None = None, hide_input: bool = False) -> str:
 
     prompt = message
-    if suggestion:
+    if hide_input:
+        prompt += f" (input hidden)"
+    if suggestion and not hide_input:
         prompt += f" [{suggestion}]"
+    if suggestion and hide_input:
+        prompt += f" (suggestion hidden)"
     prompt += ": "
 
     try:

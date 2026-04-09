@@ -5,6 +5,10 @@ Typer-based console prompt. Non ideal for tty.
 from __future__ import annotations
 import typer # keep at the top to enable failure, to hit the std lib fallback
 from rich.console import Console
+import sys
+import logging
+logger = logging.getLogger(__name__)
+
 # Create a console that specifically targets stderr
 stderr_console = Console(stderr=True)
 
@@ -17,9 +21,15 @@ def console_get_input_typer(
     default: str | None = None,
     ) -> str | None:
     try:        
+            
         if hide_input:
-            # Explicitly add the hint so the user isn't confused by lack of feedback
-            hidden_msg = f"{message} (input hidden)"
+            sgst_msg=""
+            if suggestion:
+                logger.debug("Credential suggestion not shown in console for security. Please use PromptMode.WEB or PromptMode.GUI to enjoy suggestion autofill for credentials.", file = sys.stederr)
+                
+                sgst_msg=" (suggestion hidden)"
+            hidden_msg = f"{message} (input hidden){sgst_msg}"
+
             try:
                 from rich.prompt import Prompt
                 return Prompt.ask(hidden_msg,
