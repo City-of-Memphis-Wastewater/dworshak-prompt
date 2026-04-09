@@ -2,7 +2,9 @@
 import os
 import sys
 from .keyboard_interrupt import PromptCancelled
+import logging
 
+logger = logging.getLogger(__name__)
 def console_get_input_tty(message: str, suggestion: str | None = None, hide_input: bool = False) -> str:
 
     prompt = message
@@ -11,6 +13,7 @@ def console_get_input_tty(message: str, suggestion: str | None = None, hide_inpu
     if suggestion and not hide_input:
         prompt += f" [{suggestion}]"
     if suggestion and hide_input:
+        logger.debug("Credential suggestion not shown in console for security. Please use PromptMode.WEB or PromptMode.GUI to enjoy suggestion autofill for credentials.", file = sys.stederr)
         prompt += f" (suggestion hidden)"
     prompt += ": "
 
