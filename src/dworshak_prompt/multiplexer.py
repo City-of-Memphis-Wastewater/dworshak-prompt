@@ -258,8 +258,6 @@ class DworshakPrompt:
             logger.debug("All interface modes exhausted.")
             raise RuntimeError("No input method succeeded.")
 
-
-
 def dworshak_ask(message: str | None = None, suggestion: str | None = None, **kwargs):
     """
     Passes arguments to DworshakPrompt().ask().

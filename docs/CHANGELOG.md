@@ -6,6 +6,13 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.3.2] – 2026-04-10
+### Fixed:
+- setup_dworshak_managers() now references db_path for DworshakSecret properly.
+- setup_dworshak_managers() now checks for None before Path() normalization and routes None properly to use the embedded fallbacks (to the %user/.dworshak folder).
+
+---
+
 ## [0.3.1] – 2026-04-09
 ### Changed:
 - Update dworshak-prompt to 0.3.1, to mark the mental shift of dworshak-prompt as the programmatic center of the dworshak-ecosystem, becuase:
