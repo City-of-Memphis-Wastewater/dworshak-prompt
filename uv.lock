@@ -271,8 +271,8 @@ requires-dist = [
     { name = "dworshak-config", specifier = ">=0.2.6" },
     { name = "dworshak-env", specifier = ">=0.1.7" },
     { name = "dworshak-prompt", extras = ["crypto", "typer"], marker = "extra == 'full'", editable = "." },
-    { name = "dworshak-secret", path = "../dworshak-secret/dist/dworshak_secret-1.2.18-py3-none-any.whl" },
-    { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'crypto'", path = "../dworshak-secret/dist/dworshak_secret-1.2.18-py3-none-any.whl" },
+    { name = "dworshak-secret", path = "../dworshak-secret/dist/dworshak_secret-1.2.19-py3-none-any.whl" },
+    { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'crypto'", path = "../dworshak-secret/dist/dworshak_secret-1.2.19-py3-none-any.whl" },
     { name = "pyhabitat", specifier = ">=1.2.6" },
     { name = "rich", marker = "extra == 'typer'", specifier = ">=14.3.2" },
     { name = "typer", marker = "extra == 'typer'", specifier = ">=0.21.1" },
@@ -285,13 +285,13 @@ test = [{ name = "pytest", specifier = ">=8.4.2" }]
 
 [[package]]
 name = "dworshak-secret"
-version = "1.2.18"
-source = { path = "../dworshak-secret/dist/dworshak_secret-1.2.18-py3-none-any.whl" }
+version = "1.2.19"
+source = { path = "../dworshak-secret/dist/dworshak_secret-1.2.19-py3-none-any.whl" }
 dependencies = [
     { name = "pyhabitat" },
 ]
 wheels = [
-    { filename = "dworshak_secret-1.2.18-py3-none-any.whl", hash = "sha256:3fe3b552d1767b44822383bcf242cb4e31c6dc3b87bab693de8677afa9c78b73" },
+    { filename = "dworshak_secret-1.2.19-py3-none-any.whl", hash = "sha256:6acd0e9b96ff8012ce2de0adafaa3f8102fad2ccb3375f328b7a3ed69b130c15" },
 ]
 
 [package.optional-dependencies]
