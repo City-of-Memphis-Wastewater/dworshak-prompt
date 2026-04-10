@@ -10,7 +10,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ### Changed:
 - Update dworshak-prompt to 0.3.1, to mark the mental shift of dworshak-prompt as the programmatic center of the dworshak-ecosystem, becuase:
 - dworshak-prompt now offers setup_managers.setup_dworshak_managers()
-- Increase `typer-helptree` dependency (in typer extra group), to 0.2.8; leverage this.
+- Increase `typer-helptree` dependency (in typer extra group), to 0.2.8; leverage this to update the SVG helptree asset.
 
 ---
 
