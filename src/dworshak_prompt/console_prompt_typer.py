@@ -25,7 +25,7 @@ def console_get_input_typer(
         if hide_input:
             sgst_msg=""
             if suggestion:
-                logger.debug("Credential suggestion not shown in console for security. Please use PromptMode.WEB or PromptMode.GUI to enjoy suggestion autofill for credentials.", file = sys.stederr)
+                logger.debug("Credential suggestion not shown in console for security. Please use PromptMode.WEB or PromptMode.GUI to enjoy suggestion autofill for credentials.")
                 
                 sgst_msg=" (suggestion hidden)"
             hidden_msg = f"{message} (input hidden){sgst_msg}"
