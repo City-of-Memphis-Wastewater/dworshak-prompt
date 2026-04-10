@@ -6,6 +6,13 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.3.1] – 2026-04-09
+### Changed:
+- Update dworshak-prompt to 0.3.1, to mark the mental shift of dworshak-prompt as the programmatic center of the dworshak-ecosystem, becuase:
+- dworshak-prompt now offers setup_managers.setup_dworshak_managers()
+
+---
+
 ## [0.2.39] – 2026-04-06
 ### Changed:
 - Update dworshak-config to 0.2.6, which now has json healing options.

@@ -4,10 +4,11 @@ from __future__ import annotations
 __all__ = [
     "DworshakPrompt", 
     "dworshak_ask",
-    "PromptMode",
     "Obtain",
-    "obtain",
-    "InterruptBehavior"
+    "obtain", # the default settings of Obtain() instantiation
+    "PromptMode",
+    "InterruptBehavior",
+    "setup_dworshak_managers"
     ]
 
 def __getattr__(name):
@@ -34,6 +35,10 @@ def __getattr__(name):
     if name == "InterruptBehavior":
         from .helpers import InterruptBehavior
         return InterruptBehavior
+    
+    if name == "setup_dworshak_managers":
+        from .setup_managers import setup_dworshak_managers
+        return setup_dworshak_managers
 
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 

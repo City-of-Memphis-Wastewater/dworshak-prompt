@@ -1,0 +1,36 @@
+# src/dworshak_prompt/setup_managers.py
+
+from __future__ import annotations
+from pathlib import Path
+# imported, lives in dworshak-prompt
+def setup_dworshak_managers(dir:str|Path|None=None):
+    """
+    Migrate to dworshak_prompt.
+    """
+    from dworshak_env import DworshakEnv
+    from dworshak_config import DworshakConfig
+    from dworshak_secret import DworshakSecret
+    from dworshak_prompt import Obtain
+
+    env_mngr = DworshakEnv() # assume this stays in CWD. If the user wants a custom path, they'll have to do it manually and not use setup_dworshak().
+
+    resolved_dir = Path(
+        dir or 
+        env_mngr.get("DWORSHAK_DIR")   
+    )
+    
+    config_path = resolved_dir / "config.json"
+    secret_path = resolved_dir / "vault.db"
+
+    config_mngr = DworshakConfig(path = config_path)
+    secret_mngr = DworshakSecret(path = secret_path)
+    obtain_mngr = Obtain(secret_path=secret_path, config_path = config_path)
+
+    dworshak_managers = {
+        "root": resolved_dir,
+        "env":env_mngr, 
+        "config":config_mngr, 
+        "secret":secret_mngr, 
+        "obtain":obtain_mngr
+    } 
+    return dworshak_managers

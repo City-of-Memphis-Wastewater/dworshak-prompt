@@ -236,4 +236,4 @@ class Obtain:
 
         return EnvData(value=new_value, is_new=True)
 
-obtain = Obtain()
+obtain = Obtain() # the default settings
