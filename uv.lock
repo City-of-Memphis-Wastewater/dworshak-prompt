@@ -271,8 +271,8 @@ requires-dist = [
     { name = "dworshak-config", specifier = ">=0.2.6" },
     { name = "dworshak-env", specifier = ">=0.1.7" },
     { name = "dworshak-prompt", extras = ["crypto", "typer"], marker = "extra == 'full'", editable = "." },
-    { name = "dworshak-secret", specifier = "==1.2.17" },
-    { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'crypto'" },
+    { name = "dworshak-secret", path = "../dworshak-secret/dist/dworshak_secret-1.2.18-py3-none-any.whl" },
+    { name = "dworshak-secret", extras = ["crypto"], marker = "extra == 'crypto'", path = "../dworshak-secret/dist/dworshak_secret-1.2.18-py3-none-any.whl" },
     { name = "pyhabitat", specifier = ">=1.2.6" },
     { name = "rich", marker = "extra == 'typer'", specifier = ">=14.3.2" },
     { name = "typer", marker = "extra == 'typer'", specifier = ">=0.21.1" },
@@ -285,20 +285,30 @@ test = [{ name = "pytest", specifier = ">=8.4.2" }]
 
 [[package]]
 name = "dworshak-secret"
-version = "1.2.17"
-source = { registry = "https://pypi.org/simple" }
+version = "1.2.18"
+source = { path = "../dworshak-secret/dist/dworshak_secret-1.2.18-py3-none-any.whl" }
 dependencies = [
     { name = "pyhabitat" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/da/32/a903dc7460ddc1ef180095e3d59fefa0674cec1f2a073b771ed164ba1567/dworshak_secret-1.2.17.tar.gz", hash = "sha256:6150f5b746ffc45e2aae1ccffa1e03ea1c386ec43ce55a76809faab58857a816", size = 22600, upload-time = "2026-03-27T18:21:27.115Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/84/30/5e4dd4bf5c8c5083b6e5f2a363aee92ebd16b5b070c52db0b1fcf0931e62/dworshak_secret-1.2.17-py3-none-any.whl", hash = "sha256:7efb38f47575ece7e39ae03551885553e47c734cd56f76ced162747f501a94ec", size = 24303, upload-time = "2026-03-27T18:21:25.707Z" },
+    { filename = "dworshak_secret-1.2.18-py3-none-any.whl", hash = "sha256:3fe3b552d1767b44822383bcf242cb4e31c6dc3b87bab693de8677afa9c78b73" },
 ]
 
 [package.optional-dependencies]
 crypto = [
     { name = "cryptography" },
 ]
+
+[package.metadata]
+requires-dist = [
+    { name = "cryptography", marker = "extra == 'crypto'", specifier = ">=46.0.3" },
+    { name = "dworshak-secret", extras = ["crypto", "typer"], marker = "extra == 'full'" },
+    { name = "pyhabitat", specifier = ">=1.2.2" },
+    { name = "rich", marker = "extra == 'typer'", specifier = ">=14.3.2" },
+    { name = "typer", marker = "extra == 'typer'", specifier = ">=0.21.1" },
+    { name = "typer-helptree", marker = "extra == 'typer'", specifier = ">=0.2.6" },
+]
+provides-extras = ["crypto", "typer", "full"]
 
 [[package]]
 name = "exceptiongroup"

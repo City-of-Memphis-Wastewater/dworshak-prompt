@@ -8,7 +8,7 @@ readme = "README.md"
 dependencies = [
     "dworshak-config>=0.2.6",
     "dworshak-env>=0.1.7",
-    "dworshak-secret==1.2.17",
+    "dworshak-secret==1.2.18",
     "pyhabitat>=1.2.6",
 ]
 
@@ -109,6 +109,7 @@ resolution = "highest"
 dworshak-prompt = { workspace = true }
 #pyhabitat = { path = "../pyhabitat/dist/pyhabitat-0.2.4-py3-none-any.whl" }
 #dworshak-config = { path = "../dworshak-config/dist/dworshak_config-0.2.3-py3-none-any.whl" }
+dworshak-secret = { path = "../dworshak-secret/dist/dworshak_secret-1.2.18-py3-none-any.whl" }
 
 [build-system]
 requires = ["setuptools>=64", "wheel"]
