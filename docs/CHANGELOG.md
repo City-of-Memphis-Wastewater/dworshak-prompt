@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.3.3] – 2026-04-10
+### Fixed:
+- Increase dworshak-secret to 1.2.20, which registers and handles custom .key paths.
+
+---
+
 ## [0.3.2] – 2026-04-10
 ### Fixed:
 - setup_dworshak_managers() now references db_path for DworshakSecret properly.
