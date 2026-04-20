@@ -8,7 +8,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ## [0.3.4] – 2026-04-20
 ### Fixed:
-- Nested double quotes in multiplexer.py, in two instanced of dictionary key reference inside of an f-string. Convert the inner instance to singel quotes.
+- Nested double quotes in multiplexer.py, in two instances of dictionary key reference inside of an f-string. Convert the inner instance to single quotes.
 
 ---
 
