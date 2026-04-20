@@ -103,10 +103,10 @@ class DworshakPrompt:
         '''
         
         # Force interactive check
-        logger.debug(f"{os.environ.get("DWORSHAK_FORCE_INTERACTIVE_TTY")=}")
+        logger.debug(f"{os.environ.get('DWORSHAK_FORCE_INTERACTIVE_TTY')=}")
         forced_tty = os.environ.get("DWORSHAK_FORCE_INTERACTIVE_TTY") == "1"
         logger.debug(f"{forced_tty=}")
-        logger.debug(f"{os.path.exists("/dev/tty")=}")
+        logger.debug(f"{os.path.exists('/dev/tty')=}")
 
         # Early Exit check
         if not forced_tty:

@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.3.4] – 2026-04-20
+### Fixed:
+- Nested double quotes in multiplexer.py, in two instanced of dictionary key reference inside of an f-string. Convert the inner instance to singel quotes.
+
+---
+
 ## [0.3.3] – 2026-04-10
 ### Fixed:
 - Increase dworshak-secret to 1.2.20, which registers and handles custom .key paths.
