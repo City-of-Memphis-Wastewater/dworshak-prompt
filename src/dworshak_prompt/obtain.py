@@ -53,6 +53,7 @@ class Obtain:
         config_path: str | Path | None = None,
         secret_path: str | Path | None = None,
         env_path: str | Path | None = None,
+        key_path: str | Path | None = None,
         interface_priority: list[PromptMode] | None = None,
         interface_avoid: set[PromptMode] | None =None,
         interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
@@ -62,6 +63,7 @@ class Obtain:
         self.config_path = config_path
         self.secret_path = secret_path
         self.env_path = env_path
+        self.key_path = key_path
         self.interface_priority = interface_priority
         self.interface_avoid = interface_avoid
         self.interrupt_behavior = interrupt_behavior
@@ -132,14 +134,18 @@ class Obtain:
         default: Any | None = None,
         interface_priority: list[PromptMode] | None = None,
         interface_avoid: set[PromptMode] | None = None,
-        path: str | Path | None = None,
+        vault_path: str | Path | None = None,
+        key_path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
         hide: bool = True # expect hide to be True always but allow user to set to false
         )-> SecretData:
 
-        if path is None:
-            path = self.secret_path
+        if vault_path is None:
+            vault_path = self.secret_path
+
+        if key_path is None:
+            key_path = self.key_path
 
         if interface_priority is None:
             interface_priority = self.interface_priority
@@ -151,8 +157,7 @@ class Obtain:
             # Lazy Import dworshak_secret here to mitigate top-level crashes
             import cryptography
             from dworshak_secret import DworshakSecret
-            secret_mgr = DworshakSecret(db_path = path)
-            
+            secret_mgr = DworshakSecret(db_path = vault_path, key_path=key_path)
 
         except:
             # Trigger the "Lifeboat" redirection error

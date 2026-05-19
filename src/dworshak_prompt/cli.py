@@ -142,7 +142,8 @@ app.add_typer(obtain_app, name="obtain")
 def obtain_secret(
     service: str = typer.Argument(..., help="The service name (e.g., maxson-eds)."),
     item: str = typer.Argument(..., help="The item key (e.g., port)."),
-    path: Path = typer.Option(None, "--path","-p", help="Custom encrypted database file path."),
+    vault_path: Path = typer.Option(None, "--vault-path","-vp", help="Custom encrypted database file path."),
+    key_path: Path = typer.Option(None, "--key-path","-kp", help="Custom encryption key file path."),
     message: Optional[str] = typer.Option(None, "--message", "-m", help="Custom prompt message."),
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
     interface_priority: Optional[List[PromptMode]] = typer.Option(
@@ -164,7 +165,8 @@ def obtain_secret(
     interface_priority_list = interface_priority if interface_priority is not None else None
     interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
     obtain = Obtain(
-            secret_path=path,
+            secret_path=vault_path,
+            key_path=key_path,
             debug=debug,
             verbose=verbose
             )

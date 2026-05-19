@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 from pathlib import Path
-# imported, lives in dworshak-prompt
+
 def setup_dworshak_managers(dir:str|Path|None=None):
     """
-    Migrate to dworshak_prompt.
+    A limited but basic approach for setting up client class instances.
+    Key file for an encrypted database vault will be automatically assessed and is not indicated here.
     """
     from dworshak_env import DworshakEnv
     from dworshak_config import DworshakConfig
