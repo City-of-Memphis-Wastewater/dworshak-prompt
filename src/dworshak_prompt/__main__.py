@@ -1,6 +1,6 @@
 # src/dworshak_prompt/__main__.py
 import sys
-TYPERSUCCESS=NONE
+TYPERSUCCESS=None
 try:
     import typer
     TYPERSUCCESS=True
