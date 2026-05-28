@@ -42,8 +42,7 @@ def console_get_input_typer(
         if suggestion: # and not hide_input
             return typer.prompt(
                 message,
-                default=suggestion,
-                console=stderr_console)
+                default=suggestion)
         return typer.prompt(message)
     except (typer.Abort, KeyboardInterrupt, EOFError, SystemExit):
         # We catch everything Typer/Rich/Python throws on Ctrl+C
