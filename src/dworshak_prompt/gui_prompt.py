@@ -32,7 +32,7 @@ class CustomPromptDialog:
         
         self.top = tk.Toplevel(parent)
         self.top.title(title)
-        self.top.attributes("-topmost", True)
+        #self.top.attributes("-topmost", True)
         self.top.resizable(False, False)
         
         
@@ -74,7 +74,7 @@ class CustomPromptDialog:
         tk.Button(btn_frame, text="Cancel", command=self.on_cancel, width=10).pack(side="left", padx=5)
 
         self.top.protocol("WM_DELETE_WINDOW", self.on_cancel)
-        self.top.grab_set()  # Make it modal
+        #self.top.grab_set()  # Make it modal
         parent.wait_window(self.top)
 
     def toggle_visibility(self):
@@ -98,8 +98,8 @@ def gui_get_input(message: str, suggestion: str | None = None, hide_input: bool 
     """
     try:
         root = tk.Tk()
-        root.withdraw()
-
+        #root.withdraw()
+        root.title("dworshak-prompt")
         # Use our custom dialog instead of simpledialog
         dialog = CustomPromptDialog(root, "dworshak-prompt", message, suggestion, hide_input)
         
