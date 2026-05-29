@@ -19,39 +19,38 @@ if sys.platform.startswith('linux'):
 try:
     import tkinter as tk
 except ImportError:
-    pass
+    tk=None
 from typing import Optional
 import platform
 import sys
 import pyhabitat
 
 class CustomPromptDialog:
-    def __init__(self, parent, title, message, suggestion="", hide_input=False):
+    def __init__(self, root, title, message, suggestion="", hide_input=False):
         self.result = None
         self.hide_input = hide_input
         
-        self.top = tk.Toplevel(parent)
-        self.top.title(title)
-        #self.top.attributes("-topmost", True)
-        self.top.resizable(False, False)
-        
+        self.root = root
+        self.root.title(title)
+        self.root.resizable(False, False)
+        self.root.lift()
         
         # Set a minimum width and padding
         # We target ~400px width to ensure the title isn't truncated
         min_w, min_h = 400, 150
-        screen_w = parent.winfo_screenwidth()
-        screen_h = parent.winfo_screenheight()
+        screen_w = self.root.winfo_screenwidth()
+        screen_h = self.root.winfo_screenheight()
         
         # Center with the new dimensions
         x = (screen_w // 2) - (min_w // 2)
         y = (screen_h // 2) - (min_h // 2)
-        self.top.geometry(f"{min_w}x{min_h}+{x}+{y}")
-        self.top.minsize(min_w, min_h)
+        self.root.geometry(f"{min_w}x{min_h}+{x}+{y}")
+        self.root.minsize(min_w, min_h)
 
-        tk.Label(self.top, text=message, wraplength=300, justify="left", padx=10, pady=10).pack(fill ="x")
+        tk.Label(self.root, text=message, wraplength=300, justify="left", padx=10, pady=10).pack(fill ="x")
 
         # Input container
-        entry_frame = tk.Frame(self.top, padx=10)
+        entry_frame = tk.Frame(self.root, padx=10)
         entry_frame.pack(fill="x")
 
         self.entry = tk.Entry(entry_frame, font=("sans-serif", 10))
@@ -68,14 +67,29 @@ class CustomPromptDialog:
             self.toggle_btn.pack(side="right", padx=(5, 0))
 
         # Action Buttons
-        btn_frame = tk.Frame(self.top, pady=10)
+        btn_frame = tk.Frame(self.root, pady=10)
         btn_frame.pack()
         tk.Button(btn_frame, text="OK", command=self.on_ok, width=10).pack(side="left", padx=5)
+        tk.Button(btn_frame, text="OK", command=self.on_use_empty_string, width=10).pack(side="left", padx=5)
         tk.Button(btn_frame, text="Cancel", command=self.on_cancel, width=10).pack(side="left", padx=5)
 
-        self.top.protocol("WM_DELETE_WINDOW", self.on_cancel)
-        #self.top.grab_set()  # Make it modal
-        parent.wait_window(self.top)
+        self.root.protocol("WM_DELETE_WINDOW", self.on_cancel)
+        #self.root.grab_set()  # Make it modal
+        #parent.wait_window(self.root)
+        self.root.update_idletasks()
+        self.root.lift()
+
+        if not pyhabitat.on_wsl():
+            if True:
+            #try:
+                self.root.attributes("-topmost",True)
+                self.root.after(
+                    200,
+                    lambda: self.root.attributes("-topmost",False),
+                )
+            #except Exception as e:
+            #    pass
+        self.entry.focus_force()
 
     def toggle_visibility(self):
         if self.entry.cget("show") == "*":
@@ -87,27 +101,42 @@ class CustomPromptDialog:
 
     def on_ok(self):
         self.result = self.entry.get()
-        self.top.destroy()
+        self.root.destroy()
+
+    def on_use_empty_string(self):
+        self.result = ""
+        self.root.destroy()
 
     def on_cancel(self):
-        self.top.destroy()
+        self.root.destroy()
 
 def gui_get_input(message: str, suggestion: str | None = None, hide_input: bool = False) -> Optional[str]:
     """
     Displays a custom modal GUI popup with an optional Show/Hide toggle.
     """
-    try:
-        root = tk.Tk()
-        #root.withdraw()
-        root.title("dworshak-prompt")
-        # Use our custom dialog instead of simpledialog
-        dialog = CustomPromptDialog(root, "dworshak-prompt", message, suggestion, hide_input)
+    if tk is None:
+        return None
+    root = tk.Tk()
+
+    if True:
+    #try:
+        # Use custom dialog instead of simpledialog
+        dialog = CustomPromptDialog(
+            root=root, 
+            title="dworshak-prompt", 
+            message=message, 
+            suggestion=suggestion or "", 
+            hide_input=hide_input)
+
+        root.mainloop()
         
         return dialog.result
-
-    finally:
-        root.destroy()
-
+    if True:
+    #finally:
+        try:
+            root.destroy()
+        except Exception as e:
+            pass
 
 
 def get_tkinter_hint() -> str:
