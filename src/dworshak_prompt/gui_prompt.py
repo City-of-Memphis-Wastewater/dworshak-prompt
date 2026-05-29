@@ -70,7 +70,7 @@ class CustomPromptDialog:
         btn_frame = tk.Frame(self.root, pady=10)
         btn_frame.pack()
         tk.Button(btn_frame, text="OK", command=self.on_ok, width=10).pack(side="left", padx=5)
-        tk.Button(btn_frame, text="OK", command=self.on_use_empty_string, width=10).pack(side="left", padx=5)
+        #tk.Button(btn_frame, text="Submit Empty String", command=self.on_submit_empty_string, width=10).pack(side="left", padx=5)
         tk.Button(btn_frame, text="Cancel", command=self.on_cancel, width=10).pack(side="left", padx=5)
 
         self.root.protocol("WM_DELETE_WINDOW", self.on_cancel)
@@ -103,9 +103,9 @@ class CustomPromptDialog:
         self.result = self.entry.get()
         self.root.destroy()
 
-    def on_use_empty_string(self):
-        self.result = ""
-        self.root.destroy()
+    #def on_submit_empty_string(self):
+    #    self.result = ""
+    #    self.root.destroy()
 
     def on_cancel(self):
         self.root.destroy()
@@ -131,12 +131,12 @@ def gui_get_input(message: str, suggestion: str | None = None, hide_input: bool 
         root.mainloop()
         
         return dialog.result
-    if True:
+    #if True:
     #finally:
-        try:
-            root.destroy()
-        except Exception as e:
-            pass
+    #    try:
+    #        root.destroy()
+    #    except Exception as e:
+    #        pass
 
 
 def get_tkinter_hint() -> str:
