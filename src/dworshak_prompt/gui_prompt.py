@@ -3,19 +3,16 @@ from __future__ import annotations
 # tkinter workaround for wsl2, first, before other imports
 import logging
 logger=logging.getLogger(__name__)
+# Set to DEBUG to see logs: logging.basicConfig(level=logging.DEBUG)
+if True:
+    logging.basicConfig(level=logging.DEBUG)
+logger.debug(f"gui_prompt.py, imports..")
 import sys
 if sys.platform.startswith('linux'):
-    try:
-        import ctypes
-        # Use find_library to ensure we get the right path
-        from ctypes.util import find_library
-        lib_path = find_library('X11')
-        if lib_path:
-            x11 = ctypes.cdll.LoadLibrary(lib_path)
-            x11.XInitThreads()
-            logger.debug("XInitThreads() invoked.")
-    except Exception as e:
-        logger.debug(f"Failed to init X threads: {e}")
+    import ctypes
+    # Use find_library to ensure we get the right path
+    from ctypes.util import find_library
+
 try:
     import tkinter as tk
 except ImportError:
@@ -25,18 +22,40 @@ import platform
 import sys
 import pyhabitat
 
+def _init_x11_threads():
+    """Ensures X11 is initialized in thread-safe mode before any UI call."""
+    if sys.platform.startswith('linux'):
+        try:
+            lib_path = find_library('X11')
+            if lib_path:
+                x11 = ctypes.cdll.LoadLibrary(lib_path)
+                # Attempt to initialize thread safety
+                status = x11.XInitThreads()
+                if status:
+                    logger.debug(f"XInitThreads() succeeded (status: {status})")
+                else:
+                    logger.warning("XInitThreads() returned 0; might be too late.")
+            else:
+                logger.error("Could not locate X11 library.")
+        except Exception as e:
+            logger.debug(f"Failed to init X threads: {e}")
+
 class CustomPromptDialog:
     def __init__(self, root, title, message, suggestion="", hide_input=False):
         self.result = None
         self.hide_input = hide_input
         
         self.root = root
+        logger.debug("Set title")
         self.root.title(title)
+        logger.debug("Set resizable")
         self.root.resizable(False, False)
+        logger.debug("Lift")
         self.root.lift()
         
         # Set a minimum width and padding
         # We target ~400px width to ensure the title isn't truncated
+        logger.debug("Set width")
         min_w, min_h = 400, 150
         screen_w = self.root.winfo_screenwidth()
         screen_h = self.root.winfo_screenheight()
@@ -47,9 +66,11 @@ class CustomPromptDialog:
         self.root.geometry(f"{min_w}x{min_h}+{x}+{y}")
         self.root.minsize(min_w, min_h)
 
+        logger.debug("Label, message")
         tk.Label(self.root, text=message, wraplength=300, justify="left", padx=10, pady=10).pack(fill ="x")
 
         # Input container
+        logger.debug("Build entry frame")
         entry_frame = tk.Frame(self.root, padx=10)
         entry_frame.pack(fill="x")
 
@@ -67,19 +88,24 @@ class CustomPromptDialog:
             self.toggle_btn.pack(side="right", padx=(5, 0))
 
         # Action Buttons
+        logger.debug("Build buttons")
         btn_frame = tk.Frame(self.root, pady=10)
         btn_frame.pack()
         tk.Button(btn_frame, text="OK", command=self.on_ok, width=10).pack(side="left", padx=5)
         #tk.Button(btn_frame, text="Submit Empty String", command=self.on_submit_empty_string, width=10).pack(side="left", padx=5)
         tk.Button(btn_frame, text="Cancel", command=self.on_cancel, width=10).pack(side="left", padx=5)
 
+        logger.debug("Set protocol")
         self.root.protocol("WM_DELETE_WINDOW", self.on_cancel)
         #self.root.grab_set()  # Make it modal
         #parent.wait_window(self.root)
+        logger.debug("Update idletasks")
         self.root.update_idletasks()
+        logger.debug("Lift")
         self.root.lift()
 
         if not pyhabitat.on_wsl():
+            logger.debug("Set to topmost")
             if True:
             #try:
                 self.root.attributes("-topmost",True)
@@ -89,6 +115,7 @@ class CustomPromptDialog:
                 )
             #except Exception as e:
             #    pass
+        logger.debug("Force Focus")
         self.entry.focus_force()
 
     def toggle_visibility(self):
@@ -111,15 +138,48 @@ class CustomPromptDialog:
         self.root.destroy()
 
 def gui_get_input(message: str, suggestion: str | None = None, hide_input: bool = False) -> Optional[str]:
+    logger.debug("gui_get_input invoked.")
+    
+    # Force thread-safe initialization immediately before any tkinter touch
+    _init_x11_threads()
+    
+    logger.debug("Initializing tk.Tk()")
+    try:
+        root = tk.Tk()
+        root.withdraw()
+        logger.debug("tk.Tk() initialized and withdrawn.")
+    except Exception as e:
+        logger.critical(f"Failed to create root window: {e}")
+        return None
+
+    try:
+        logger.debug("Building CustomPromptDialog")
+        dialog = CustomPromptDialog(
+            root=root, 
+            title="dworshak-prompt", 
+            message=message, 
+            suggestion=suggestion or "", 
+            hide_input=hide_input
+        )
+        root.deiconify()
+        logger.debug("Entering mainloop.")
+        root.mainloop()
+        return dialog.result
+    finally:
+        logger.debug("Destroying root window.")
+        root.destroy()
+
+def gui_get_input_(message: str, suggestion: str | None = None, hide_input: bool = False) -> Optional[str]:
     """
     Displays a custom modal GUI popup with an optional Show/Hide toggle.
     """
     if tk is None:
         return None
     root = tk.Tk()
+    root.withdraw()
 
-    if True:
-    #try:
+    #if True:
+    try:
         # Use custom dialog instead of simpledialog
         dialog = CustomPromptDialog(
             root=root, 
@@ -128,15 +188,16 @@ def gui_get_input(message: str, suggestion: str | None = None, hide_input: bool 
             suggestion=suggestion or "", 
             hide_input=hide_input)
 
+        root.deiconify()
         root.mainloop()
         
         return dialog.result
-    #if True:
-    #finally:
-    #    try:
-    #        root.destroy()
-    #    except Exception as e:
-    #        pass
+    
+    finally:
+        try:
+            root.destroy()
+        except Exception as e:
+            pass
 
 
 def get_tkinter_hint() -> str:
