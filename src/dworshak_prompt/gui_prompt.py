@@ -29,7 +29,6 @@ class CustomPromptDialog:
         self.root.resizable(False, False)
         logger.debug("Lift")
         self.root.lift()
-        
         # Set a minimum width and padding
         # We target ~400px width to ensure the title isn't truncated
         logger.debug("Set width")
