@@ -7,7 +7,7 @@ try:
 except (ImportError, ModuleNotFoundError):
     # Fallback to the 'lifeboat' CLI
     #from .cli_stdlib import main as run
-    TYPERSUCCESS=FALSE
+    TYPERSUCCESS=False
  
 if TYPERSUCCESS:
     # Attempt to use the feature-rich CLI

@@ -2,43 +2,20 @@
 from __future__ import annotations
 # tkinter workaround for wsl2, first, before other imports
 import logging
-logger=logging.getLogger(__name__)
-# Set to DEBUG to see logs: logging.basicConfig(level=logging.DEBUG)
-if True:
-    logging.basicConfig(level=logging.DEBUG)
-logger.debug(f"gui_prompt.py, imports..")
-import sys
-if sys.platform.startswith('linux'):
-    import ctypes
-    # Use find_library to ensure we get the right path
-    from ctypes.util import find_library
+logger=logging.getLogger(__name__) # debug handled by CLI flag, --debug
+from .helpers import init_x11_threads
 
+logger.debug(f"gui_prompt.py, imports..")
+
+init_x11_threads()
 try:
     import tkinter as tk
 except ImportError:
     tk=None
 from typing import Optional
 import platform
-import sys
-import pyhabitat
 
-def _init_x11_threads():
-    """Ensures X11 is initialized in thread-safe mode before any UI call."""
-    if sys.platform.startswith('linux'):
-        try:
-            lib_path = find_library('X11')
-            if lib_path:
-                x11 = ctypes.cdll.LoadLibrary(lib_path)
-                # Attempt to initialize thread safety
-                status = x11.XInitThreads()
-                if status:
-                    logger.debug(f"XInitThreads() succeeded (status: {status})")
-                else:
-                    logger.warning("XInitThreads() returned 0; might be too late.")
-            else:
-                logger.error("Could not locate X11 library.")
-        except Exception as e:
-            logger.debug(f"Failed to init X threads: {e}")
+import pyhabitat
 
 class CustomPromptDialog:
     def __init__(self, root, title, message, suggestion="", hide_input=False):
@@ -92,9 +69,12 @@ class CustomPromptDialog:
         btn_frame = tk.Frame(self.root, pady=10)
         btn_frame.pack()
         tk.Button(btn_frame, text="OK", command=self.on_ok, width=10).pack(side="left", padx=5)
-        #tk.Button(btn_frame, text="Submit Empty String", command=self.on_submit_empty_string, width=10).pack(side="left", padx=5)
         tk.Button(btn_frame, text="Cancel", command=self.on_cancel, width=10).pack(side="left", padx=5)
 
+        btn_frame2 = tk.Frame(self.root, pady=5)
+        btn_frame2.pack()
+        tk.Button(btn_frame2, text="Submit Empty String", command=self.on_submit_empty_string, width=20).pack(side="left", padx=5)
+        
         logger.debug("Set protocol")
         self.root.protocol("WM_DELETE_WINDOW", self.on_cancel)
         #self.root.grab_set()  # Make it modal
@@ -130,9 +110,9 @@ class CustomPromptDialog:
         self.result = self.entry.get()
         self.root.destroy()
 
-    #def on_submit_empty_string(self):
-    #    self.result = ""
-    #    self.root.destroy()
+    def on_submit_empty_string(self):
+        self.result = ""
+        self.root.destroy()
 
     def on_cancel(self):
         self.root.destroy()
@@ -141,7 +121,7 @@ def gui_get_input(message: str, suggestion: str | None = None, hide_input: bool 
     logger.debug("gui_get_input invoked.")
     
     # Force thread-safe initialization immediately before any tkinter touch
-    _init_x11_threads()
+    #init_x11_threads()
     
     logger.debug("Initializing tk.Tk()")
     try:
@@ -152,54 +132,19 @@ def gui_get_input(message: str, suggestion: str | None = None, hide_input: bool 
         logger.critical(f"Failed to create root window: {e}")
         return None
 
-    try:
-        logger.debug("Building CustomPromptDialog")
-        dialog = CustomPromptDialog(
-            root=root, 
-            title="dworshak-prompt", 
-            message=message, 
-            suggestion=suggestion or "", 
-            hide_input=hide_input
-        )
-        root.deiconify()
-        logger.debug("Entering mainloop.")
-        root.mainloop()
-        return dialog.result
-    finally:
-        logger.debug("Destroying root window.")
-        root.destroy()
-
-def gui_get_input_(message: str, suggestion: str | None = None, hide_input: bool = False) -> Optional[str]:
-    """
-    Displays a custom modal GUI popup with an optional Show/Hide toggle.
-    """
-    if tk is None:
-        return None
-    root = tk.Tk()
-    root.withdraw()
-
-    #if True:
-    try:
-        # Use custom dialog instead of simpledialog
-        dialog = CustomPromptDialog(
-            root=root, 
-            title="dworshak-prompt", 
-            message=message, 
-            suggestion=suggestion or "", 
-            hide_input=hide_input)
-
-        root.deiconify()
-        root.mainloop()
-        
-        return dialog.result
+    logger.debug("Building CustomPromptDialog")
+    dialog = CustomPromptDialog(
+        root=root, 
+        title="dworshak-prompt", 
+        message=message, 
+        suggestion=suggestion or "", 
+        hide_input=hide_input
+    )
+    root.deiconify()
+    logger.debug("Entering mainloop.")
+    root.mainloop()
+    return dialog.result
     
-    finally:
-        try:
-            root.destroy()
-        except Exception as e:
-            pass
-
-
 def get_tkinter_hint() -> str:
     os_name = platform.system().lower()
     hint_base = (
