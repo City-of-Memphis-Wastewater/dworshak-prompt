@@ -14,3 +14,10 @@ uv.lock
 .venv
 env/
 venv/
+
+vault.db
+.key
+del.txt
+*.key
+*.db
+
