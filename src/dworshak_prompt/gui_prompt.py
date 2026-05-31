@@ -68,12 +68,9 @@ class CustomPromptDialog:
         logger.debug("Build buttons")
         btn_frame = tk.Frame(self.root, pady=10)
         btn_frame.pack()
-        tk.Button(btn_frame, text="OK", command=self.on_ok, width=10).pack(side="left", padx=5)
-        tk.Button(btn_frame, text="Cancel", command=self.on_cancel, width=10).pack(side="left", padx=5)
-
-        btn_frame2 = tk.Frame(self.root, pady=5)
-        btn_frame2.pack()
-        tk.Button(btn_frame2, text="Submit Empty String", command=self.on_submit_empty_string, width=20).pack(side="left", padx=5)
+        tk.Button(btn_frame, text="OK", command=self.on_ok, width=5).pack(side="left", padx=5)
+        tk.Button(btn_frame, text="Submit Empty String", command=self.on_submit_empty_string, width=16).pack(side="left", padx=5)
+        tk.Button(btn_frame, text="Cancel", command=self.on_cancel, width=5).pack(side="left", padx=5)
         
         logger.debug("Set protocol")
         self.root.protocol("WM_DELETE_WINDOW", self.on_cancel)
