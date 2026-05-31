@@ -9,7 +9,7 @@ import sys
 import os
 from pathlib import Path
 
-from .gui_prompt import get_tkinter_hint
+from .gui_helpers import get_tkinter_hint
 if ph.tkinter_is_available():
     from .gui_prompt import gui_get_input
 else:
