@@ -74,7 +74,6 @@ class DworshakPrompt:
         if interrupt_behavior is None:
             interrupt_behavior = self.interrupt_behavior
 
-        
 
         '''
 

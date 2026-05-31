@@ -3,6 +3,8 @@ from __future__ import annotations
 import re
 from typing import List, Set
 from enum import Enum
+import logging
+logger=logging.getLogger(__name__) # debug handled by CLI flag, --debug
 
 class PromptMode(Enum):
     CONSOLE = "console"
@@ -44,3 +46,27 @@ def resolve_str_to_list(instance: str | List[PromptMode] | None) -> List[PromptM
         except KeyError as e:
             raise ValueError(f"Invalid PromptMode: {e}")
     raise ValueError(f"Invalid type for list: {type(instance)}")
+
+def init_x11_threads():
+    """Ensures X11 is initialized in thread-safe mode before any UI call."""
+    import sys
+    if sys.platform.startswith('linux'):
+        import ctypes
+        # Use find_library to ensure we get the right path
+        from ctypes.util import find_library
+
+    if sys.platform.startswith('linux'):
+        try:
+            lib_path = find_library('X11')
+            if lib_path:
+                x11 = ctypes.cdll.LoadLibrary(lib_path)
+                # Attempt to initialize thread safety
+                status = x11.XInitThreads()
+                if status:
+                    logger.debug(f"XInitThreads() succeeded (status: {status})")
+                else:
+                    logger.warning("XInitThreads() returned 0; might be too late.")
+            else:
+                logger.error("Could not locate X11 library.")
+        except Exception as e:
+            logger.debug(f"Failed to init X threads: {e}")
