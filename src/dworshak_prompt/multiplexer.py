@@ -223,8 +223,6 @@ class DworshakPrompt:
                     if interrupt_event:
                         interrupt_event.set()
 
-                    #if interrupt_behavior == InterruptBehavior.EXIT
-
                     if interrupt_behavior == InterruptBehavior.EXIT:
                         print("\n[!] Operation cancelled by user.", file=sys.stderr)
                         sys.exit(130)
