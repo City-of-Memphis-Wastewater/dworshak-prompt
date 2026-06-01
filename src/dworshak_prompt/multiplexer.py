@@ -1,7 +1,6 @@
 # src/dworshak_prompt/multiplexer.py
 from __future__ import annotations
 import pyhabitat as ph
-from enum import Enum
 from typing import Set, Any
 import threading
 import traceback
@@ -124,21 +123,11 @@ class DworshakPrompt:
         interface_avoid = interface_avoid or set()
         interface_avoid = resolve_str_to_set(interface_avoid)
         interface_priority = resolve_str_to_list(interface_priority)
-         
-        if ph.on_wsl():
-            raw_val = os.getenv("DWORSHAK_TRY_TKINTER_ON_WSL")
-            logger.debug(f"raw DWORSHAK_TRY_TKINTER_ON_WSL = {raw_val!r}")
-            
-            # Convert common truthy strings to boolean
-            if raw_val is not None:
-                DWORSHAK_TRY_TKINTER_ON_WSL = raw_val.lower() in ('1', 'true', 'yes', 'on', 'enable')
-            else:
-                DWORSHAK_TRY_TKINTER_ON_WSL = False
-            
-            logger.debug(f"DWORSHAK_TRY_TKINTER_ON_WSL interpreted as {DWORSHAK_TRY_TKINTER_ON_WSL}")
-            if not DWORSHAK_TRY_TKINTER_ON_WSL:
-                logger.warning(f"PromptMode.GUI avoided for WSL; to try it, set `export DWORSHAK_TRY_TKINTER_ON_WSL=1` ")
-                interface_avoid.add(PromptMode.GUI)
+
+        avoid_tk_on_wsl = _check_avoid_tkinter_on_wsl(interface_priority,logger)
+
+        if avoid_tk_on_wsl:
+            interface_avoid.add(PromptMode.GUI)
 
         default_order = [PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB]
         if interface_priority:
@@ -256,6 +245,7 @@ class DworshakPrompt:
 
             logger.debug("All interface modes exhausted.")
             raise RuntimeError("No input method succeeded.")
+        
 
 def dworshak_ask(message: str | None = None, suggestion: str | None = None, **kwargs):
     """
@@ -268,7 +258,35 @@ def dworshak_ask(message: str | None = None, suggestion: str | None = None, **kw
         **kwargs
     )
 
+# --- helpers ---
 
+def _check_avoid_tkinter_on_wsl(interface_priority,logger)->bool:
+    if PromptMode.GUI in interface_priority:
+        warn=True
+    else:
+        warn=False
+        
+    if ph.on_wsl():
+        raw_val = os.getenv("DWORSHAK_TRY_TKINTER_ON_WSL")
+        logger.debug(f"raw DWORSHAK_TRY_TKINTER_ON_WSL = {raw_val!r}")
+        
+        # Convert common truthy strings to boolean
+        if raw_val is not None:
+            dworshak_try_tkinter_on_wsl = raw_val.lower() in ('1', 'true', 'yes', 'on', 'enable')
+        else:
+            dworshak_try_tkinter_on_wsl = False
+        
+        logger.debug(f"DWORSHAK_TRY_TKINTER_ON_WSL interpreted as {dworshak_try_tkinter_on_wsl}")
+        instruction_to_allow_tk_on_wsl=f"PromptMode.GUI avoided for WSL; to try it, set `export DWORSHAK_TRY_TKINTER_ON_WSL=1`"
+        if not dworshak_try_tkinter_on_wsl:
+            if warn:
+                logger.warning(instruction_to_allow_tk_on_wsl)
+            else:
+                logger.debug(instruction_to_allow_tk_on_wsl)
+            return True
+        else:
+            return False
+        
 # --- Demo entry ---
 
 def main():

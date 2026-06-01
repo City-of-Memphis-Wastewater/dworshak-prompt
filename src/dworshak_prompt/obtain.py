@@ -1,7 +1,6 @@
 # src/dworshak_prompt/obtain.py
 from pathlib import Path
 from dataclasses import dataclass
-#from enum import Enum
 from typing import Optional, Any
 
 from dworshak_config import DworshakConfig
