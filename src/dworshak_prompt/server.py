@@ -51,7 +51,8 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             if req_id and val is not None:
                 # --- THE HANDOFF VIA ATTACHED MANAGER ---
                 self.server.manager.submit_result(req_id, val) 
-                self._send_response("<html><body><h1>Success</h1><br><p>Input received.</p> <script>window.close();</script></body></html>")
+                self._send_success_page()
+                #self._send_response("<html><body><h1>Success</h1><br><p>Input received.</p> <script>window.close();</script></body></html>")
                 #self._send_response("<html><body><script>window.close();</script></body></html>")
             else:
                 self.send_error(400, "Missing request_id or input_value")
@@ -136,7 +137,8 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
                     </div>
                     <div class="actions">
                         <button type="button" class="cancel-btn" onclick="cancelPrompt()">Cancel</button>
-                        <button type="submit">Submit</button>
+                        <button type="button" onclick="submitValue()">Submit</button>
+                        <!--button type="submit">Submit</button-->
                     </div>
                 </form>
             </div>
@@ -154,15 +156,12 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
                     }});
                 }}
                 function submitValue() {{
+                    const val = document.getElementById('input_field').value;
                     fetch('/api/submit_value', {{
                         method: 'POST',
                         headers: {{ 'Content-Type': 'application/x-www-form-urlencoded' }},
-                        body: 'request_id={req_id}'
-                    }}).then(() => {{
-                        window.close();
-                    }}).catch(err => {{
-                        console.error('Submit failed:', err);
-                    }});
+                        body: 'request_id={req_id}&input_value=' + encodeURIComponent(val)
+                    }}).then(() => window.close());
                 }}
             </script>
         </body></html>"""
@@ -173,6 +172,23 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
         self.send_header("Content-Type", f"{content_type}; charset=utf-8")
         self.end_headers()
         self.wfile.write(content.encode("utf-8"))
+
+    def _send_success_page(self):
+        """Standardized closing response."""
+        html = """
+        <!DOCTYPE html>
+        <html>
+        <body onload="window.close()">
+            <script>
+                // Attempt to close; fallback for browsers that block it
+                setTimeout(() => { window.close(); }, 500);
+            </script>
+            <h1>Action Processed</h1>
+            <p>You may close this window.</p>
+        </body>
+        </html>
+        """
+        self._send_response(html)
 
     def _serve_json(self, data):
         self._send_response(json.dumps(data or {"show": False}), "application/json")
