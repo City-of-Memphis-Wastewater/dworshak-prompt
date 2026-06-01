@@ -55,9 +55,6 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
                 self.server.manager.submit_result(req_id, val) 
                 self.send_response(200)
                 self.end_headers()
-                #self._send_success_page()
-                #self._send_response("<html><body><h1>Success</h1><br><p>Input received.</p> <script>window.close();</script></body></html>")
-                #self._send_response("<html><body><script>window.close();</script></body></html>")
             else:
                 self.send_error(400, "Missing request_id or input_value")
         # allow user to hit the cancel button
@@ -176,23 +173,6 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
         self.send_header("Content-Type", f"{content_type}; charset=utf-8")
         self.end_headers()
         self.wfile.write(content.encode("utf-8"))
-
-    def _send_success_page(self):
-        """Standardized closing response."""
-        html = """
-        <!DOCTYPE html>
-        <html>
-        <body onload="window.close()">
-            <script>
-                // Attempt to close; fallback for browsers that block it
-                setTimeout(() => { window.close(); }, 500);
-            </script>
-            <h1>Action Processed</h1>
-            <p>You may close this window.</p>
-        </body>
-        </html>
-        """
-        self._send_response(html)
 
     def _serve_json(self, data):
         self._send_response(json.dumps(data or {"show": False}), "application/json")
