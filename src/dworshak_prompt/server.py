@@ -38,6 +38,7 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             content_length = int(self.headers.get('Content-Length', 0))
             if content_length == 0:
                 self.send_error(400, "Empty submission")
+                #self.use_empty_string() ?
                 return
 
             # 2. Read and parse the URL-encoded form data
@@ -48,10 +49,13 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             req_id = fields.get('request_id', [None])[0]
             val = fields.get('input_value', [None])[0]
 
-            if req_id and val is not None:
+            if req_id is not None and val is not None:
+                #if req_id and val is not None:
                 # --- THE HANDOFF VIA ATTACHED MANAGER ---
                 self.server.manager.submit_result(req_id, val) 
-                self._send_success_page()
+                self.send_response(200)
+                self.end_headers()
+                #self._send_success_page()
                 #self._send_response("<html><body><h1>Success</h1><br><p>Input received.</p> <script>window.close();</script></body></html>")
                 #self._send_response("<html><body><script>window.close();</script></body></html>")
             else:
