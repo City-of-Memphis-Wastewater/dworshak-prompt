@@ -33,11 +33,12 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
     def do_POST(self):
         parsed_url = urllib.parse.urlparse(self.path)
         params = urllib.parse.parse_qs(parsed_url.query)
-        if parsed_url.path == "/api/submit_config":
+        if parsed_url.path == "/api/submit_value":
             # 1. Determine how much data to read
             content_length = int(self.headers.get('Content-Length', 0))
             if content_length == 0:
                 self.send_error(400, "Empty submission")
+                #self.use_empty_string() ?
                 return
 
             # 2. Read and parse the URL-encoded form data
@@ -48,10 +49,12 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             req_id = fields.get('request_id', [None])[0]
             val = fields.get('input_value', [None])[0]
 
-            if req_id and val is not None:
+            if req_id is not None and val is not None:
+                #if req_id and val is not None:
                 # --- THE HANDOFF VIA ATTACHED MANAGER ---
                 self.server.manager.submit_result(req_id, val) 
-                self._send_response("<h1>Success</h1><br><p>Input received. You may now close this tab.</p>")
+                self.send_response(200)
+                self.end_headers()
             else:
                 self.send_error(400, "Missing request_id or input_value")
         # allow user to hit the cancel button
@@ -63,7 +66,7 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             if req_id:
                 logger.debug(f"[SERVER] Received cancel request for req_id={req_id}")
                 self.server.manager.cancel_prompt(req_id)
-                self._send_response("<h2>Cancelled</h2><br><p>You may now close this tab.</p>")
+                self._send_response("<html><body><h2>Cancelled</h2><br><script>window.close();</script></body></html>")
                 logger.debug(f"[SERVER] Cancel processed for req_id={req_id}")
             else:
                 self.send_error(400, "Missing request_id")
@@ -99,46 +102,6 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             </script>
             """
 
-        html2 = f"""<!DOCTYPE html>
-        <html>
-        <head>
-            <title>Dworshak Prompt</title>
-            <style>
-                body {{ font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f2f5; }}
-                .card {{ background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 100%; max-width: 400px; }}
-                h2 {{ margin-top: 0; color: #1c1e21; font-size: 1.2rem; }}
-                .input-group {{ display: flex; margin: 20px 0; }}
-                input {{ flex-grow: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; }}
-                button {{ background: #007bff; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }}
-                button:hover {{ opacity: 0.9; }}
-                .actions {{ display: flex; justify-content: flex-end; }}
-            </style>
-        </head>
-        <body>
-            <div class="card">
-                <h2>{msg}</h2>
-                <form action="/api/submit_config" method="post">
-                    <input type="hidden" name="request_id" value="{req_id}">
-                    <div class="input-group">
-                        <input id="input_field" 
-                               type="{input_type}" 
-                               name="input_value" 
-                               value="{suggestion}" 
-                               autofocus 
-                               onfocus="this.select()" 
-                               autocomplete="off" 
-                               spellcheck="false"
-                               required>
-                        {toggle_html}
-                    </div>
-                    <div class="actions">
-                        <button type="submit">Submit</button>
-                    </div>
-                </form>
-            </div>
-            {toggle_script}
-        </body></html>"""
-
         # cancel button added
         html = f"""<!DOCTYPE html>
         <html>
@@ -159,7 +122,7 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
         <body>
             <div class="card">
                 <h2>{msg}</h2>
-                <form action="/api/submit_config" method="post">
+                <form action="/api/submit_value" method="post">
                     <input type="hidden" name="request_id" value="{req_id}">
                     <div class="input-group">
                         <input id="input_field"
@@ -175,7 +138,8 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
                     </div>
                     <div class="actions">
                         <button type="button" class="cancel-btn" onclick="cancelPrompt()">Cancel</button>
-                        <button type="submit">Submit</button>
+                        <button type="button" onclick="submitValue()">Submit</button>
+                        <!--button type="submit">Submit</button-->
                     </div>
                 </form>
             </div>
@@ -187,10 +151,18 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
                         headers: {{ 'Content-Type': 'application/x-www-form-urlencoded' }},
                         body: 'request_id={req_id}'
                     }}).then(() => {{
-                        document.body.innerHTML = '<h2 style="text-align:center;">Cancelled</h2><br><p>You may now close this tab.</p>';
+                        window.close();
                     }}).catch(err => {{
                         console.error('Cancel failed:', err);
                     }});
+                }}
+                function submitValue() {{
+                    const val = document.getElementById('input_field').value;
+                    fetch('/api/submit_value', {{
+                        method: 'POST',
+                        headers: {{ 'Content-Type': 'application/x-www-form-urlencoded' }},
+                        body: 'request_id={req_id}&input_value=' + encodeURIComponent(val)
+                    }}).then(() => window.close());
                 }}
             </script>
         </body></html>"""
