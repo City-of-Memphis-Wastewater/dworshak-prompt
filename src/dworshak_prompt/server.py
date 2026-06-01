@@ -48,7 +48,11 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
             # 3. Extract our specific fields
             req_id = fields.get('request_id', [None])[0]
             val = fields.get('input_value', [None])[0]
+            is_empty_str = fields.get('is_empty_str', ['false'])[0] == 'true'
 
+            if is_empty_str:
+                val = ""
+            
             if req_id is not None and val is not None:
                 #if req_id and val is not None:
                 # --- THE HANDOFF VIA ATTACHED MANAGER ---
@@ -158,10 +162,16 @@ class PromptHandler(http.server.BaseHTTPRequestHandler):
                 }}
                 function submitValue() {{
                     const val = document.getElementById('input_field').value;
+                    // Explicitly send a type flag
+                    const payload = new URLSearchParams({{
+                        request_id: '{req_id}',
+                        input_value: val,
+                        is_empty_str: val.trim() === "" ? "true" : "false" 
+                    }});
                     fetch('/api/submit_value', {{
                         method: 'POST',
                         headers: {{ 'Content-Type': 'application/x-www-form-urlencoded' }},
-                        body: 'request_id={req_id}&input_value=' + encodeURIComponent(val)
+                        body: payload.toString()
                     }}).then(() => window.close());
                 }}
             </script>

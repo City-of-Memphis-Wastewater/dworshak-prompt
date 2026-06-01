@@ -49,7 +49,7 @@ def finalize_protocol_output(
         typer.echo(f"VERBOSE: {v_msg}", err=True)
 
     # 2. Data Plane (stdout)
-    if value is not None:
+    if value is not None: # truthy for empty string
         if emit:
             # Raw output for redirection
             # Use sys.stdout.write(value) if you want to avoid the trailing newline
@@ -131,7 +131,8 @@ def ask(
         verbose=verbose,
     )
 
-    status = "Input received." if val else "No input received."
+    # truthy for empty string
+    status = "Input received." if val is not None else "No input received."
     finalize_protocol_output(val, emit, verbose, status)
 
 # Create the 'obtain' sub-app
