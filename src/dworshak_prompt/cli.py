@@ -10,15 +10,15 @@ from .logging_setup import setup_logging
 logger=setup_logging(verbose=False, debug=False, initial=True)  # Default off
 import typer
 from rich.console import Console
+from rich.logging import RichHandler
 import os
+import sys
 from pathlib import Path
 from typing import Optional, List
-try:
-    from typer_helptree import add_typer_helptree
-except:
-    pass
-from . import DworshakPrompt, PromptMode, Obtain
+from typer_helptree import add_typer_helptree
+import logging
 
+from . import DworshakPrompt, PromptMode, Obtain
 from ._version import __version__
 
 
@@ -72,11 +72,26 @@ app = typer.Typer(
                       "help_option_names": ["-h", "--help"]},
 )
 
-@app.callback(invoke_without_command=True)
+def configure_root_logging(debug: bool):
+    root_logger = logging.getLogger()
+    for handler in root_logger.handlers[:]:
+        root_logger.removeHandler(handler)
+
+    level = logging.DEBUG if debug else logging.WARNING
+    root_logger.setLevel(level)
+    handler = RichHandler(console=console, show_time=debug, show_path=debug,log_time_format="[%H:%M:%S]")
+    handler.setFormatter(logging.Formatter("%(message)s"))
+    root_logger.addHandler(handler)
+    root_logger.debug("Debug logging enabled.")
+
+
+@app.callback(invoke_without_command=True,no_args_is_help=True)
 def main(ctx: typer.Context,
     version: Optional[bool] = typer.Option(
     None, "--version", is_flag=True, help="Show the version."
-    )
+    ),
+    debug: bool = typer.Option(
+        False, "--debug", "-d", is_flag=True, help="Enable debug logging to stderr.")
     ):
     """
     Enable --version
@@ -84,11 +99,20 @@ def main(ctx: typer.Context,
     if version:
         typer.echo(__version__)
         raise typer.Exit(code=0)
+    
+    if version:
+        typer.echo(__version__)
+        raise typer.Exit(code=0)
+    
+    # Configure logging immediately
+    configure_root_logging(debug)
+    
+    # Join the string from the command line arg and log debug to show the command.
+    full_command_list = sys.argv
+    command_string = " ".join(full_command_list)
+    logging.debug(f"command:\n{command_string}\n")
 
-try:
-    add_typer_helptree(app=app, console=console, version = __version__,hidden=True)
-except:
-    pass
+add_typer_helptree(app=app, console=console, version = __version__,hidden=True)
 
 @app.command(name = "ask", help = "Simply prompt for an input. Do not check storage, nor store the input value.")
 def ask(
