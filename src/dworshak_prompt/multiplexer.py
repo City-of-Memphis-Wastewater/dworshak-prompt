@@ -154,8 +154,16 @@ class DworshakPrompt:
                     if not interactive_terminal_is_available() and not forced_tty:
                         logger.debug(f"{interface_mode} skipped: No interactive terminal.")
                         continue
+                    
+                    def reject_suggestion_for_hidden_inputs(suggestion: str | None, hide_input: bool) -> str | None:
+                        if suggestion:
+                            logger.warning(f"A suggestion cannot be accepted while the input is hidden in the console. Whatever is typed will be used.")
+                        if hide_input:
+                            return None  # Suggestion is completely blocked from hidden prompts
+                        return suggestion
 
                     console_get_input = get_console_provider(debug=debug)
+                    suggestion = reject_suggestion_for_hidden_inputs(suggestion, hide_input)
                     val = console_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
                     log_val = "'********'" if hide_input else repr(val)
                     logger.debug(f"SUCCESS: {interface_mode} returned: {log_val}")

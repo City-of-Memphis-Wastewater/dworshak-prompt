@@ -6,7 +6,7 @@ from enum import Enum
 import logging
 logger=logging.getLogger(__name__) # debug handled by CLI flag, --debug
 
-SHOULD_ALLOW_HIDDEN_CLI_SUGGESTIONS = True
+SHOULD_ALLOW_HIDDEN_CLI_SUGGESTIONS = False
 
 class PromptMode(Enum):
     #CONSOLE = "console"

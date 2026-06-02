@@ -35,7 +35,7 @@ def console_get_input_stdlib(
             # getpass handles terminal echoing automatically
             hidden_prompt = f"{message} (input hidden){sgst_msg}: "
             response = getpass.getpass(hidden_prompt)
-                
+            return response
         else:
             # Standard logic for visible input
             prompt_str = f"{message}"
@@ -45,17 +45,11 @@ def console_get_input_stdlib(
             response = input(prompt_str)
 
         
-        if SHOULD_ALLOW_HIDDEN_CLI_SUGGESTIONS:
-            # Explicit check: If user hit Enter, and we have a suggestion, even if it is hidden, use it.
+            # Visible mode: Auto-fill suggestion on empty Enter
             if response == "" and suggestion is not None:
                 return suggestion
-        else:
-            # Handle the 'Enter' key with a suggestion
-            if not response and suggestion:
-                return suggestion
-        
-        return response
-
+            return response
+            
     except (KeyboardInterrupt, EOFError):
         # We catch Ctrl+C (KeyboardInterrupt) or Ctrl+D (EOFError)
         # We print a newline so the shell prompt doesn't end up on the same line

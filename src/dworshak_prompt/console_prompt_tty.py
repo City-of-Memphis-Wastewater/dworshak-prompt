@@ -69,11 +69,8 @@ def console_get_input_tty(message: str, suggestion: str | None = None, hide_inpu
                     print(file=tty_out, flush=True)
                     raise PromptCancelled()
                 val = val.rstrip("\n")
-                if not SHOULD_ALLOW_HIDDEN_CLI_SUGGESTIONS:
-                    return val or suggestion
-                else:
-                    if val == "" and suggestion is not None:
-                        return suggestion
-                    return val
+                if val == "" and suggestion is not None:
+                    return suggestion
+                return val
     except (KeyboardInterrupt, EOFError):
         raise PromptCancelled()
