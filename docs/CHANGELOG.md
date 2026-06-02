@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.3.6] – 2026-06-01
+### Changed:
+- Include typer and cryptography in the PYZ build
+
+---
+
 ## [0.3.5] – 2026-06-01
 ### Changed:
 - Web interface now will close smoothly given submit or cancel.

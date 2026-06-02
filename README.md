@@ -188,7 +188,7 @@ dworshak-prompt helptree
 ```
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/City-of-Memphis-Wastewater/dworshak-prompt/main/assets/dworshak-prompt_v0.3.5_helptree.svg" width="100%" alt="Screenshot of the dworshak-prompt CLI helptree">
+  <img src="https://raw.githubusercontent.com/City-of-Memphis-Wastewater/dworshak-prompt/main/assets/dworshak-prompt_v0.3.6_helptree.svg" width="100%" alt="Screenshot of the dworshak-prompt CLI helptree">
 </p>
 
 `helptree` is utility funtion for Typer CLIs, imported from the `typer-helptree` library.

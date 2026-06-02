@@ -28,8 +28,8 @@ jobs:
       - name: UV Sync
         run: |
           uv venv --clear
-          # No extras needed for the Lite PYZ build
-          uv sync
+          # Include typer and cryptography in the PYZ build
+          uv sync --extra typer --extra cryptography
 
       - name: Build PYZ Artifact
         run: |
