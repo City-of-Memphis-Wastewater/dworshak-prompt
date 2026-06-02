@@ -98,7 +98,7 @@ def ask(
     ),
     interface_priority: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
-        help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
+        help="Preferred input modes in order (repeatable, e.g., --interface gui --interface web)."
     ),
     interface_avoid: Optional[List[PromptMode]] = typer.Option(
         None, "--avoid", "-a",
@@ -149,7 +149,7 @@ def obtain_secret(
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
     interface_priority: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
-        help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
+        help="Preferred input modes in order (repeatable, e.g., --interface gui --interface web)."
     ),
     interface_avoid: Optional[List[PromptMode]] = typer.Option(
         None, "--avoid", "-a",
@@ -193,7 +193,7 @@ def obtain_config(
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
     interface_priority: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
-        help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
+        help="Preferred input modes in order (repeatable, e.g., --interface gui --interface web)."
     ),
     interface_avoid: Optional[List[PromptMode]] = typer.Option(
         None, "--avoid", "-a",
@@ -239,7 +239,7 @@ def obtain_env(
     suggestion: Optional[str] = typer.Option(None, "--suggestion", "-s", help="Suggested value."),
     interface_priority: Optional[List[PromptMode]] = typer.Option(
         None, "--interface", "-i",
-        help="Preferred input modes in order (repeatable, e.g., --interface gui --interface console)."
+        help="Preferred input modes in order (repeatable, e.g., --interface gui --interface web)."
     ),
     interface_avoid: Optional[List[PromptMode]] = typer.Option(
         None, "--avoid", "-a",

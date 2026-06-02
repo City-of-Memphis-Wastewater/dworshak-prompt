@@ -69,7 +69,7 @@ from dworshak_prompt import DworshakPrompt, PromptMode
 
 special_secret = DworshakPrompt().ask(
     message="Enter special key",
-    interface_priority=[PromptMode.CONSOLE, PromptMode.GUI],
+    interface_priority=[PromptMode.CLI, PromptMode.GUI],
     interface_avoid={PromptMode.WEB},
     hide_input=True
 )
@@ -107,7 +107,7 @@ api_key = DworshakPrompt().ask(
     message="Enter API key for agent workflow",
     suggestion="Use your AI service key",  # human-facing
     default="NONE",                         # safe fallback for automation
-    interface_priority=[PromptMode.WEB, PromptMode.CONSOLE],
+    interface_priority=[PromptMode.WEB, PromptMode.CLI],
     hide_input=True,
     interrupt_event=cancel_event,
     debug=True

@@ -61,7 +61,7 @@ val = DworshakPrompt().ask("Enter value")
 val = DworshakPrompt().ask(
     message = "Secure Key",
     hide_input=True,
-    interface_priority = [PromptMode.CONSOLE, PromptMode.GUI]
+    interface_priority = [PromptMode.CLI, PromptMode.GUI]
     interface_avoid = {PromptMode.WEB}
 
 )
@@ -94,7 +94,7 @@ from dworshak_prompt import Obtain, PromptMode, InterruptBehavior,
 obtain = Obtain(
     config_path="~/.pipeline-eds/config.json"
     interface_priority = [PromptMode.GUI, PromptMode.WEB]
-    interface_avoid = {PromptMode.CONSOLE}
+    interface_avoid = {PromptMode.CLI}
     interrupt_behavior = InterruptBehavior.EXIT,
     debug = True
     )
@@ -114,7 +114,7 @@ logger=logging.getLogger(__name__)
 avoid_set = set()
 DWO_AVOID_CONSOLE = os.environ.get('DWO_AVOID_CONSOLE')
 if  DWO_AVOID_CONSOLE == "1":
-    avoid_set.add(PromptMode.CONSOLE)
+    avoid_set.add(PromptMode.CLI)
 else:
     logger.warning("Use 'export DWO_AVOID_CONSOLE=1 to avoid the console, to make enable unhiding hidden input.'")
 logger.debug(f"{avoid_set=}")

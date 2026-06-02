@@ -129,7 +129,7 @@ class DworshakPrompt:
         if avoid_tk_on_wsl:
             interface_avoid.add(PromptMode.GUI)
 
-        default_order = [PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB]
+        default_order = [PromptMode.CLI, PromptMode.GUI, PromptMode.WEB]
         if interface_priority:
             # User choice first, followed by everything else as a safety net
             effective_interface_priority = interface_priority + [m for m in default_order if m not in interface_priority]
@@ -149,7 +149,7 @@ class DworshakPrompt:
             logger.debug(f"\n=== Interface Mode: {interface_mode} ===")
             
             try:
-                if interface_mode == PromptMode.CONSOLE:
+                if interface_mode == PromptMode.CLI:
                     # if not has_real_tty():
                     if not interactive_terminal_is_available() and not forced_tty:
                         logger.debug(f"{interface_mode} skipped: No interactive terminal.")

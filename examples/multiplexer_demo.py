@@ -16,7 +16,7 @@ def main():
             suggestion="99",
             hide_input=False,
             # We explicitly set the priority for this demo
-            interface_priority=[PromptMode.CONSOLE, PromptMode.GUI, PromptMode.WEB],
+            interface_priority=[PromptMode.CLI, PromptMode.GUI, PromptMode.WEB],
             interrupt_event=shutdown_trigger
         )
 

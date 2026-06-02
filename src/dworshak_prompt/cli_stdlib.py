@@ -137,7 +137,7 @@ def main():
     ask_parser.add_argument(
         "--interface", "-i", 
         choices=[m.value for m in PromptMode], 
-        default=None,#PromptMode.CONSOLE.value,
+        default=None,
         type=str.lower,
         help="Preferred input mode (case-insensitive)",
     )
