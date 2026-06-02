@@ -43,7 +43,7 @@ def finalize_protocol_output(
 ):
     # 1. Human Plane (stderr)
     if status_msg:
-        typer.echo(f"[*] {status_msg}", err=True)
+        typer.echo(f"[dp] {status_msg}", err=True)
 
     if verbose and v_msg:
         typer.echo(f"VERBOSE: {v_msg}", err=True)

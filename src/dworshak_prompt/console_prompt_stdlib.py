@@ -2,6 +2,7 @@
 import sys
 import getpass
 from .keyboard_interrupt import PromptCancelled
+from .helpers import SHOULD_ALLOW_HIDDEN_CLI_SUGGESTIONS
 
 import logging
 logger = logging.getLogger(__name__)
@@ -37,14 +38,22 @@ def console_get_input_stdlib(
                 
         else:
             # Standard logic for visible input
+            prompt_str = f"{message}"
             if suggestion:
-                prompt_str = f"{message} [{suggestion}]: ".replace("::", ":")
+                prompt_str = f"{message} [{suggestion}]"
+            prompt_str = f"{prompt_str}: ".replace("::", ":")
             response = input(prompt_str)
 
-        # Handle the 'Enter' key with a suggestion
-        if not response and suggestion:
-            return suggestion
-            
+        
+        if SHOULD_ALLOW_HIDDEN_CLI_SUGGESTIONS:
+            # Explicit check: If user hit Enter, and we have a suggestion, even if it is hidden, use it.
+            if response == "" and suggestion is not None:
+                return suggestion
+        else:
+            # Handle the 'Enter' key with a suggestion
+            if not response and suggestion:
+                return suggestion
+        
         return response
 
     except (KeyboardInterrupt, EOFError):

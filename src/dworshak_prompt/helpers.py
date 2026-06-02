@@ -6,6 +6,8 @@ from enum import Enum
 import logging
 logger=logging.getLogger(__name__) # debug handled by CLI flag, --debug
 
+SHOULD_ALLOW_HIDDEN_CLI_SUGGESTIONS = True
+
 class PromptMode(Enum):
     #CONSOLE = "console"
     CLI = "cli"
@@ -53,3 +55,4 @@ def resolve_str_to_list(instance: str | List[PromptMode] | None) -> List[PromptM
         except KeyError as e:
             raise ValueError(f"Invalid PromptMode: {e}")
     raise ValueError(f"Invalid type for list: {type(instance)}")
+
