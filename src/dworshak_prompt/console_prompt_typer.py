@@ -23,13 +23,11 @@ def console_get_input_typer(
     try:        
             
         if hide_input:
-            sgst_msg=""
             if suggestion:
                 # Security notice: we don't pass the suggestion to the prompt,
                 # so the user cannot "blindly" accept it by hitting Enter.
                 logger.debug("Credential suggestion not shown in console for security. Please use PromptMode.WEB or PromptMode.GUI to enjoy suggestion autofill for credentials.")
-                sgst_msg=" (suggestion hidden)"
-            hidden_msg = f"{message} (input hidden){sgst_msg}"
+            hidden_msg = f"{message} (input hidden)"
 
             try:
                 from rich.prompt import Prompt

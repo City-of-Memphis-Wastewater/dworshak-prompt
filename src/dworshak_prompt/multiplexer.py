@@ -157,7 +157,8 @@ class DworshakPrompt:
                     
                     def reject_suggestion_for_hidden_inputs(suggestion: str | None, hide_input: bool) -> str | None:
                         if suggestion:
-                            logger.warning(f"A suggestion cannot be accepted while the input is hidden in the console. Whatever is typed will be used.")
+                            logger.warning(f"A suggestion cannot be accepted while the input is hidden in the console. Simply pressing enter will submit an empty string, not the suggestion.")
+                            logger.warning(f"Please use PromptMode.WEB or PromptMode.GUI to enjoy suggestions for hidden credentials.")
                         if hide_input:
                             return None  # Suggestion is completely blocked from hidden prompts
                         return suggestion

@@ -223,9 +223,6 @@ def obtain_config(
         interface_avoid=interface_avoid_set,
         forget=forget,
     )
-    #status = f"Config '{item}' resolved." if val else "Config not found."
-    #v_info = f"Path: {path or 'default'}"
-    #finalize_protocol_output(val, emit, verbose, status, v_info)
 
     finalize_protocol_output(result.value, emit, verbose, result.status_message)
     
@@ -269,9 +266,6 @@ def obtain_env(
         forget=forget
     )
 
-    #status = f"Env var '{key}' resolved." if val else f"'{key}' not set."
-    #v_info = f"Searching .env at: {path or os.getcwd()}"
-    #finalize_protocol_output(val, emit, verbose, status, v_info)
     finalize_protocol_output(result.value, emit, verbose, result.status_message)
 
 if __name__ == "__main__":
