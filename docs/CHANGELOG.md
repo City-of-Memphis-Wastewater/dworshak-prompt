@@ -6,6 +6,15 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.3.5] – 2026-06-01
+### Changed:
+- Web interface now will close smoothly given submit or cancel.
+- GUI is working on WSL after I reinstalled my local environment.
+- BREAKING: PromptMode.CONSOLE changed to PromptMode.CLI.
+- Increase dworshak-secret to 1.3.2
+
+---
+
 ## [0.3.4] – 2026-04-20
 ### Fixed:
 - Nested double quotes in multiplexer.py, in two instances of dictionary key reference inside of an f-string. Convert the inner instance to single quotes.
