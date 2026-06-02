@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.3.8] – 2026-06-01
+### Fixed:
+- 'from cryptography.fernet import Fernet' in key, in dworshak-secret v1.3.3
+
+---
+
 ## [0.3.7] – 2026-06-01
 ### Fixed:
 - '--extra cryptography' corrected to '--extra crypto' in the PYZ build
