@@ -5,12 +5,11 @@
 Waterfall logic for configuration.
 """
 from __future__ import annotations
-from .logging_setup import setup_logging
+#from .logging_setup import setup_logging
 # Initialize logging before anything else
-logger=setup_logging(verbose=False, debug=False, initial=True)  # Default off
+#logger=setup_logging(verbose=False, debug=False, initial=True)  # Default off
 import typer
 from rich.console import Console
-from rich.logging import RichHandler
 import os
 import sys
 from pathlib import Path
@@ -18,9 +17,11 @@ from typing import Optional, List
 from typer_helptree import add_typer_helptree
 import logging
 
-from . import DworshakPrompt, PromptMode, Obtain
+from .multiplexer import DworshakPrompt
+from .helpers import PromptMode
+from .obtain import Obtain
 from ._version import __version__
-
+from .logging_setup import configure_root_logging_for_application
 
 console = Console() # to be above the tkinter check, in case of console.print
 app = typer.Typer()
@@ -37,14 +38,14 @@ DEFAULT_PROMPT_MSG = "Enter value"
 def finalize_protocol_output(
     value: Optional[str],
     emit: bool,
-    verbose: bool,
     status_msg: str,
     v_msg: Optional[str] = None
 ):
     # 1. Human Plane (stderr)
     if status_msg:
         typer.echo(f"[dp] {status_msg}", err=True)
-
+    
+    verbose = logging.INFO
     if verbose and v_msg:
         typer.echo(f"VERBOSE: {v_msg}", err=True)
 
@@ -72,26 +73,12 @@ app = typer.Typer(
                       "help_option_names": ["-h", "--help"]},
 )
 
-def configure_root_logging(debug: bool):
-    root_logger = logging.getLogger()
-    for handler in root_logger.handlers[:]:
-        root_logger.removeHandler(handler)
-
-    level = logging.DEBUG if debug else logging.WARNING
-    root_logger.setLevel(level)
-    handler = RichHandler(console=console, show_time=debug, show_path=debug,log_time_format="[%H:%M:%S]")
-    handler.setFormatter(logging.Formatter("%(message)s"))
-    root_logger.addHandler(handler)
-    root_logger.debug("Debug logging enabled.")
-
 
 @app.callback(invoke_without_command=True,no_args_is_help=True)
 def main(ctx: typer.Context,
-    version: Optional[bool] = typer.Option(
-    None, "--version", is_flag=True, help="Show the version."
-    ),
-    debug: bool = typer.Option(
-        False, "--debug", "-d", is_flag=True, help="Enable debug logging to stderr.")
+    version: Optional[bool] = typer.Option(None, "--version", is_flag=True, help="Show the version."),
+    debug: bool = typer.Option(False, "--debug", "-d", is_flag=True, help="Enable diagnostic logging."),
+    verbose: bool = typer.Option(False, "--verbose", "-v", is_flag=True, help="Enable detail logging.")
     ):
     """
     Enable --version
@@ -99,14 +86,10 @@ def main(ctx: typer.Context,
     if version:
         typer.echo(__version__)
         raise typer.Exit(code=0)
-    
-    if version:
-        typer.echo(__version__)
-        raise typer.Exit(code=0)
-    
+
     # Configure logging immediately
-    configure_root_logging(debug)
-    
+    configure_root_logging_for_application(debug, verbose)
+
     # Join the string from the command line arg and log debug to show the command.
     full_command_list = sys.argv
     command_string = " ".join(full_command_list)
@@ -134,8 +117,6 @@ def ask(
         help="The user will be suggested this value."),
 
     hide: bool = typer.Option(False, "--hide", "-H", help="Hide input (for passwords)"),
-    debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages, to stderr (recommended)."),
     emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout.")
 ):
 
@@ -151,13 +132,11 @@ def ask(
         interface_avoid=interface_avoid_set,
         suggestion = suggestion,
         hide_input = hide,
-        debug=debug, 
-        verbose=verbose,
     )
 
     # truthy for empty string
     status = "Input received." if val is not None else "No input received."
-    finalize_protocol_output(val, emit, verbose, status)
+    finalize_protocol_output(val, emit, status)
 
 # Create the 'obtain' sub-app
 obtain_app = typer.Typer(help="If a value cannot be retrieved, it will be prompted for and set.")
@@ -181,8 +160,6 @@ def obtain_secret(
     ),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
-    debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended)."),
     emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout.")
 ):
     """Obtain a secret value (Check Vault -> Prompt -> Save)."""
@@ -192,8 +169,6 @@ def obtain_secret(
     obtain = Obtain(
             secret_path=vault_path,
             key_path=key_path,
-            debug=debug,
-            verbose=verbose
             )
     result = obtain.secret(
         service=service,
@@ -206,7 +181,7 @@ def obtain_secret(
         forget=forget
     )
 
-    finalize_protocol_output(result.value, emit, verbose, result.status_message)
+    finalize_protocol_output(result.value, emit, result.status_message)
 
 @obtain_app.command(name="config", help = "Obtain a config value (Check config file -> Prompt -> Save).")
 def obtain_config(
@@ -225,16 +200,12 @@ def obtain_config(
     ),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
-    debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended)."),
     emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout")
 ):
     interface_priority_list = interface_priority if interface_priority is not None else None
     interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
     obtain = Obtain(
-            config_path=path,
-            debug=debug,
-            verbose=verbose
+            config_path=path
             )
     """Get a configuration value (Storage -> Prompt -> Save)."""
     result = obtain.config(
@@ -248,7 +219,7 @@ def obtain_config(
         forget=forget,
     )
 
-    finalize_protocol_output(result.value, emit, verbose, result.status_message)
+    finalize_protocol_output(result.value, emit, result.status_message)
     
     
     
@@ -268,16 +239,12 @@ def obtain_env(
     ),
     overwrite: bool = typer.Option(False, "--overwrite/--no-overwrite", help="Force a new prompt."),
     forget: bool = typer.Option(False, "--forget", help="Don't save the prompted value."),
-    debug: bool = typer.Option(False, "--debug", "-d", help="Enable low-level diagnostics and tracebacks."),
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed operation messages (recommended)."),
     emit:  bool = typer.Option(False, "--emit", "-e", help="Emit value to stdout")
 ):
     interface_priority_list = interface_priority if interface_priority is not None else None
     interface_avoid_set = set(interface_avoid) if interface_avoid is not None else None
     obtain = Obtain(
-            env_path=path,
-            debug=debug,
-            verbose=verbose
+            env_path=path
             )
     """Retrieve a setting; falls back to interactive setup if the key is undefined."""
     result = obtain.env(
@@ -290,7 +257,7 @@ def obtain_env(
         forget=forget
     )
 
-    finalize_protocol_output(result.value, emit, verbose, result.status_message)
+    finalize_protocol_output(result.value, emit, result.status_message)
 
 if __name__ == "__main__":
     app()

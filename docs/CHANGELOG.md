@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.3.9] – 2026-06-04
+### Changed:
+- Implement new logging approach with logging_setup.configure_root_logging_for_application(), and in various dependencies.
+
+---
+
 ## [0.3.8] – 2026-06-01
 ### Fixed:
 - Guard cryptography import properly in dworshak-secret v1.3.4

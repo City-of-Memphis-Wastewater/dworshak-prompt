@@ -6,9 +6,9 @@ description = "Multiplexed user input via console, GUI, and web, depending on av
 requires-python = ">=3.9"
 readme = "README.md"
 dependencies = [
-    "dworshak-config>=0.2.7",
-    "dworshak-env>=0.1.7",
-    "dworshak-secret>=1.3.4",
+    "dworshak-config>=0.2.8",
+    "dworshak-env>=0.1.8",
+    "dworshak-secret>=1.3.5",
     "pyhabitat>=1.2.7",
 ]
 
@@ -89,7 +89,7 @@ dworshak-prompt = "dworshak_prompt.__main__:run"
 typer = [
     "typer>=0.21.1",
     "rich>=14.3.2",
-    "typer-helptree>=0.2.8",
+    "typer-helptree>=0.2.10.2",
 ]
 crypto = [
     "cryptography>=46.0.3",
@@ -108,8 +108,10 @@ resolution = "highest"
 [tool.uv.sources] # for hardcoding local wheels, to test without leveraging PyPI.
 dworshak-prompt = { workspace = true }
 #pyhabitat = { path = "../pyhabitat/dist/pyhabitat-0.2.4-py3-none-any.whl" }
-#dworshak-config = { path = "../dworshak-config/dist/dworshak_config-0.2.3-py3-none-any.whl" }
-#dworshak-secret = { path = "../dworshak-secret/dist/dworshak_secret-1.2.19-py3-none-any.whl" }
+#dworshak-config = { path = "../dworshak-config/dist/dworshak_config-0.2.8-py3-none-any.whl" }
+#dworshak-secret = { path = "../dworshak-secret/dist/dworshak_secret-1.3.5-py3-none-any.whl" }
+#dworshak-env = { path = "../dworshak-env/dist/dworshak_env-0.1.8-py3-none-any.whl" }
+#typer-helptree = { path = "../typer-helptree/dist/typer_helptree-0.2.10.2-py3-none-any.whl" }
 
 [build-system]
 requires = ["setuptools>=64", "wheel"]

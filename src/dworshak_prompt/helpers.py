@@ -4,7 +4,7 @@ import re
 from typing import List, Set
 from enum import Enum
 import logging
-logger=logging.getLogger(__name__) # debug handled by CLI flag, --debug
+logger=logging.getLogger(__name__)
 
 SHOULD_ALLOW_HIDDEN_CLI_SUGGESTIONS = False
 

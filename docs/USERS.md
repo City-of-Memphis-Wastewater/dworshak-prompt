@@ -110,7 +110,6 @@ api_key = DworshakPrompt().ask(
     interface_priority=[PromptMode.WEB, PromptMode.CLI],
     hide_input=True,
     interrupt_event=cancel_event,
-    debug=True
 )
 
 if cancel_event.is_set():

@@ -6,7 +6,7 @@ from typing import Dict, Any, Optional
 
 # Setup Logging
 import logging
-logger = logging.getLogger("dworshak_prompt")
+logger = logging.getLogger(__name__)
 
 class PromptManagerWeb:
     """

@@ -7,6 +7,8 @@ import traceback
 import sys
 import os
 from pathlib import Path
+import logging
+logger = logging.getLogger(__name__)
 
 from .gui_helpers import get_tkinter_hint
 if ph.tkinter_is_available():
@@ -30,14 +32,10 @@ class DworshakPrompt:
         interface_priority: list[PromptMode] | None = None,
         interface_avoid: set[PromptMode] | None =None,
         interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
-        debug: bool = False,
-        verbose: bool = False,
     ):
         self.interface_priority = interface_priority
         self.interface_avoid = interface_avoid
         self.interrupt_behavior = interrupt_behavior
-        self.debug = debug
-        self.verbose = verbose
         
     def ask(
         self,
@@ -48,18 +46,13 @@ class DworshakPrompt:
         interface_priority: list[PromptMode] | None = None,
         interface_avoid: set[PromptMode] | None = None,
         interrupt_event: threading.Event | None = None,
-        debug: bool | None = None, 
-        verbose: bool = False, 
         timeout: int | float | None = None,
         interrupt_behavior: InterruptBehavior | None = None
     ) -> str | None:
-        if debug is None:
-            debug = self.debug
-        if verbose is None:
-            verbose = self.verbose
-        
-        from .logging_setup import setup_logging
-        logger = setup_logging(verbose=verbose, debug=debug, initial=True)
+        import logging
+        logger = logging.getLogger(__name__)
+        #from .logging_setup import setup_logging
+        #logger = setup_logging(verbose=logging.INFO, debug=logging.DEBUG, initial=True)
 
         if interface_priority is None:
             interface_priority = self.interface_priority
@@ -72,7 +65,6 @@ class DworshakPrompt:
 
         if interrupt_behavior is None:
             interrupt_behavior = self.interrupt_behavior
-
 
         '''
 
@@ -156,14 +148,14 @@ class DworshakPrompt:
                         continue
                     
                     def reject_suggestion_for_hidden_inputs(suggestion: str | None, hide_input: bool) -> str | None:
-                        if suggestion:
-                            logger.warning(f"A suggestion cannot be accepted while the input is hidden in the console. Simply pressing enter will submit an empty string, not the suggestion.")
-                            logger.warning(f"Please use PromptMode.WEB or PromptMode.GUI to enjoy suggestions for hidden credentials.")
+                        if suggestion and hide_input:
+                            logger.warning(f"A suggestion cannot be accepted in the console while the input is hidden. Simply pressing enter will submit an empty string, not the suggestion. Use the WEB or GUI interfaces to see a suggestion securely. \n\nRecommendation 1: Do no use suggestions for secrets. \nRecommendation 2: Keep suggestions for secrets out of your console history and out of your public codebases.")
+                            logger.info(f"Use PromptMode.WEB or PromptMode.GUI to enjoy suggestions for hidden credentials.")
                         if hide_input:
                             return None  # Suggestion is completely blocked from hidden prompts
                         return suggestion
 
-                    console_get_input = get_console_provider(debug=debug)
+                    console_get_input = get_console_provider()
                     suggestion = reject_suggestion_for_hidden_inputs(suggestion, hide_input)
                     val = console_get_input(message = message, suggestion = suggestion, hide_input = hide_input)
                     log_val = "'********'" if hide_input else repr(val)
@@ -208,7 +200,6 @@ class DworshakPrompt:
 
             
             except BaseException as e:
-                import logging
                 exc_type = type(e)
                 exc_name = exc_type.__name__
                 exc_module = exc_type.__module__
@@ -287,7 +278,7 @@ def _check_avoid_tkinter_on_wsl(interface_priority,logger)->bool:
         instruction_to_allow_tk_on_wsl=f"PromptMode.GUI avoided for WSL; to try it, set `export DWORSHAK_TRY_TKINTER_ON_WSL=1`"
         if not dworshak_try_tkinter_on_wsl:
             if warn:
-                logger.warning(instruction_to_allow_tk_on_wsl)
+                logger.debug(instruction_to_allow_tk_on_wsl)
             else:
                 logger.debug(instruction_to_allow_tk_on_wsl)
             return True
@@ -299,6 +290,5 @@ def _check_avoid_tkinter_on_wsl(interface_priority,logger)->bool:
 def main():
     DworshakPrompt().ask(
         "What is your name?",
-        suggestion="George",
-        debug=True,
+        suggestion="George"
     )

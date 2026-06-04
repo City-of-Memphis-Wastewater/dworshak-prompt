@@ -2,7 +2,7 @@
 from __future__ import annotations
 # tkinter workaround for wsl2, first, before other imports
 import logging
-logger=logging.getLogger(__name__) # debug handled by CLI flag, --debug
+logger=logging.getLogger(__name__)
 from .gui_helpers import init_x11_threads
 
 logger.debug(f"gui_prompt.py, imports..")

@@ -66,15 +66,11 @@ class Obtain:
         self.interface_priority = interface_priority
         self.interface_avoid = interface_avoid
         self.interrupt_behavior = interrupt_behavior
-        self.debug = debug
-        self.verbose = verbose
 
         self.prompt = DworshakPrompt(
             interface_priority=interface_priority, # instantiated value can be overrode for each function call
             interface_avoid=interface_avoid, # instantiated value can be overrode for each function call 
             interrupt_behavior=interrupt_behavior, # only instantitated here
-            debug = debug, # only instantitated here
-            verbose = verbose
         )
 
     def config(

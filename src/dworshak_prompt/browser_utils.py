@@ -14,7 +14,7 @@ import pyhabitat
 
 # Setup Logging
 import logging
-logger = logging.getLogger("dworshak_prompt")
+logger = logging.getLogger(__name__)
 
 
 # ──────────────────────────────────────────────────────────────────────────────

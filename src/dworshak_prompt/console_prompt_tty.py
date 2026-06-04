@@ -15,7 +15,7 @@ def console_get_input_tty(message: str, suggestion: str | None = None, hide_inpu
     if suggestion and not hide_input:
         prompt += f" [{suggestion}]"
     if suggestion and hide_input:
-        logger.debug("Credential suggestion not shown in console for security. Please use PromptMode.WEB or PromptMode.GUI to enjoy suggestion autofill for credentials.")
+        logger.debug("Credential suggestion not shown in console for security. Use PromptMode.WEB or PromptMode.GUI to enjoy suggestion autofill for credentials.\n")
         prompt += f" (suggestion hidden)"
     prompt += ": "
 

@@ -26,22 +26,26 @@ def console_get_input_typer(
             if suggestion:
                 # Security notice: we don't pass the suggestion to the prompt,
                 # so the user cannot "blindly" accept it by hitting Enter.
-                logger.debug("Credential suggestion not shown in console for security. Please use PromptMode.WEB or PromptMode.GUI to enjoy suggestion autofill for credentials.")
+                logger.debug("Credential suggestion not shown in console for security. Use PromptMode.WEB or PromptMode.GUI to enjoy suggestion autofill for credentials.")
             hidden_msg = f"{message} (input hidden)"
 
             try:
                 from rich.prompt import Prompt
+                logger.debug("(try to) Use Prompt.ask() as the console_get_input_typer() solution. [hidden input]")
                 return Prompt.ask(hidden_msg,
                                   password=True,
                                   console=stderr_console)
             except ImportError:
+                logger.debug("Use typer.prompt() as the console_get_input_typer() solution. [hidden input]")
                 return typer.prompt(hidden_msg, hide_input=True)
         
         # Standard credential case
         if suggestion: # and not hide_input
+            logger.debug("Use typer.prompt() as the console_get_input_typer() solution. [suggestion]")
             return typer.prompt(
                 message,
                 default=suggestion)
+        logger.debug("Use typer.prompt() as the console_get_input_typer() solution. []")
         return typer.prompt(message)
     except (typer.Abort, KeyboardInterrupt, EOFError, SystemExit):
         # We catch everything Typer/Rich/Python throws on Ctrl+C

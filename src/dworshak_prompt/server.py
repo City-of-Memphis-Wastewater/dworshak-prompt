@@ -8,7 +8,7 @@ import threading
 
 # Setup logger
 import logging
-logger = logging.getLogger("dworshak_prompt")
+logger = logging.getLogger(__name__)
 
 from .browser_utils import find_open_port
 

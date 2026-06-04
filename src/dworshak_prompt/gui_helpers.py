@@ -2,7 +2,7 @@
 import logging
 import platform
 import pyhabitat
-logger=logging.getLogger(__name__) # debug handled by CLI flag, --debug
+logger=logging.getLogger(__name__)
 def get_tkinter_hint() -> str:
     os_name = platform.system().lower()
     hint_base = (

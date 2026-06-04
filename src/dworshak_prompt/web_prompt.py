@@ -7,7 +7,7 @@ from typing import Any
 
 # Setup logger
 import logging
-logger = logging.getLogger("dworshak_prompt")
+logger = logging.getLogger(__name__)
 
 from .prompt_manager_web import PromptManagerWeb # for type hinting
 from .browser_utils import launch_browser, is_server_running

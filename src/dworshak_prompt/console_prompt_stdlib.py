@@ -29,7 +29,7 @@ def console_get_input_stdlib(
     try:
         if hide_input:
             if suggestion:
-                logger.debug("Credential suggestion not shown in console for security. Please use PromptMode.WEB or PromptMode.GUI to enjoy suggestion autofill for credentials.")
+                logger.debug("Credential suggestion not shown in console for security. Use PromptMode.WEB or PromptMode.GUI to enjoy suggestion autofill for credentials.")
             # getpass handles terminal echoing automatically
             hidden_prompt = f"{message} (input hidden): "
             response = getpass.getpass(hidden_prompt)

@@ -8,9 +8,10 @@ import sys
 import logging
 import pyhabitat
 
-from dworshak_prompt.logging_setup import setup_logging
-    
-logger = setup_logging()
+logger = logging.getLogger(__name__)
+
+#from dworshak_prompt.logging_setup import setup_logging
+#logger = setup_logging()
 
 def has_real_tty() -> bool:
     # If forced, we assume we can find a way to the user
@@ -31,8 +32,10 @@ def has_real_tty() -> bool:
     return False
 
 def get_console_provider(debug:bool=False):
+#def get_console_provider():
     # 1. If we are in a normal interactive terminal, use the 'pretty' version
-    setup_logging(debug=debug)
+    if False:
+        setup_logging(debug=debug)
     logger.debug("get_console_provider()")
     
     # If EITHER input or output is redirected, but we have a sideband, 
@@ -40,27 +43,30 @@ def get_console_provider(debug:bool=False):
     if (not sys.stdin.isatty() or not sys.stdout.isatty()) and os.path.exists("/dev/tty"):
         from .console_prompt_tty import console_get_input_tty
         logger.debug("Redirected I/O detected; routing to TTY sideband.")
+        logger.debug("console provider = console_get_input_tty")
         return console_get_input_tty
     
     else:
         try:
             from .console_prompt_typer import console_get_input_typer
-            logger.debug("return console_get_input_typer")
+            logger.debug("console provider = console_get_input_typer")
             return console_get_input_typer
         except ImportError:
             pass
 
     # Absolute fallback (Windows or CI)
     from .console_prompt_stdlib import console_get_input_stdlib
-    logger.debug("return console_get_input_stdlib")
+    logger.debug("console provider = console_get_input_stdlib")
     return console_get_input_stdlib
 
 def is_likely_ci_or_non_interactive(debug:bool=False) -> bool:
+#def is_likely_ci_or_non_interactive() -> bool:
     """
     Heuristic to determine if we should skip interactive prompting.
     In Dworshak, we only return True if there is NO path to the user.
     """
-    if debug:
+    
+    if False:
         setup_logging(debug=debug)
     logger.debug("is_likely_ci_or_non_interactive()")
     # If /dev/tty exists, we HAVE a path to the user, regardless of CI env vars.
