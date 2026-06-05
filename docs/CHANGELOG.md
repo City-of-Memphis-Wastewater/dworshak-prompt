@@ -8,7 +8,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ## [0.3.9] – 2026-06-04
 ### Changed:
-- Implement new logging approach with logging_setup.configure_root_logging_for_application(), and in various dependencies.
+- Implement new logging approach with logging_setup.configure_logging_for_application(), and in various dependencies.
 
 ---
 

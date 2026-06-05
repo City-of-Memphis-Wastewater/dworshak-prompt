@@ -21,7 +21,7 @@ from .multiplexer import DworshakPrompt
 from .helpers import PromptMode
 from .obtain import Obtain
 from ._version import __version__
-from .logging_setup import configure_root_logging_for_application
+from .logging_setup import configure_logging_for_application
 
 console = Console() # to be above the tkinter check, in case of console.print
 app = typer.Typer()
@@ -88,7 +88,7 @@ def main(ctx: typer.Context,
         raise typer.Exit(code=0)
 
     # Configure logging immediately
-    configure_root_logging_for_application(debug, verbose)
+    configure_logging_for_application(debug, verbose)
 
     # Join the string from the command line arg and log debug to show the command.
     full_command_list = sys.argv

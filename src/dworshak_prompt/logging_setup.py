@@ -8,7 +8,7 @@ console = Console(stderr=True)
 
 logger = logging.getLogger("dworshak_prompt")
 
-def configure_root_logging_for_application(debug: bool=False,verbose: bool=False):
+def configure_logging_for_application(debug: bool=False,verbose: bool=False):
     INTENT="subapp"
 
     if debug:
