@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         # uv sync handles the 'virtualenv create false' logic 
         # via the --system flag if you don't want a venv
-        run: uv sync --no-dev
+        run: uv sync --extra typer --extra crypto
 
       - name: Build package
         run: uv build
