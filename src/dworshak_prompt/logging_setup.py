@@ -4,13 +4,12 @@ import sys
 import traceback
 from rich.logging import RichHandler
 from rich.console import Console
-console = Console()
+console = Console(stderr=True)
+
+logger = logging.getLogger("dworshak_prompt")
 
 def configure_root_logging_for_application(debug: bool=False,verbose: bool=False):
-    INTENT="app"
-    root_logger = logging.getLogger()
-    for handler in root_logger.handlers[:]:
-        root_logger.removeHandler(handler)
+    INTENT="subapp"
 
     if debug:
         level = logging.DEBUG
@@ -19,13 +18,18 @@ def configure_root_logging_for_application(debug: bool=False,verbose: bool=False
     else:
         level = logging.WARNING
 
-    root_logger.setLevel(level)
+    logger.setLevel(level)
+
+    # Remove existing handlers to avoid duplicates if called multiple times
+    if logger.hasHandlers():
+        logger.handlers.clear()
+
     handler = RichHandler(console=console, show_time=False, show_path=debug,log_time_format="[%H:%M:%S]")
     handler.setFormatter(logging.Formatter("%(message)s"))
-    root_logger.addHandler(handler)
-    root_logger.debug(f"Debug logging enabled for {INTENT}.")
-    root_logger.info(f"Verbose logging enabled for {INTENT}.")
-    
+    logger.addHandler(handler)
+    logger.debug(f"Debug logging enabled for {INTENT}.")
+    logger.info(f"Verbose logging enabled for {INTENT}.")
+
 def setup_logging(verbose: bool = False, debug: bool = False, initial: bool=False):
     """
     Configure the root 'dworshak_prompt' logger.
