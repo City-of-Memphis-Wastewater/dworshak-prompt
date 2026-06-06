@@ -95,7 +95,7 @@ class Obtain:
             interface_priority = self.interface_priority
         if interface_avoid is None:
             interface_avoid = self.interface_avoid
-        if force_prompt=None:
+        if force_prompt is None:
             force_prompt=self.force_prompt
 
         config_mgr = DworshakConfig(path = path)
@@ -153,7 +153,7 @@ class Obtain:
         if interface_avoid is None:
             interface_avoid = self.interface_avoid
 
-        if force_prompt=None:
+        if force_prompt is None:
             force_prompt=self.force_prompt
             
         try:
@@ -219,7 +219,7 @@ class Obtain:
         if interface_avoid is None:
             interface_avoid = self.interface_avoid
 
-        if force_prompt=None:
+        if force_prompt is None:
             force_prompt=self.force_prompt
             
         env_mgr = DworshakEnv(path=path)
