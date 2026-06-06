@@ -1,4 +1,4 @@
-# src/dworshak_prompt/obtain.py
+/# src/dworshak_prompt/obtain.py
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional, Any
@@ -181,7 +181,7 @@ class Obtain:
         
         # Similar logic for secrets, but using dworshak-secret
         value = secret_mgr.get(service = service, item=item)
-        if value is not None and not overwrite not force_prompt:
+        if value is not None and not overwrite and not force_prompt:
             return SecretData(value = value, is_new = False)
         
         new_value = self.prompt.ask(
