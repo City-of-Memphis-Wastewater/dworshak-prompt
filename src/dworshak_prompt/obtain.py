@@ -56,8 +56,9 @@ class Obtain:
         interface_priority: list[PromptMode] | None = None,
         interface_avoid: set[PromptMode] | None =None,
         interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
-        debug: bool = False,
-        verbose: bool = False
+        force_prompt: bool |None=False
+        #debug: bool = False,
+        #verbose: bool = False
     ):
         self.config_path = config_path
         self.secret_path = secret_path
@@ -66,7 +67,7 @@ class Obtain:
         self.interface_priority = interface_priority
         self.interface_avoid = interface_avoid
         self.interrupt_behavior = interrupt_behavior
-
+        self.force_prompt = force_prompt
         self.prompt = DworshakPrompt(
             interface_priority=interface_priority, # instantiated value can be overrode for each function call
             interface_avoid=interface_avoid, # instantiated value can be overrode for each function call 
@@ -84,7 +85,8 @@ class Obtain:
         interface_avoid: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
-        forget: bool = False
+        forget: bool = False,
+        force_prompt: bool|None = None
     ) -> ConfigData:
         if path is None:
             path = self.config_path
@@ -93,7 +95,9 @@ class Obtain:
             interface_priority = self.interface_priority
         if interface_avoid is None:
             interface_avoid = self.interface_avoid
-            
+        if force_prompt=None:
+            force_prompt=self.force_prompt
+
         config_mgr = DworshakConfig(path = path)
         value = config_mgr.get(service, item)
 
@@ -133,7 +137,8 @@ class Obtain:
         key_path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
-        hide: bool = True # expect hide to be True always but allow user to set to false
+        hide: bool = True, # expect hide to be True always but allow user to set to false
+        force_prompt: bool|None = None
         )-> SecretData:
 
         if vault_path is None:
@@ -148,6 +153,9 @@ class Obtain:
         if interface_avoid is None:
             interface_avoid = self.interface_avoid
 
+        if force_prompt=None:
+            force_prompt=self.force_prompt
+            
         try:
             # Lazy Import dworshak_secret here to mitigate top-level crashes
             import cryptography
@@ -195,7 +203,8 @@ class Obtain:
         interface_avoid: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
-        forget: bool = False
+        forget: bool = False,
+        force_prompt: bool|None = None
     ) -> EnvData:
         """
         Checks key from os.environ or .env file, using the dworshak-env library. 
@@ -210,6 +219,9 @@ class Obtain:
         if interface_avoid is None:
             interface_avoid = self.interface_avoid
 
+        if force_prompt=None:
+            force_prompt=self.force_prompt
+            
         env_mgr = DworshakEnv(path=path)
         value = env_mgr.get(key)
 
