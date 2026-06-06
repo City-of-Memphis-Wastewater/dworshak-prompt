@@ -1,4 +1,4 @@
-/# src/dworshak_prompt/obtain.py
+# src/dworshak_prompt/obtain.py
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional, Any
