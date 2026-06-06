@@ -55,8 +55,8 @@ class Obtain:
         key_path: str | Path | None = None,
         interface_priority: list[PromptMode] | None = None,
         interface_avoid: set[PromptMode] | None =None,
-        interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE,
-        force_prompt: bool |None=False
+        interrupt_behavior: InterruptBehavior = InterruptBehavior.RETURN_NONE
+        #force_prompt: bool |None=False
         #debug: bool = False,
         #verbose: bool = False
     ):
@@ -85,8 +85,8 @@ class Obtain:
         interface_avoid: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
-        forget: bool = False,
-        force_prompt: bool|None = None
+        forget: bool = False
+        #force_prompt: bool|None = None
     ) -> ConfigData:
         if path is None:
             path = self.config_path
@@ -95,8 +95,9 @@ class Obtain:
             interface_priority = self.interface_priority
         if interface_avoid is None:
             interface_avoid = self.interface_avoid
-        if force_prompt is None:
-            force_prompt=self.force_prompt
+            
+        #if force_prompt is None:
+        #    force_prompt=self.force_prompt
 
         config_mgr = DworshakConfig(path = path)
         value = config_mgr.get(service, item)
@@ -110,7 +111,7 @@ class Obtain:
 
         # Added force_prompt arg June 2026, allows promot to be made even if it exists, in a way that differs from just overwrite, i think. 
         # Logic: Forcing a prompt, with the existing plain text value as thw auggeation.
-        if value is not None and not overwrite and not force_prompt:
+        if value is not None and not overwrite: # and not force_prompt:
             return ConfigData(value=value, is_new=False)
 
         # If missing or overwriting, we use the multiplexer
@@ -145,8 +146,8 @@ class Obtain:
         key_path: str | Path | None = None,
         overwrite: bool = False,
         forget: bool = False,
-        hide: bool = True, # expect hide to be True always but allow user to set to false
-        force_prompt: bool|None = None
+        hide: bool = True # expect hide to be True always but allow user to set to false
+        #force_prompt: bool|None = None
         )-> SecretData:
 
         if vault_path is None:
@@ -161,8 +162,8 @@ class Obtain:
         if interface_avoid is None:
             interface_avoid = self.interface_avoid
 
-        if force_prompt is None:
-            force_prompt=self.force_prompt
+        #if force_prompt is None:
+        #    force_prompt=self.force_prompt
             
         try:
             # Lazy Import dworshak_secret here to mitigate top-level crashes
@@ -181,7 +182,7 @@ class Obtain:
         
         # Similar logic for secrets, but using dworshak-secret
         value = secret_mgr.get(service = service, item=item)
-        if value is not None and not overwrite and not force_prompt:
+        if value is not None and not overwrite: # and not force_prompt:
             return SecretData(value = value, is_new = False)
         
         new_value = self.prompt.ask(
@@ -211,8 +212,8 @@ class Obtain:
         interface_avoid: set[PromptMode] | None = None,
         path: str | Path | None = None,
         overwrite: bool = False,
-        forget: bool = False,
-        force_prompt: bool|None = None
+        forget: bool = False
+        #force_prompt: bool|None = None
     ) -> EnvData:
         """
         Checks key from os.environ or .env file, using the dworshak-env library. 
@@ -227,14 +228,14 @@ class Obtain:
         if interface_avoid is None:
             interface_avoid = self.interface_avoid
 
-        if force_prompt is None:
-            force_prompt=self.force_prompt
+        #if force_prompt is None:
+        #    force_prompt=self.force_prompt
             
         env_mgr = DworshakEnv(path=path)
         value = env_mgr.get(key)
 
         # Logic: If it exists and we aren't forcing a refresh, return it.
-        if value is not None and not overwrite and not force_prompt:
+        if value is not None and not overwrite: # and not force_prompt:
             return EnvData(value=value, is_new=False)
 
         # If missing or overwriting, we use the multiplexer
