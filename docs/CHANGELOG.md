@@ -10,6 +10,9 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ### Changed:
 Ladies and gentlemen, we now have config windows. when force_prompt_is True in obtain_mngr.config() and when the suggestion is the current value from disk (only for plaontext config, not secrets).
 
+### Fixed:
+- Actually use force_prompt in obtain.py.
+
 ---
 
 ## [0.3.9] – 2026-06-04
