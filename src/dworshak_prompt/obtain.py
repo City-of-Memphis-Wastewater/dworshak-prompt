@@ -101,8 +101,16 @@ class Obtain:
         config_mgr = DworshakConfig(path = path)
         value = config_mgr.get(service, item)
 
+        """
+        # Out June 2026, the overwrite was doing two jobs, both set and re-get.
         # Logic: If it exists and we aren't forcing a refresh, return it.
         if value is not None and not overwrite:
+            return ConfigData(value=value, is_new=False)
+        """
+
+        # Added force_prompt arg June 2026, allows promot to be made even if it exists, in a way that differs from just overwrite, i think. 
+        # Logic: Forcing a prompt, with the existing plain text value as thw auggeation.
+        if value is not None and not overwrite and not force_prompt:
             return ConfigData(value=value, is_new=False)
 
         # If missing or overwriting, we use the multiplexer
@@ -173,7 +181,7 @@ class Obtain:
         
         # Similar logic for secrets, but using dworshak-secret
         value = secret_mgr.get(service = service, item=item)
-        if value is not None and not overwrite:
+        if value is not None and not overwrite not force_prompt:
             return SecretData(value = value, is_new = False)
         
         new_value = self.prompt.ask(
@@ -226,7 +234,7 @@ class Obtain:
         value = env_mgr.get(key)
 
         # Logic: If it exists and we aren't forcing a refresh, return it.
-        if value is not None and not overwrite:
+        if value is not None and not overwrite and not force_prompt:
             return EnvData(value=value, is_new=False)
 
         # If missing or overwriting, we use the multiplexer
