@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.3.10] – 2026-06-05
+### Changed:
+Ladies and gentlemen, we now have config windows. when force_prompt_is True in obtain_mngr.config() and when the suggestion is the current value from disk (only for plaontext config, not secrets).
+
+---
+
 ## [0.3.9] – 2026-06-04
 ### Changed:
 - Implement new logging approach with logging_setup.configure_logging_for_application(), and in various dependencies.
