@@ -39,7 +39,7 @@ jobs:
       - name: Sanity Check Artifact
         run: |
           echo "Verifying PYZ execution..."
-          # Test help command to ensure entry point and stdlib fallback work
+          # Test help command to ensure entry point
           uv run python dist/zipapp/*.pyz --help
       
       - name: Generate Checksums

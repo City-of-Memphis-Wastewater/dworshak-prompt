@@ -42,6 +42,12 @@ jobs:
       - name: Install the built package (sanity check)
         run: uv pip install dist/*.whl --system
 
+      - name: Check For Errors 
+        run: |
+          echo "Verifying execution..."
+          # Test help command to ensure entry point
+          uv run dworshak-prompt --help  
+          
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         # Trusted Publishing: no token needed — uses OIDC automatically
