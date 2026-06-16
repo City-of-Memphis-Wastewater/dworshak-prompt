@@ -6,7 +6,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
-## [0.3.10.1] - 2026-06-15
+## [0.3.11] - 2026-06-15
 ### Fixed:
 - Path resolution improved.
 - Rule: users must provide a filepath for the vault, not just a dir.
