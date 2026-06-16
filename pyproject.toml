@@ -89,7 +89,8 @@ dworshak-prompt = "dworshak_prompt.__main__:run"
 typer = [
     "typer>=0.21.1",
     "rich>=14.3.2",
-    "typer-helptree>=0.2.10.2",
+    "typer-helptree>=0.2.10.4",
+    "click>=8.1.8"
 ]
 crypto = [
     "cryptography>=46.0.3",
