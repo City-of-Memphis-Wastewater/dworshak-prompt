@@ -15,9 +15,9 @@ def setup_dworshak_managers(dir:str|Path|None=None):
 
     env_mngr = DworshakEnv() # assume this stays in CWD. If the user wants a custom path, they'll have to do it manually and not use setup_dworshak().
 
-    resolved_dir = dir or env_mngr.get("DWORSHAK_DIR")
+    resolved_dir = dir if dir is not None else env_mngr.get("DWORSHAK_DIR")
     if resolved_dir:
-        resolved_dir = Path(resolved_dir)
+        resolved_dir = Path(resolved_dir).expanduser().resolve()
         config_path = resolved_dir / "config.json"
         secret_path = resolved_dir / "vault.db"
     else:
