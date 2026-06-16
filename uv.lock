@@ -247,6 +247,8 @@ crypto = [
     { name = "dworshak-secret", extra = ["crypto"] },
 ]
 full = [
+    { name = "click", version = "8.1.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "click", version = "8.3.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "cryptography" },
     { name = "dworshak-secret", extra = ["crypto"] },
     { name = "rich" },
@@ -254,6 +256,8 @@ full = [
     { name = "typer-helptree" },
 ]
 typer = [
+    { name = "click", version = "8.1.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "click", version = "8.3.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "rich" },
     { name = "typer" },
     { name = "typer-helptree" },
@@ -267,6 +271,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
+    { name = "click", marker = "extra == 'typer'", specifier = ">=8.1.8" },
     { name = "cryptography", marker = "extra == 'crypto'", specifier = ">=46.0.3" },
     { name = "dworshak-config", specifier = ">=0.2.8" },
     { name = "dworshak-env", specifier = ">=0.1.8" },
@@ -276,7 +281,7 @@ requires-dist = [
     { name = "pyhabitat", specifier = ">=1.2.7" },
     { name = "rich", marker = "extra == 'typer'", specifier = ">=14.3.2" },
     { name = "typer", marker = "extra == 'typer'", specifier = ">=0.21.1" },
-    { name = "typer-helptree", marker = "extra == 'typer'", specifier = ">=0.2.10.2" },
+    { name = "typer-helptree", marker = "extra == 'typer'", specifier = ">=0.2.10.5" },
 ]
 provides-extras = ["typer", "crypto", "full"]
 
@@ -596,16 +601,18 @@ wheels = [
 
 [[package]]
 name = "typer-helptree"
-version = "0.2.10.2"
+version = "0.2.10.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "click", version = "8.1.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "click", version = "8.3.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "pyhabitat" },
     { name = "rich" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4b/35/8d938f9a6becfc9506ebffe3b121c2a0e4cc40c8191ec4a3dce7d0fd05cb/typer_helptree-0.2.10.2.tar.gz", hash = "sha256:08e4b7d36dd07845abe587bb16daeffe24b769a81a838c0fc30e01d10264a987", size = 11961, upload-time = "2026-06-05T19:04:10.802Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e6/12/2a168ded0802073616f9de16a5afbcc5e39fd55f0a4fff1f6f6e9c82b982/typer_helptree-0.2.10.5.tar.gz", hash = "sha256:fa311a2c20cd2d38de53d38823c637972adedca18553e74f9c66743f2a842256", size = 12498, upload-time = "2026-06-16T20:46:12.947Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fe/04/ff55f9cdcc38347161f5da3ad0f297767e877e9821e145008a8e071f64b3/typer_helptree-0.2.10.2-py3-none-any.whl", hash = "sha256:731d643f5ec434f5c0059e538f1daba9e796837faae211e9b4fb63380aeb2da7", size = 13858, upload-time = "2026-06-05T19:04:09.693Z" },
+    { url = "https://files.pythonhosted.org/packages/17/cc/74646e9c23285d3f894eb735df2d2e6ffc4752d518e8e7ada3c1f2c69f94/typer_helptree-0.2.10.5-py3-none-any.whl", hash = "sha256:2b41f7006a4fac6e1c7b490c635b4d8f7f558597743611de3afe2b10f89e7ba0", size = 14413, upload-time = "2026-06-16T20:46:11.744Z" },
 ]
 
 [[package]]
