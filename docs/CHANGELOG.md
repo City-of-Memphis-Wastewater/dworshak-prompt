@@ -6,6 +6,14 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.3.10.1] - 2026-06-15
+### Fixed:
+- Path resolution improved.
+- Rule: users must provide a filepath for the vault, not just a dir.
+- dworshak-secret set to 1.3.5.1
+
+---
+
 ## [0.3.10] – 2026-06-05
 ### Changed:
 Ladies and gentlemen, we now have config windows. when force_prompt_is True in obtain_mngr.config() and when the suggestion is the current value from disk (only for plaontext config, not secrets).
