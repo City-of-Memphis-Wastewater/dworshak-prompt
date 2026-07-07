@@ -8,8 +8,8 @@ readme = "README.md"
 dependencies = [
     "dworshak-config>=0.2.8",
     "dworshak-env>=0.1.8",
-    "dworshak-secret>=1.3.5.1",
-    "pyhabitat>=1.2.7",
+    "dworshak-secret>=1.3.6",
+    "pyhabitat>=1.3.4",
 ]
 
 authors = [
@@ -89,7 +89,7 @@ dworshak-prompt = "dworshak_prompt.__main__:run"
 typer = [
     "typer>=0.21.1",
     "rich>=14.3.2",
-    "typer-helptree>=0.2.10.5",
+    "typer-helptree>=0.2.11",
     "click>=8.1.8"
 ]
 crypto = [
